@@ -983,6 +983,24 @@ main {
   color: var(--text-muted);
 }
 
+.cart-item-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.cart-color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--swatch);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
 .cart-item-price {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
