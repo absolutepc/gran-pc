@@ -392,9 +392,12 @@ function uniqueImages(list) {
   });
 }
 
-function buildProductImages(product) {
-  if (Array.isArray(product.images) && product.images.length) {
-    return uniqueImages(product.images);
+function buildProductImages(product, def) {
+  const explicit = Array.isArray(product.images) && product.images.length
+    ? product.images
+    : (Array.isArray(def?.images) && def.images.length ? def.images : []);
+  if (explicit.length) {
+    return uniqueImages(explicit);
   }
   const main = getProductImg(product);
   const fromColors = (product.colors || []).map(c => c.img).filter(Boolean);
@@ -413,7 +416,7 @@ function enrichProduct(product, def) {
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
-  merged.images = buildProductImages(merged);
+  merged.images = buildProductImages(merged, def);
   PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
     if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });

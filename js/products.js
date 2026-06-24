@@ -32,6 +32,52 @@ function renderProductSpecsTable(product) {
   `;
 }
 
+function getProductGalleryItems(product) {
+  const images = product.images || [];
+  if (images.length > 1) {
+    return images.map(src => ({ src, filter: '', colorName: '' }));
+  }
+
+  const colors = product.colors || [];
+  if (colors.length > 1) {
+    const seen = new Set();
+    return colors.map(color => ({
+      src: color.img || getProductImg(product),
+      filter: color.filter && color.filter !== 'none' ? color.filter : '',
+      colorName: color.name || '',
+    })).filter(item => {
+      const key = `${item.src}|${item.filter}|${item.colorName}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  return [{ src: getProductImg(product), filter: '', colorName: '' }];
+}
+
+function renderGalleryThumb(item, productName, index, isActive) {
+  const filterStyle = item.filter ? `filter:${item.filter};` : '';
+  return `
+    <button
+      type="button"
+      class="pc-gallery-thumb ${isActive ? 'active' : ''}"
+      data-src="${item.src}"
+      data-filter="${item.filter || ''}"
+      data-color-name="${item.colorName || ''}"
+      aria-label="Фото ${index + 1}${item.colorName ? `: ${item.colorName}` : ''}"
+    >
+      <img
+        src="${item.src}"
+        alt="${productName}"
+        style="${filterStyle}"
+        loading="lazy"
+        onerror="this.src='${DEFAULT_IMG}'"
+      >
+    </button>
+  `;
+}
+
 function renderProductColorPicker(product) {
   const colors = product.colors || [];
   if (!colors.length) return '';
@@ -60,27 +106,24 @@ function renderProductColorPicker(product) {
 }
 
 function renderProductGallery(product) {
-  const images = product.images?.length ? product.images : [getProductImg(product)];
-  const main = images[0];
-  const initialFilter = product.colors?.[0]?.filter || 'none';
-  const thumbs = images.length > 1
-    ? `<div class="pc-gallery-thumbs">${images.map((src, i) => `
-        <button type="button" class="pc-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="Фото ${i + 1}">
-          ${renderProductImg(src, product.name)}
-        </button>
-      `).join('')}</div>`
+  const items = getProductGalleryItems(product);
+  const initial = items[0];
+  const initialFilter = initial.filter || product.colors?.[0]?.filter || 'none';
+  const filterValue = initialFilter === 'none' ? '' : initialFilter;
+  const thumbs = items.length > 1
+    ? `<div class="pc-gallery-thumbs">${items.map((item, i) => renderGalleryThumb(item, product.name, i, i === 0)).join('')}</div>`
     : '';
 
   return `
-    <div class="pc-detail-gallery">
+    <div class="pc-detail-gallery" id="productGallery">
       <div class="product-detail-image-wrap">
         ${product.badge ? `<span class="product-badge ${product.badge}">${BADGE_LABELS[product.badge] || product.badge}</span>` : ''}
         <img
           class="pc-detail-main-img product-detail-main-img"
           id="productDetailMainImg"
-          src="${main}"
+          src="${initial.src}"
           alt="${product.name}"
-          style="filter: ${initialFilter}"
+          style="filter: ${filterValue}"
           onerror="this.src='${DEFAULT_IMG}'"
         >
       </div>
@@ -90,24 +133,40 @@ function renderProductGallery(product) {
   `;
 }
 
-function setProductMainImage(container, src, filter = '') {
-  const main = container.querySelector('#productDetailMainImg');
-  if (!main) return;
-  main.src = src;
-  main.style.filter = filter;
-  container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.src === src);
-  });
+function normalizeGallerySrc(src) {
+  try {
+    return decodeURI(src || '');
+  } catch {
+    return src || '';
+  }
 }
 
-function syncColorPickerWithImage(container, src) {
+function setProductMainImage(container, src, filter = '', colorName = '') {
+  const main = container.querySelector('#productDetailMainImg');
+  if (!main) return;
+  const normalizedSrc = normalizeGallerySrc(src);
+  main.src = normalizedSrc;
+  main.style.filter = filter;
+
+  container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {
+    const matchesSrc = normalizeGallerySrc(btn.dataset.src) === normalizedSrc;
+    const matchesFilter = (btn.dataset.filter || '') === (filter || '');
+    btn.classList.toggle('active', matchesSrc && matchesFilter);
+  });
+
+  syncColorPickerWithImage(container, normalizedSrc, colorName);
+}
+
+function syncColorPickerWithImage(container, src, preferredColorName = '') {
   const picker = container.querySelector('.product-color-picker');
   if (!picker) return;
   const colorNameEl = container.querySelector('#selectedColorName');
   let matched = false;
 
   picker.querySelectorAll('.color-btn').forEach(btn => {
-    const isMatch = btn.dataset.img === src;
+    const isMatch = preferredColorName
+      ? btn.dataset.name === preferredColorName
+      : normalizeGallerySrc(btn.dataset.img) === normalizeGallerySrc(src);
     btn.classList.toggle('active', isMatch);
     if (isMatch) {
       matched = true;
@@ -115,22 +174,24 @@ function syncColorPickerWithImage(container, src) {
     }
   });
 
-  if (!matched && colorNameEl && picker.querySelector('.color-btn.active')) {
-    colorNameEl.textContent = picker.querySelector('.color-btn.active').dataset.name;
+  if (!matched && colorNameEl) {
+    const active = picker.querySelector('.color-btn.active');
+    if (active) colorNameEl.textContent = active.dataset.name;
   }
 }
 
 function bindProductGallery(container) {
-  container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const src = btn.dataset.src;
-      const activeColor = container.querySelector('.product-color-picker .color-btn.active');
-      const filter = activeColor && activeColor.dataset.img === src && activeColor.dataset.filter !== 'none'
-        ? activeColor.dataset.filter
-        : '';
-      setProductMainImage(container, src, filter);
-      syncColorPickerWithImage(container, src);
-    });
+  const gallery = container.querySelector('#productGallery');
+  if (!gallery) return;
+
+  gallery.addEventListener('click', (event) => {
+    const btn = event.target.closest('.pc-gallery-thumb');
+    if (!btn || !gallery.contains(btn)) return;
+
+    const src = btn.dataset.src;
+    const filter = btn.dataset.filter || '';
+    const colorName = btn.dataset.colorName || '';
+    setProductMainImage(container, src, filter, colorName);
   });
 }
 
@@ -146,8 +207,8 @@ function bindProductColorPicker(container) {
       const colorNameEl = container.querySelector('#selectedColorName');
       if (colorNameEl) colorNameEl.textContent = btn.dataset.name;
 
-      const filter = btn.dataset.filter === 'none' ? '' : btn.dataset.filter;
-      setProductMainImage(container, btn.dataset.img, filter);
+      const filter = btn.dataset.filter === 'none' ? '' : (btn.dataset.filter || '');
+      setProductMainImage(container, btn.dataset.img, filter, btn.dataset.name);
     });
   });
 }
