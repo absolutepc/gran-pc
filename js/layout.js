@@ -102,13 +102,13 @@ function renderFooter() {
 
           <div class="footer-social">
 
-            <a href="#" aria-label="Telegram">📱</a>
+            <a href="#" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
 
-            <a href="#" aria-label="VK">💬</a>
+            <a href="#" aria-label="VK" title="VKontakte"><i class="fab fa-vk"></i></a>
 
-            <a href="#" aria-label="YouTube">▶️</a>
+            <a href="#" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
 
-            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
 
           </div>
 
