@@ -46,7 +46,17 @@ const DEFAULT_PRODUCTS = [
   { id: 'p5', name: 'ASUS ROG Strix B650-E', category: 'motherboard', price: 28990, img: 'img/categories/motherboard.svg', description: 'AM5, PCIe 5.0, WiFi 6E', stock: 12, socket: 'AM5', memoryType: 'DDR5', specs: { formFactor: 'ATX' } },
   { id: 'p6', name: 'be quiet! Dark Power 13 850W', category: 'psu', price: 19990, img: 'img/categories/psu.svg', description: '80+ Titanium, полностью модульный', stock: 18, psutype: 'Полностью модульный', specs: { wattage: '850 Вт', efficiency: 'Titanium' } },
   { id: 'p7', name: 'NZXT Kraken X73 RGB', category: 'cooling', price: 15990, img: 'img/categories/cooling.svg', description: 'СЖО 360 мм, LCD-дисплей', stock: 10, liquid: '360 мм', specs: { type: 'AIO', size: '360 мм' } },
-  { id: 'p8', name: 'Lian Li O11 Dynamic EVO', category: 'case', price: 16990, img: 'img/categories/case.svg', description: 'Mid-tower, закалённое стекло', stock: 8, caseff: 'Mid-Tower', specs: { formFactor: 'Mid-Tower', color: 'Чёрный' } },
+  {
+    id: 'p8', name: 'Lian Li O11 Dynamic EVO', category: 'case', price: 16990,
+    img: 'img/components/case/D400-B.png',
+    description: 'Mid-tower, закалённое стекло', stock: 8, caseff: 'Mid-Tower',
+    specs: { formFactor: 'Mid-Tower', color: 'Чёрный' },
+    fullDescription: 'Lian Li O11 Dynamic EVO — культовый mid-tower с двойной камерой, панорамным закалённым стеклом и модульной системой крепления радиаторов. Поддерживает E-ATX платы, до 10 вентиляторов и вертикальную установку GPU. Идеален для showcase-сборок с подсветкой.',
+    colors: [
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
+    ],
+  },
   { id: 'p9', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, img: 'img/categories/peripherals.svg', description: 'Беспроводная игровая мышь, 60 г', stock: 25, wired: 'Беспроводной', specs: { dpi: '32000', weight: '60 г' } },
   { id: 'p10', name: 'Keychron Q1 Pro', category: 'peripherals', price: 19990, img: 'img/categories/peripherals.svg', description: 'Механическая клавиатура, QMK/VIA', badge: 'new', stock: 20, wired: 'Bluetooth', specs: { switches: 'Gateron', layout: '75%' } },
   { id: 'p11', name: 'ASUS ROG Swift PG27AQDM', category: 'monitor', price: 89990, oldPrice: 99990, img: 'img/categories/monitor.svg', description: '27" OLED, 240 Гц, 0.03 мс', badge: 'sale', stock: 5, inch: '27"', matrix: 'OLED', hertz: '240 Гц', quality: 'QHD', specs: { size: '27"', refresh: '240 Гц' } },
@@ -258,6 +268,64 @@ const COMPONENT_TYPE_LABELS = {
   case: 'Корпус',
 };
 
+const PRODUCT_SPEC_LABELS = {
+  vram: 'Видеопамять',
+  tdp: 'TDP',
+  cores: 'Ядра',
+  capacity: 'Объём',
+  type: 'Тип',
+  speed: 'Частота',
+  formFactor: 'Форм-фактор',
+  wattage: 'Мощность',
+  efficiency: 'Эффективность',
+  dpi: 'DPI',
+  weight: 'Вес',
+  switches: 'Переключатели',
+  layout: 'Раскладка',
+  size: 'Диагональ',
+  refresh: 'Частота обновления',
+  color: 'Цвет',
+};
+
+const ATTRIBUTE_LABELS = {
+  socket: 'Сокет',
+  memoryType: 'Тип памяти',
+  pcie: 'PCI-E',
+  atx: 'Форм-фактор',
+  ram: 'Объём ОЗУ',
+  liquid: 'Размер СЖО',
+  psutype: 'Тип БП',
+  caseff: 'Форм-фактор корпуса',
+  inch: 'Диагональ',
+  matrix: 'Матрица',
+  hertz: 'Частота',
+  quality: 'Разрешение',
+  wired: 'Подключение',
+};
+
+const DEFAULT_COLOR_SETS = {
+  case: [
+    { name: 'Чёрный', hex: '#1a1a1a', filter: 'none' },
+    { name: 'Белый', hex: '#f0f0f0', filter: 'brightness(1.15)' },
+    { name: 'Серый', hex: '#6b7280', filter: 'grayscale(0.35)' },
+  ],
+  peripherals: [
+    { name: 'Чёрный', hex: '#1a1a1a', filter: 'none' },
+    { name: 'Белый', hex: '#ffffff', filter: 'brightness(1.2)' },
+    { name: 'Розовый', hex: '#ec4899', filter: 'hue-rotate(300deg) saturate(1.2)' },
+  ],
+  ram: [
+    { name: 'Чёрный', hex: '#1a1a1a', filter: 'none' },
+    { name: 'Белый', hex: '#f5f5f5', filter: 'brightness(1.1)' },
+    { name: 'RGB', hex: '#8b5cf6', filter: 'hue-rotate(45deg) saturate(1.3)' },
+  ],
+  default: [
+    { name: 'Чёрный', hex: '#1a1a1a', filter: 'none' },
+    { name: 'Серебристый', hex: '#c0c0c0', filter: 'grayscale(0.25) brightness(1.05)' },
+    { name: 'Белый', hex: '#f5f5f5', filter: 'brightness(1.15)' },
+  ],
+};
+
 const ADMIN_CREDENTIALS = { email: 'admin@pcmarket.ru', password: 'admin123' };
 
 function getProductImg(item) {
@@ -286,20 +354,55 @@ function initStore() {
 
 function mergeDefaultAttributes(products) {
   const defaultsById = Object.fromEntries(DEFAULT_PRODUCTS.map(p => [p.id, p]));
-  return products.map(product => {
-    const def = defaultsById[product.id];
-    if (!def) return product;
-    const merged = { ...product };
-    PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
-      if (merged[field] == null && def[field] != null) merged[field] = def[field];
-    });
-    return merged;
+  return products.map(product => enrichProduct(product, defaultsById[product.id]));
+}
+
+function buildFullDescription(product) {
+  if (product.fullDescription) return product.fullDescription;
+  const cat = (CATEGORY_LABELS[product.category] || product.category).toLowerCase();
+  const attrs = PRODUCT_ATTRIBUTE_FIELDS
+    .filter(f => product[f])
+    .map(f => `${ATTRIBUTE_LABELS[f]}: ${product[f]}`)
+    .join(', ');
+  const specsText = product.specs && typeof product.specs === 'object' && !Array.isArray(product.specs)
+    ? Object.entries(product.specs).map(([k, v]) => `${PRODUCT_SPEC_LABELS[k] || k}: ${v}`).join(', ')
+    : '';
+  const parts = [
+    `${product.name} — ${cat} от PC Market.`,
+    product.description || '',
+    attrs,
+    specsText,
+    'Гарантия 24 месяца. Бесплатная консультация по совместимости с вашей сборкой.',
+  ].filter(Boolean);
+  return parts.join(' ');
+}
+
+function buildDefaultColors(product) {
+  const baseImg = getProductImg(product);
+  const set = DEFAULT_COLOR_SETS[product.category] || DEFAULT_COLOR_SETS.default;
+  return set.map(c => ({ ...c, img: c.img || baseImg }));
+}
+
+function enrichProduct(product, def) {
+  const merged = def ? { ...def, ...product } : { ...product };
+  merged.fullDescription = buildFullDescription(merged);
+  merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
+    .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
+  PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
+    if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });
+  if (!merged.specs && def?.specs) merged.specs = def.specs;
+  return merged;
 }
 
 function getProducts() {
   initStore();
   return mergeDefaultAttributes(JSON.parse(localStorage.getItem(STORE_KEY)).products);
+}
+
+function getEnrichedProductById(id) {
+  const products = getProducts();
+  return products.find(p => p.id === id) || null;
 }
 
 function enrichReadyPC(pc) {
@@ -346,7 +449,7 @@ function formatPrice(price) {
 }
 
 function getProductById(id) {
-  return getProducts().find(p => p.id === id) || getReadyPCs().find(p => p.id === id);
+  return getEnrichedProductById(id) || getReadyPCs().find(p => p.id === id);
 }
 
 function matchesAttributeFilter(product, field, selected) {

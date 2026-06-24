@@ -13,6 +13,21 @@ function pickProductFilterFields(data) {
   return fields;
 }
 
+function parseProductColors(raw) {
+  if (!raw || !raw.trim()) return undefined;
+  const colors = raw.trim().split('\n').map(line => {
+    const [name, hex, img] = line.split('|').map(s => s.trim());
+    if (!name || !hex) return null;
+    return { name, hex, img: img || undefined };
+  }).filter(Boolean);
+  return colors.length ? colors : undefined;
+}
+
+function formatProductColors(colors) {
+  if (!colors?.length) return '';
+  return colors.map(c => [c.name, c.hex, c.img || ''].filter(Boolean).join('|')).join('\n');
+}
+
 function fillProductFilterFields(form, product) {
   PRODUCT_FILTER_FIELDS.forEach(key => {
     if (form[key]) form[key].value = product[key] || '';
@@ -214,6 +229,8 @@ function renderProductsAdmin() {
             </div>
           </div>
           <div class="form-group"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
+          <div class="form-group"><label>Полное описание (страница «Подробнее»)</label><textarea name="fullDescription" rows="4" placeholder="Расширенное описание для страницы товара"></textarea></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|путь_к_изображению&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png"></textarea></div>
           <div style="display:flex;gap:8px;margin-top:16px">
             <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
             <button type="button" class="btn btn-secondary btn-sm" id="cancelProductForm">Отмена</button>
@@ -262,30 +279,27 @@ function bindProductAdmin() {
     const products = getProducts();
     const data = Object.fromEntries(new FormData(form));
     const filterFields = pickProductFilterFields(data);
+    const colors = parseProductColors(data.colors);
+    const productFields = {
+      name: data.name,
+      category: data.category,
+      price: +data.price,
+      stock: +data.stock,
+      img: data.img || DEFAULT_IMG,
+      description: data.description,
+      fullDescription: data.fullDescription || undefined,
+      ...(colors ? { colors } : {}),
+      ...filterFields,
+    };
     if (data.editId) {
       const idx = products.findIndex(p => p.id === data.editId);
       if (idx >= 0) {
-        products[idx] = {
-          ...products[idx],
-          name: data.name,
-          category: data.category,
-          price: +data.price,
-          stock: +data.stock,
-          img: data.img || DEFAULT_IMG,
-          description: data.description,
-          ...filterFields,
-        };
+        products[idx] = { ...products[idx], ...productFields };
       }
     } else {
       products.push({
         id: 'p' + Date.now(),
-        name: data.name,
-        category: data.category,
-        price: +data.price,
-        stock: +data.stock,
-        img: data.img || DEFAULT_IMG,
-        description: data.description,
-        ...filterFields,
+        ...productFields,
         specs: {},
       });
     }
@@ -308,6 +322,8 @@ function bindProductAdmin() {
       form.img.value = getProductImg(product);
       fillProductFilterFields(form, product);
       form.description.value = product.description || '';
+      form.fullDescription.value = product.fullDescription || '';
+      form.colors.value = formatProductColors(product.colors);
       document.getElementById('productFormTitle').textContent = 'Редактировать товар';
     });
   });
