@@ -397,7 +397,9 @@ function enrichProduct(product, def) {
 
 function getProducts() {
   initStore();
-  return mergeDefaultAttributes(JSON.parse(localStorage.getItem(STORE_KEY)).products);
+  const data = JSON.parse(localStorage.getItem(STORE_KEY));
+  const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
+  return mergeDefaultAttributes(products);
 }
 
 function getEnrichedProductById(id) {

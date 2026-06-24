@@ -150,6 +150,12 @@ function renderProductDetail(product) {
   `;
 }
 
+function resolveProductById(id) {
+  if (typeof getEnrichedProductById === 'function') return getEnrichedProductById(id);
+  if (typeof getProducts === 'function') return getProducts().find(p => p.id === id) || null;
+  return null;
+}
+
 function initProductDetailPage() {
   const container = document.getElementById('productDetailContent');
   if (!container) return;
@@ -167,7 +173,7 @@ function initProductDetailPage() {
     return;
   }
 
-  const product = getEnrichedProductById(id);
+  const product = resolveProductById(id);
   if (!product) {
     container.innerHTML = `
       <div class="container pc-detail-page" style="text-align:center">
@@ -185,12 +191,3 @@ function initProductDetailPage() {
   updateCartBadge();
 }
 
-function bootProducts() {
-  if (document.getElementById('productDetailContent')) initProductDetailPage();
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootProducts);
-} else {
-  bootProducts();
-}
