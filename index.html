@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Market — Компьютеры и комплектующие</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <div class="hero-text">
+          <h1>Соберите ПК <span class="highlight">мечты</span></h1>
+          <p>Премиальные комплектующие, профессиональная сборка и лучшие цены. От игровых монстров до рабочих станций.</p>
+          <div class="hero-buttons">
+            <a href="catalog.html" class="btn btn-primary btn-lg">Смотреть каталог</a>
+            <a href="configurator.html" class="btn btn-secondary btn-lg">Собрать ПК</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-pc"><img src="img/hero-pc.svg" alt="Игровой компьютер"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Почему PC Market?</h2>
+          <p>Мы сочетаем качество, экспертизу и сервис, чтобы дать вам лучший опыт покупки компьютера</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3>Премиальное качество</h3>
+            <p>Только оригинальные комплектующие от авторизованных дистрибьюторов с полной гарантией</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔧</div>
+            <h3>Профессиональная сборка</h3>
+            <p>Сборка и тестирование сертифицированными специалистами</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🚚</div>
+            <h3>Быстрая доставка</h3>
+            <p>Бесплатная доставка по России при заказе от ₽50 000</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>Поддержка 24/7</h3>
+            <p>Экспертная консультация до и после покупки</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <h2>Популярные товары</h2>
+          <p>Лучшие предложения из каталога — отобраны нашими экспертами</p>
+        </div>
+        <div class="products-grid" id="popularProducts"></div>
+        <div style="text-align:center;margin-top:40px">
+          <a href="catalog.html" class="btn btn-secondary">Все товары →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Готовые ПК</h2>
+          <p>Предсобранные системы — подключите и играйте</p>
+        </div>
+        <div class="products-grid" id="featuredPCs"></div>
+        <div style="text-align:center;margin-top:40px">
+          <a href="ready-pcs.html" class="btn btn-secondary">Все сборки →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container" style="text-align:center">
+        <h2 style="font-size:2rem;margin-bottom:12px">Готовы собрать ПК?</h2>
+        <p style="color:var(--text-secondary);margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto">Используйте конфигуратор, чтобы выбрать каждый компонент и получить ПК под ваши задачи</p>
+        <a href="configurator.html" class="btn btn-primary btn-lg">Открыть конфигуратор →</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/ready-pcs.js"></script>
+  <script>
+    initLayout('home');
+    const popular = getProducts().slice(0, 4);
+    document.getElementById('popularProducts').innerHTML = popular.map(p => renderProductCard(p)).join('');
+    const featuredGrid = document.getElementById('featuredPCs');
+    featuredGrid.innerHTML = getReadyPCs().slice(0, 3).map(renderReadyPCCard).join('');
+    bindAddToCartButtons();
+    updateCartBadge();
+  </script>
+</body>
+</html>

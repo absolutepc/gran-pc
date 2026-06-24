@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — PC Market</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div id="authView">
+      <div class="auth-layout">
+        <div class="auth-form-panel">
+          <div class="auth-form">
+            <div class="form-tabs">
+              <button class="form-tab active" data-tab="login">Вход</button>
+              <button class="form-tab" data-tab="register">Регистрация</button>
+            </div>
+            <div id="loginForm">
+              <h2>С возвращением</h2>
+              <p class="subtitle">Войдите в аккаунт PC Market</p>
+              <form id="loginFormEl">
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" name="email" required placeholder="you@email.com">
+                </div>
+                <div class="form-group">
+                  <label>Пароль</label>
+                  <input type="password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Войти</button>
+              </form>
+            </div>
+            <div id="registerForm" style="display:none">
+              <h2>Создать аккаунт</h2>
+              <p class="subtitle">Присоединяйтесь к PC Market</p>
+              <form id="registerFormEl">
+                <div class="form-group">
+                  <label>Имя и фамилия</label>
+                  <input type="text" name="name" required placeholder="Иван Иванов">
+                </div>
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" name="email" required placeholder="you@email.com">
+                </div>
+                <div class="form-group">
+                  <label>Пароль</label>
+                  <input type="password" name="password" required minlength="6" placeholder="Минимум 6 символов">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Зарегистрироваться</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="auth-visual-panel">
+          <div class="auth-visual-content">
+            <div class="icon"><img src="img/hero-pc.svg" alt="" style="width:120px;margin:0 auto"></div>
+            <h2>Ваш путь к идеальному ПК</h2>
+            <p>Отслеживайте заказы, сохраняйте сборки и получайте эксклюзивные предложения</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardView" style="display:none">
+      <div class="container account-dashboard">
+        <div class="account-grid">
+          <aside class="account-sidebar">
+            <div class="user-info">
+              <div class="avatar" id="userAvatar">U</div>
+              <h3 id="userName">Пользователь</h3>
+              <p style="color:var(--text-muted);font-size:0.85rem" id="userEmail">email</p>
+            </div>
+            <nav class="account-nav">
+              <button class="active" data-section="orders">📦 Мои заказы</button>
+              <button data-section="profile">👤 Профиль</button>
+              <button data-section="wishlist">❤️ Избранное</button>
+              <button id="logoutBtn">🚪 Выйти</button>
+            </nav>
+          </aside>
+          <div class="account-content" id="accountContent"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script>
+    initLayout('account');
+
+    const authView = document.getElementById('authView');
+    const dashboardView = document.getElementById('dashboardView');
+
+    function showDashboard() {
+      const user = getCurrentUser();
+      if (!user || user.role === 'admin') {
+        authView.style.display = 'block';
+        dashboardView.style.display = 'none';
+        return;
+      }
+      authView.style.display = 'none';
+      dashboardView.style.display = 'block';
+      document.getElementById('userName').textContent = user.name;
+      document.getElementById('userEmail').textContent = user.email;
+      document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+      renderAccountSection('orders');
+    }
+
+    document.querySelectorAll('.form-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.form-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('loginForm').style.display = tab.dataset.tab === 'login' ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = tab.dataset.tab === 'register' ? 'block' : 'none';
+      });
+    });
+
+    document.getElementById('loginFormEl').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const result = loginUser(fd.get('email'), fd.get('password'));
+      if (result.success) {
+        if (result.isAdmin) {
+          window.location.href = 'admin.html';
+        } else {
+          showToast('С возвращением!', 'success');
+          showDashboard();
+        }
+      } else {
+        showToast(result.message, 'error');
+      }
+    });
+
+    document.getElementById('registerFormEl').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const result = registerUser(fd.get('name'), fd.get('email'), fd.get('password'));
+      if (result.success) {
+        showToast('Аккаунт создан!', 'success');
+        showDashboard();
+      } else {
+        showToast(result.message, 'error');
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      logoutUser();
+      showToast('Вы вышли из аккаунта', 'info');
+      authView.style.display = 'block';
+      dashboardView.style.display = 'none';
+    });
+
+    document.querySelectorAll('.account-nav button[data-section]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.account-nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderAccountSection(btn.dataset.section);
+      });
+    });
+
+    function renderAccountSection(section) {
+      const content = document.getElementById('accountContent');
+      const user = getCurrentUser();
+      if (!user) return;
+
+      if (section === 'orders') {
+        const orders = getOrders().filter(o => o.userId === user.id);
+        content.innerHTML = `
+          <h2>Мои заказы</h2>
+          ${orders.length === 0 ? '<p style="color:var(--text-secondary)">Заказов пока нет. <a href="catalog.html" style="color:var(--accent-light)">Перейти в каталог</a></p>' : `
+            <table class="admin-table">
+              <thead><tr><th>Заказ</th><th>Товары</th><th>Сумма</th><th>Статус</th><th>Дата</th></tr></thead>
+              <tbody>${orders.map(o => `
+                <tr>
+                  <td>${o.id}</td>
+                  <td>${o.items.length} шт.</td>
+                  <td>${formatPrice(o.total)}</td>
+                  <td><span class="status-badge ${o.status}">${STATUS_LABELS[o.status] || o.status}</span></td>
+                  <td>${new Date(o.createdAt).toLocaleDateString('ru-RU')}</td>
+                </tr>
+              `).join('')}</tbody>
+            </table>
+          `}
+        `;
+      } else if (section === 'profile') {
+        content.innerHTML = `
+          <h2>Настройки профиля</h2>
+          <form id="profileForm">
+            <div class="form-group"><label>Имя и фамилия</label><input name="name" value="${user.name}"></div>
+            <div class="form-group"><label>Email</label><input name="email" value="${user.email}" disabled></div>
+            <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
+          </form>
+        `;
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = new FormData(e.target).get('name');
+          setCurrentUser({ ...user, name });
+          document.getElementById('userName').textContent = name;
+          document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+          showToast('Профиль обновлён', 'success');
+        });
+      } else if (section === 'wishlist') {
+        content.innerHTML = `
+          <h2>Избранное</h2>
+          <p style="color:var(--text-secondary)">Список избранного пуст. Загляните в <a href="catalog.html" style="color:var(--accent-light)">каталог</a>.</p>
+        `;
+      }
+    }
+
+    showDashboard();
+  </script>
+</body>
+</html>

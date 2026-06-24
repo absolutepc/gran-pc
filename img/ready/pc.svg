@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#1a2234"/>
+  <rect x="70" y="60" width="260" height="280" rx="12" fill="#111827" stroke="#3b82f6" stroke-width="3"/>
+  <rect x="90" y="80" width="220" height="180" rx="6" fill="#0a0e17"/>
+  <circle cx="200" cy="170" r="40" fill="#3b82f6" opacity="0.2"/>
+  <rect x="120" y="280" width="160" height="40" rx="6" fill="#1f2a40"/>
+  <text x="200" y="370" text-anchor="middle" fill="#06b6d4" font-family="sans-serif" font-size="16" font-weight="700">GAMING PC</text>
+</svg>

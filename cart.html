@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Корзина — PC Market</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <div class="breadcrumbs"><a href="index.html">Главная</a> / <span>Корзина</span></div>
+        <h1>Корзина</h1>
+        <p>Проверьте товары перед оформлением заказа</p>
+      </div>
+    </div>
+
+    <div class="container cart-layout" id="cartContent"></div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/layout.js"></script>
+  <script>
+    initLayout('cart');
+
+    function renderCart() {
+      const cart = getCart();
+      const container = document.getElementById('cartContent');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="cart-empty">
+            <div class="cart-empty-icon">🛒</div>
+            <h2>Корзина пуста</h2>
+            <p>Вы ещё не добавили ни одного товара</p>
+            <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
+          </div>
+        `;
+        return;
+      }
+
+      const subtotal = getCartTotal();
+      const shipping = subtotal >= 50000 ? 0 : 990;
+      const total = subtotal + shipping;
+      const itemCount = cart.reduce((s, i) => s + i.qty, 0);
+
+      container.innerHTML = `
+        <div class="cart-items">
+          ${cart.map(item => `
+            <div class="cart-item">
+              <div class="cart-item-image">${renderProductImg(item.img || DEFAULT_IMG, item.name)}</div>
+              <div class="cart-item-info">
+                <h3>${item.name}</h3>
+                <div class="category">${item.category || ''}</div>
+                ${item.description ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px">${item.description.substring(0, 80)}...</div>` : ''}
+              </div>
+              <div class="cart-item-qty">
+                <button class="qty-btn qty-minus" data-id="${item.id}" data-type="${item.type}">−</button>
+                <span style="min-width:24px;text-align:center;font-weight:600">${item.qty}</span>
+                <button class="qty-btn qty-plus" data-id="${item.id}" data-type="${item.type}">+</button>
+              </div>
+              <div class="cart-item-price">${formatPrice(item.price * item.qty)}</div>
+              <button class="btn btn-danger btn-sm remove-item" data-id="${item.id}" data-type="${item.type}">✕</button>
+            </div>
+          `).join('')}
+        </div>
+        <div class="cart-summary">
+          <h3>Итого по заказу</h3>
+          <div class="summary-row"><span>Подытог (${itemCount} шт.)</span><span>${formatPrice(subtotal)}</span></div>
+          <div class="summary-row"><span>Доставка</span><span>${shipping === 0 ? 'Бесплатно' : formatPrice(shipping)}</span></div>
+          ${shipping > 0 ? `<div class="summary-row" style="font-size:0.8rem;color:var(--cyan)">Бесплатная доставка при заказе от ₽50 000</div>` : ''}
+          <div class="summary-row total"><span>К оплате</span><span>${formatPrice(total)}</span></div>
+          <button class="btn btn-primary" id="checkoutBtn" style="width:100%;margin-top:16px">Оформить заказ</button>
+          <a href="catalog.html" class="btn btn-secondary" style="width:100%;margin-top:8px;text-align:center">Продолжить покупки</a>
+        </div>
+      `;
+
+      container.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = getCart().find(c => c.id === btn.dataset.id && c.type === btn.dataset.type);
+          if (item && item.qty > 1) { updateCartQty(btn.dataset.id, btn.dataset.type, item.qty - 1); renderCart(); }
+        });
+      });
+      container.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = getCart().find(c => c.id === btn.dataset.id && c.type === btn.dataset.type);
+          if (item) { updateCartQty(btn.dataset.id, btn.dataset.type, item.qty + 1); renderCart(); }
+        });
+      });
+      container.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', () => { removeFromCart(btn.dataset.id, btn.dataset.type); renderCart(); showToast('Товар удалён', 'info'); });
+      });
+      document.getElementById('checkoutBtn').addEventListener('click', () => {
+        const user = getCurrentUser();
+        const order = createOrder(getCart(), user);
+        clearCart();
+        renderCart();
+        showToast(`Заказ ${order.id} успешно оформлен!`, 'success');
+      });
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

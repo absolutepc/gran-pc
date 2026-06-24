@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#1a2234"/>
+  <rect x="120" y="100" width="160" height="200" rx="12" fill="#111827" stroke="#ef4444" stroke-width="3"/>
+  <rect x="140" y="120" width="120" height="80" rx="4" fill="#0a0e17"/>
+  <circle cx="200" cy="250" r="30" fill="#ef4444" opacity="0.4"/>
+  <text x="200" y="330" text-anchor="middle" fill="#f1f5f9" font-family="sans-serif" font-size="14" font-weight="600">PSU</text>
+</svg>
