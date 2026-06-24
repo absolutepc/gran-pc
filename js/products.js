@@ -60,8 +60,16 @@ function renderProductColorPicker(product) {
 }
 
 function renderProductGallery(product) {
-  const imgSrc = getProductImg(product);
+  const images = product.images?.length ? product.images : [getProductImg(product)];
+  const main = images[0];
   const initialFilter = product.colors?.[0]?.filter || 'none';
+  const thumbs = images.length > 1
+    ? `<div class="pc-gallery-thumbs">${images.map((src, i) => `
+        <button type="button" class="pc-gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" aria-label="Фото ${i + 1}">
+          ${renderProductImg(src, product.name)}
+        </button>
+      `).join('')}</div>`
+    : '';
 
   return `
     <div class="pc-detail-gallery">
@@ -70,34 +78,76 @@ function renderProductGallery(product) {
         <img
           class="pc-detail-main-img product-detail-main-img"
           id="productDetailMainImg"
-          src="${imgSrc}"
+          src="${main}"
           alt="${product.name}"
           style="filter: ${initialFilter}"
           onerror="this.src='${DEFAULT_IMG}'"
         >
       </div>
+      ${thumbs}
       ${renderProductColorPicker(product)}
     </div>
   `;
+}
+
+function setProductMainImage(container, src, filter = '') {
+  const main = container.querySelector('#productDetailMainImg');
+  if (!main) return;
+  main.src = src;
+  main.style.filter = filter;
+  container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.src === src);
+  });
+}
+
+function syncColorPickerWithImage(container, src) {
+  const picker = container.querySelector('.product-color-picker');
+  if (!picker) return;
+  const colorNameEl = container.querySelector('#selectedColorName');
+  let matched = false;
+
+  picker.querySelectorAll('.color-btn').forEach(btn => {
+    const isMatch = btn.dataset.img === src;
+    btn.classList.toggle('active', isMatch);
+    if (isMatch) {
+      matched = true;
+      if (colorNameEl) colorNameEl.textContent = btn.dataset.name;
+    }
+  });
+
+  if (!matched && colorNameEl && picker.querySelector('.color-btn.active')) {
+    colorNameEl.textContent = picker.querySelector('.color-btn.active').dataset.name;
+  }
+}
+
+function bindProductGallery(container) {
+  container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src = btn.dataset.src;
+      const activeColor = container.querySelector('.product-color-picker .color-btn.active');
+      const filter = activeColor && activeColor.dataset.img === src && activeColor.dataset.filter !== 'none'
+        ? activeColor.dataset.filter
+        : '';
+      setProductMainImage(container, src, filter);
+      syncColorPickerWithImage(container, src);
+    });
+  });
 }
 
 function bindProductColorPicker(container) {
   const picker = container.querySelector('.product-color-picker');
   if (!picker) return;
 
-  const mainImg = container.querySelector('#productDetailMainImg');
-  const colorNameEl = container.querySelector('#selectedColorName');
-
   picker.querySelectorAll('.color-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       picker.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
+      const colorNameEl = container.querySelector('#selectedColorName');
       if (colorNameEl) colorNameEl.textContent = btn.dataset.name;
-      if (mainImg) {
-        mainImg.src = btn.dataset.img;
-        mainImg.style.filter = btn.dataset.filter === 'none' ? '' : btn.dataset.filter;
-      }
+
+      const filter = btn.dataset.filter === 'none' ? '' : btn.dataset.filter;
+      setProductMainImage(container, btn.dataset.img, filter);
     });
   });
 }
@@ -180,6 +230,7 @@ function initProductDetailPage() {
 
   document.title = `${product.name} — PC Market`;
   container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
+  bindProductGallery(container);
   bindProductColorPicker(container);
   bindAddToCartButtons(container);
   updateCartBadge();
