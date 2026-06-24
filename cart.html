@@ -52,23 +52,33 @@
 
       container.innerHTML = `
         <div class="cart-items">
-          ${cart.map(item => `
+          ${cart.map(item => {
+            const colorAttr = encodeURIComponent(item.colorName || '');
+            const colorHtml = item.colorName ? `
+                <div class="cart-item-color">
+                  <span class="cart-color-swatch" style="--swatch:${item.colorHex || '#ccc'}"></span>
+                  <span>Цвет: ${item.colorName}</span>
+                </div>
+              ` : '';
+            return `
             <div class="cart-item">
               <div class="cart-item-image">${renderProductImg(item.img || DEFAULT_IMG, item.name)}</div>
               <div class="cart-item-info">
                 <h3>${item.name}</h3>
                 <div class="category">${item.category || ''}</div>
+                ${colorHtml}
                 ${item.description ? `<div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px">${item.description.substring(0, 80)}...</div>` : ''}
               </div>
               <div class="cart-item-qty">
-                <button class="qty-btn qty-minus" data-id="${item.id}" data-type="${item.type}">−</button>
+                <button class="qty-btn qty-minus" data-id="${item.id}" data-type="${item.type}" data-color="${colorAttr}">−</button>
                 <span style="min-width:24px;text-align:center;font-weight:600">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-id="${item.id}" data-type="${item.type}">+</button>
+                <button class="qty-btn qty-plus" data-id="${item.id}" data-type="${item.type}" data-color="${colorAttr}">+</button>
               </div>
               <div class="cart-item-price">${formatPrice(item.price * item.qty)}</div>
-              <button class="btn btn-danger btn-sm remove-item" data-id="${item.id}" data-type="${item.type}">✕</button>
+              <button class="btn btn-danger btn-sm remove-item" data-id="${item.id}" data-type="${item.type}" data-color="${colorAttr}">✕</button>
             </div>
-          `).join('')}
+          `;
+          }).join('')}
         </div>
         <div class="cart-summary">
           <h3>Итого по заказу</h3>
@@ -83,18 +93,31 @@
 
       container.querySelectorAll('.qty-minus').forEach(btn => {
         btn.addEventListener('click', () => {
-          const item = getCart().find(c => c.id === btn.dataset.id && c.type === btn.dataset.type);
-          if (item && item.qty > 1) { updateCartQty(btn.dataset.id, btn.dataset.type, item.qty - 1); renderCart(); }
+          const colorName = decodeURIComponent(btn.dataset.color || '');
+          const item = findCartItem(getCart(), btn.dataset.id, btn.dataset.type, colorName);
+          if (item && item.qty > 1) {
+            updateCartQty(btn.dataset.id, btn.dataset.type, item.qty - 1, colorName);
+            renderCart();
+          }
         });
       });
       container.querySelectorAll('.qty-plus').forEach(btn => {
         btn.addEventListener('click', () => {
-          const item = getCart().find(c => c.id === btn.dataset.id && c.type === btn.dataset.type);
-          if (item) { updateCartQty(btn.dataset.id, btn.dataset.type, item.qty + 1); renderCart(); }
+          const colorName = decodeURIComponent(btn.dataset.color || '');
+          const item = findCartItem(getCart(), btn.dataset.id, btn.dataset.type, colorName);
+          if (item) {
+            updateCartQty(btn.dataset.id, btn.dataset.type, item.qty + 1, colorName);
+            renderCart();
+          }
         });
       });
       container.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', () => { removeFromCart(btn.dataset.id, btn.dataset.type); renderCart(); showToast('Товар удалён', 'info'); });
+        btn.addEventListener('click', () => {
+          const colorName = decodeURIComponent(btn.dataset.color || '');
+          removeFromCart(btn.dataset.id, btn.dataset.type, colorName);
+          renderCart();
+          showToast('Товар удалён', 'info');
+        });
       });
       document.getElementById('checkoutBtn').addEventListener('click', () => {
         const user = getCurrentUser();

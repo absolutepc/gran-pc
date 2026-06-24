@@ -56,6 +56,12 @@ const DEFAULT_PRODUCTS = [
       { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
       { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
     ],
+    images: [
+      'img/components/case/D400-B.png',
+      'img/components/case/D400-W.png',
+      'img/components/case/D300 Black.png',
+      'img/components/case/D300 White.png',
+    ],
   },
   { id: 'p9', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, img: 'img/categories/peripherals.svg', description: 'Беспроводная игровая мышь, 60 г', stock: 25, wired: 'Беспроводной', specs: { dpi: '32000', weight: '60 г' } },
   { id: 'p10', name: 'Keychron Q1 Pro', category: 'peripherals', price: 19990, img: 'img/categories/peripherals.svg', description: 'Механическая клавиатура, QMK/VIA', badge: 'new', stock: 20, wired: 'Bluetooth', specs: { switches: 'Gateron', layout: '75%' } },
@@ -377,6 +383,25 @@ function buildFullDescription(product) {
   return parts.join(' ');
 }
 
+function uniqueImages(list) {
+  const seen = new Set();
+  return list.filter(src => {
+    if (!src || seen.has(src)) return false;
+    seen.add(src);
+    return true;
+  });
+}
+
+function buildProductImages(product) {
+  if (Array.isArray(product.images) && product.images.length) {
+    return uniqueImages(product.images);
+  }
+  const main = getProductImg(product);
+  const fromColors = (product.colors || []).map(c => c.img).filter(Boolean);
+  const built = uniqueImages([main, ...fromColors]);
+  return built.length ? built : [DEFAULT_IMG];
+}
+
 function buildDefaultColors(product) {
   const baseImg = getProductImg(product);
   const set = DEFAULT_COLOR_SETS[product.category] || DEFAULT_COLOR_SETS.default;
@@ -388,6 +413,7 @@ function enrichProduct(product, def) {
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
+  merged.images = buildProductImages(merged);
   PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
     if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });
