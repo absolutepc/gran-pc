@@ -417,15 +417,19 @@ function uniqueImages(list) {
 }
 
 function buildItemImages(item, def) {
-  const explicit = Array.isArray(item.images) && item.images.length
-    ? item.images
-    : (Array.isArray(def?.images) && def.images.length ? def.images : []);
-  if (explicit.length) {
-    return uniqueImages(explicit);
+  const fromItem = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
+  const fromDef = Array.isArray(def?.images) ? def.images.filter(Boolean) : [];
+
+  if (fromItem.length > 1) {
+    return uniqueImages(fromItem);
   }
+  if (fromDef.length > 1) {
+    return uniqueImages(fromDef);
+  }
+
   const main = getProductImg(item);
-  const fromColors = (item.colors || []).map(c => c.img).filter(Boolean);
-  const built = uniqueImages([main, ...fromColors]);
+  const fromColors = (item.colors || def?.colors || []).map(c => c.img).filter(Boolean);
+  const built = uniqueImages([...fromItem, ...fromDef, main, ...fromColors]);
   return built.length ? built : [DEFAULT_IMG];
 }
 
@@ -490,10 +494,18 @@ function enrichReadyPC(pc) {
 
 function getReadyPCs() {
   initStore();
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
-  const pcs = Array.isArray(data.readyPCs) ? data.readyPCs : [];
-  const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
-  return list.sort((a, b) => a.price - b.price);
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
+    const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
+    return list.sort((a, b) => a.price - b.price);
+  } catch (e) {
+    console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);
+  }
 }
 
 function getReadyPCById(id) {

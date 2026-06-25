@@ -9,7 +9,11 @@
 <body>
   <div id="site-header"></div>
 
-  <main id="pcDetailContent"></main>
+  <main id="pcDetailContent">
+    <div class="container pc-detail-page" style="text-align:center;padding:80px 24px">
+      <p style="color:var(--text-secondary)">Загрузка сборки...</p>
+    </div>
+  </main>
 
   <div id="site-footer"></div>
 
@@ -18,6 +22,21 @@
   <script src="js/layout.js"></script>
   <script src="js/gallery.js"></script>
   <script src="js/ready-pcs.js"></script>
-  <script>initLayout('ready-pcs');</script>
+  <script>
+    initLayout('ready-pcs');
+    if (typeof initReadyPCDetailPage === 'function') {
+      initReadyPCDetailPage();
+    } else {
+      document.getElementById('pcDetailContent').innerHTML = `
+        <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
+          <h2>Не удалось загрузить страницу сборки</h2>
+          <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">
+            Файл js/ready-pcs.js не найден. Выполните git pull origin master и откройте сайт через Live Server.
+          </p>
+          <a href="ready-pcs.html" class="btn btn-primary">К готовым ПК</a>
+        </div>
+      `;
+    }
+  </script>
 </body>
 </html>

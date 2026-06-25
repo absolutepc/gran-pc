@@ -110,32 +110,46 @@ function initReadyPCsPage() {
 }
 
 function initReadyPCDetailPage() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
   const container = document.getElementById('pcDetailContent');
   if (!container) return;
 
-  if (!id) {
-    container.innerHTML = '<div class="container pc-detail-page" style="text-align:center"><h2>Сборка не указана</h2><a href="ready-pcs.html" class="btn btn-primary">К готовым ПК</a></div>';
-    return;
-  }
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
 
-  const pc = getReadyPCById(id);
-  if (!pc) {
-    container.innerHTML = '<div class="container pc-detail-page" style="text-align:center"><h2>ПК не найден</h2><a href="ready-pcs.html" class="btn btn-primary">К готовым ПК</a></div>';
-    return;
-  }
+    if (!id) {
+      container.innerHTML = '<div class="container pc-detail-page" style="text-align:center"><h2>Сборка не указана</h2><a href="ready-pcs.html" class="btn btn-primary">К готовым ПК</a></div>';
+      return;
+    }
 
-  document.title = `${pc.name} — PC Market`;
-  container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
-  bindItemGalleryAndColor(container, GALLERY_UI.readyPc);
-  bindAddToCartButtons(container);
-  updateCartBadge();
+    const pc = getReadyPCById(id);
+    if (!pc) {
+      container.innerHTML = `<div class="container pc-detail-page" style="text-align:center"><h2>ПК не найден</h2><p style="color:var(--text-secondary);margin:12px 0 24px">ID: ${escapeHtml(id)}</p><a href="ready-pcs.html" class="btn btn-primary">К готовым ПК</a></div>`;
+      return;
+    }
+
+    document.title = `${pc.name} — PC Market`;
+    container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
+    bindItemGalleryAndColor(container, GALLERY_UI.readyPc);
+    bindAddToCartButtons(container);
+    updateCartBadge();
+  } catch (err) {
+    console.error('PC Market: ошибка страницы готового ПК', err);
+    container.innerHTML = `
+      <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
+        <h2>Не удалось загрузить страницу сборки</h2>
+        <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">
+          ${escapeHtml(err.message || String(err))}. Убедитесь, что файлы js/gallery.js и js/ready-pcs.js загружены,
+          и откройте сайт через Live Server.
+        </p>
+        <a href="ready-pcs.html" class="btn btn-primary">К готовым ПК</a>
+      </div>
+    `;
+  }
 }
 
 function bootReadyPCs() {
   if (document.getElementById('readyPCsGrid')) initReadyPCsPage();
-  if (document.getElementById('pcDetailContent')) initReadyPCDetailPage();
 }
 
 if (document.readyState === 'loading') {

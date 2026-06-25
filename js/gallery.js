@@ -16,27 +16,30 @@ const GALLERY_UI = {
 };
 
 function getGalleryItems(item) {
-  const images = item.images || [];
-  if (images.length > 1) {
-    return images.map(src => ({ src, filter: '', colorName: '' }));
+  const entries = [];
+  const seen = new Set();
+
+  function addEntry(src, filter = '', colorName = '') {
+    const key = `${src}|${filter}|${colorName}`;
+    if (!src || seen.has(key)) return;
+    seen.add(key);
+    entries.push({ src, filter, colorName });
   }
 
-  const colors = item.colors || [];
-  if (colors.length > 1) {
-    const seen = new Set();
-    return colors.map(color => ({
-      src: color.img || getProductImg(item),
-      filter: color.filter && color.filter !== 'none' ? color.filter : '',
-      colorName: color.name || '',
-    })).filter(entry => {
-      const key = `${entry.src}|${entry.filter}|${entry.colorName}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+  (item.images || []).forEach(src => addEntry(src, '', ''));
+  (item.colors || []).forEach(color => {
+    addEntry(
+      color.img || getProductImg(item),
+      color.filter && color.filter !== 'none' ? color.filter : '',
+      color.name || ''
+    );
+  });
+
+  if (!entries.length) {
+    addEntry(getProductImg(item), '', '');
   }
 
-  return [{ src: getProductImg(item), filter: '', colorName: '' }];
+  return entries;
 }
 
 function renderGalleryThumb(item, itemName, index, isActive) {
@@ -44,17 +47,18 @@ function renderGalleryThumb(item, itemName, index, isActive) {
   const safeName = escapeHtml(itemName);
   const safeSrc = escapeHtml(item.src);
   const safeColorName = escapeHtml(item.colorName);
+  const safeFilter = escapeHtml(item.filter || '');
   return `
     <button
       type="button"
       class="pc-gallery-thumb ${isActive ? 'active' : ''}"
       data-src="${safeSrc}"
-      data-filter="${escapeHtml(item.filter || '')}"
+      data-filter="${safeFilter}"
       data-color-name="${safeColorName}"
       aria-label="Фото ${index + 1}${item.colorName ? `: ${item.colorName}` : ''}"
     >
       <img
-        src="${safeSrc}"
+        src="${item.src}"
         alt="${safeName}"
         style="${filterStyle}"
         loading="lazy"
@@ -79,7 +83,7 @@ function renderItemColorPicker(item, ui) {
             class="color-btn ${i === 0 ? 'active' : ''}"
             data-index="${i}"
             data-name="${escapeHtml(color.name)}"
-            data-img="${escapeHtml(color.img || getProductImg(item))}"
+            data-img="${color.img || getProductImg(item)}"
             data-filter="${escapeHtml(color.filter || 'none')}"
             style="--swatch: ${color.hex}"
             title="${escapeHtml(color.name)}"
@@ -107,7 +111,7 @@ function renderItemGallery(item, ui) {
         <img
           class="pc-detail-main-img"
           id="${ui.mainImgId}"
-          src="${escapeHtml(initial.src)}"
+          src="${initial.src}"
           alt="${escapeHtml(item.name)}"
           style="filter: ${filterValue}"
           onerror="this.src='${DEFAULT_IMG}'"
@@ -173,6 +177,7 @@ function bindItemGallery(container, ui) {
   gallery.addEventListener('click', (event) => {
     const btn = event.target.closest('.pc-gallery-thumb');
     if (!btn || !gallery.contains(btn)) return;
+    event.preventDefault();
     setGalleryMainImage(container, btn.dataset.src, btn.dataset.filter || '', btn.dataset.colorName || '', ui);
   });
 }
