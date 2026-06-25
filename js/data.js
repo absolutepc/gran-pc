@@ -346,6 +346,15 @@ function renderProductImg(img, alt = '') {
   return `<img src="${src}" alt="${safeAlt}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
 }
 
+function escapeHtml(text) {
+  if (text == null) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function initStore() {
   if (!localStorage.getItem(STORE_KEY)) {
     localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
@@ -426,9 +435,17 @@ function enrichProduct(product, def) {
 
 function getProducts() {
   initStore();
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
-  const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
-  return mergeDefaultAttributes(products);
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
+    return mergeDefaultAttributes(products);
+  } catch (e) {
+    console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return mergeDefaultAttributes(DEFAULT_PRODUCTS);
+  }
 }
 
 function getEnrichedProductById(id) {

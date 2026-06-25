@@ -9,7 +9,11 @@
 <body>
   <div id="site-header"></div>
 
-  <main id="productDetailContent"></main>
+  <main id="productDetailContent">
+    <div class="container pc-detail-page" style="text-align:center;padding:80px 24px">
+      <p style="color:var(--text-secondary)">Загрузка товара...</p>
+    </div>
+  </main>
 
   <div id="site-footer"></div>
 
@@ -19,26 +23,19 @@
   <script src="js/products.js"></script>
   <script>
     initLayout('catalog');
-    try {
-      if (typeof initProductDetailPage !== 'function') {
-        throw new Error('Не загружен файл js/products.js');
-      }
+    if (typeof initProductDetailPage === 'function') {
       initProductDetailPage();
-    } catch (err) {
-      console.error(err);
-      const container = document.getElementById('productDetailContent');
-      if (container) {
-        container.innerHTML = `
-          <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
-            <h2>Не удалось загрузить страницу товара</h2>
-            <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">
-              ${err.message || err}. Убедитесь, что вы скачали последнюю версию проекта
-              и открываете сайт через локальный сервер (Live Server), а не двойным кликом по HTML-файлу.
-            </p>
-            <a href="catalog.html" class="btn btn-primary">Вернуться в каталог</a>
-          </div>
-        `;
-      }
+    } else {
+      document.getElementById('productDetailContent').innerHTML = `
+        <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
+          <h2>Не удалось загрузить страницу товара</h2>
+          <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">
+            Файл js/products.js не найден. Убедитесь, что вы скачали последнюю версию проекта
+            и открываете сайт через Live Server из корневой папки проекта.
+          </p>
+          <a href="catalog.html" class="btn btn-primary">Вернуться в каталог</a>
+        </div>
+      `;
     }
   </script>
 </body>

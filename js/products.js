@@ -13,7 +13,7 @@ function renderProductSpecsTable(product) {
     });
   }
 
-  rows.push({ label: 'На складе', value: `${product.stock ?? 0} шт.` });
+  rows.push({ label: 'На складе', value: `${product.stock != null ? product.stock : 0} шт.` });
   rows.push({ label: 'Категория', value: CATEGORY_LABELS[product.category] || product.category });
 
   if (!rows.length) {
@@ -58,18 +58,21 @@ function getProductGalleryItems(product) {
 
 function renderGalleryThumb(item, productName, index, isActive) {
   const filterStyle = item.filter ? `filter:${item.filter};` : '';
+  const safeName = escapeHtml(productName);
+  const safeSrc = escapeHtml(item.src);
+  const safeColorName = escapeHtml(item.colorName);
   return `
     <button
       type="button"
       class="pc-gallery-thumb ${isActive ? 'active' : ''}"
-      data-src="${item.src}"
-      data-filter="${item.filter || ''}"
-      data-color-name="${item.colorName || ''}"
+      data-src="${safeSrc}"
+      data-filter="${escapeHtml(item.filter || '')}"
+      data-color-name="${safeColorName}"
       aria-label="Фото ${index + 1}${item.colorName ? `: ${item.colorName}` : ''}"
     >
       <img
-        src="${item.src}"
-        alt="${productName}"
+        src="${safeSrc}"
+        alt="${safeName}"
         style="${filterStyle}"
         loading="lazy"
         onerror="this.src='${DEFAULT_IMG}'"
@@ -122,7 +125,7 @@ function renderProductGallery(product) {
           class="pc-detail-main-img product-detail-main-img"
           id="productDetailMainImg"
           src="${initial.src}"
-          alt="${product.name}"
+          alt="${escapeHtml(product.name)}"
           style="filter: ${filterValue}"
           onerror="this.src='${DEFAULT_IMG}'"
         >
@@ -215,12 +218,16 @@ function bindProductColorPicker(container) {
 
 function renderProductDetail(product) {
   const categoryLabel = CATEGORY_LABELS[product.category] || product.category;
+  const safeName = escapeHtml(product.name);
+  const safeCategory = escapeHtml(categoryLabel);
+  const safeDescription = escapeHtml(product.description || '');
+  const safeFullDescription = escapeHtml(product.fullDescription || product.description || '');
   const oldPriceHtml = product.oldPrice
     ? `<span class="old-price">${formatPrice(product.oldPrice)}</span>`
     : '';
   const attrTags = PRODUCT_ATTRIBUTE_FIELDS
     .filter(f => product[f])
-    .map(f => `<span class="product-attr-tag">${product[f]}</span>`)
+    .map(f => `<span class="product-attr-tag">${escapeHtml(product[f])}</span>`)
     .join('');
 
   return `
@@ -230,27 +237,27 @@ function renderProductDetail(product) {
         <div class="breadcrumbs">
           <a href="index.html">Главная</a> /
           <a href="catalog.html">Каталог</a> /
-          <a href="catalog.html?cat=${product.category}">${categoryLabel}</a> /
-          <span>${product.name}</span>
+          <a href="catalog.html?cat=${escapeHtml(product.category)}">${safeCategory}</a> /
+          <span>${safeName}</span>
         </div>
-        <div class="product-category">${categoryLabel}</div>
-        <h1>${product.name}</h1>
-        <p class="pc-detail-desc">${product.description || ''}</p>
+        <div class="product-category">${safeCategory}</div>
+        <h1>${safeName}</h1>
+        <p class="pc-detail-desc">${safeDescription}</p>
         ${attrTags ? `<div class="product-attrs product-detail-attrs">${attrTags}</div>` : ''}
         <div class="product-price pc-detail-price">${formatPrice(product.price)}${oldPriceHtml}</div>
         <div class="product-stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
           ${product.stock > 0 ? `✓ В наличии: ${product.stock} шт.` : 'Нет в наличии'}
         </div>
         <div class="pc-detail-actions">
-          <button class="btn btn-primary btn-lg add-to-cart-btn" data-id="${product.id}" data-type="product">Добавить в корзину</button>
-          <a href="catalog.html?cat=${product.category}" class="btn btn-secondary btn-lg">← К каталогу</a>
+          <button class="btn btn-primary btn-lg add-to-cart-btn" data-id="${escapeHtml(product.id)}" data-type="product">Добавить в корзину</button>
+          <a href="catalog.html?cat=${escapeHtml(product.category)}" class="btn btn-secondary btn-lg">← К каталогу</a>
         </div>
       </div>
     </div>
 
     <section class="pc-detail-section">
       <h2>Описание</h2>
-      <p class="pc-full-desc">${product.fullDescription || product.description || ''}</p>
+      <p class="pc-full-desc">${safeFullDescription}</p>
     </section>
 
     <section class="pc-detail-section">
@@ -258,6 +265,16 @@ function renderProductDetail(product) {
       <p class="section-sub">Подробные технические параметры компонента</p>
       ${renderProductSpecsTable(product)}
     </section>
+  `;
+}
+
+function showProductPageError(container, message) {
+  container.innerHTML = `
+    <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
+      <h2>Не удалось загрузить страницу товара</h2>
+      <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">${escapeHtml(message)}</p>
+      <a href="catalog.html" class="btn btn-primary">Вернуться в каталог</a>
+    </div>
   `;
 }
 
@@ -271,35 +288,53 @@ function initProductDetailPage() {
   const container = document.getElementById('productDetailContent');
   if (!container) return;
 
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
 
-  if (!id) {
-    container.innerHTML = `
-      <div class="container pc-detail-page" style="text-align:center">
-        <h2>Товар не указан</h2>
-        <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
-      </div>
-    `;
-    return;
+    if (!id) {
+      container.innerHTML = `
+        <div class="container pc-detail-page" style="text-align:center">
+          <h2>Товар не указан</h2>
+          <p style="color:var(--text-secondary);margin:12px 0 24px">Откройте товар из каталога через кнопку «Подробнее».</p>
+          <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
+        </div>
+      `;
+      return;
+    }
+
+    const product = resolveProductById(id);
+    if (!product) {
+      container.innerHTML = `
+        <div class="container pc-detail-page" style="text-align:center">
+          <h2>Товар не найден</h2>
+          <p style="color:var(--text-secondary);margin:12px 0 24px">ID: ${escapeHtml(id)}</p>
+          <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
+        </div>
+      `;
+      return;
+    }
+
+    document.title = `${product.name} — PC Market`;
+    container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
+    bindProductGallery(container);
+    bindProductColorPicker(container);
+    bindAddToCartButtons(container);
+    updateCartBadge();
+  } catch (err) {
+    console.error('PC Market: ошибка страницы товара', err);
+    showProductPageError(container, err.message || String(err));
   }
+}
 
-  const product = resolveProductById(id);
-  if (!product) {
-    container.innerHTML = `
-      <div class="container pc-detail-page" style="text-align:center">
-        <h2>Товар не найден</h2>
-        <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
-      </div>
-    `;
-    return;
-  }
+function bootProductDetailPage() {
+  if (!document.getElementById('productDetailContent')) return;
+  initProductDetailPage();
+}
 
-  document.title = `${product.name} — PC Market`;
-  container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
-  bindProductGallery(container);
-  bindProductColorPicker(container);
-  bindAddToCartButtons(container);
-  updateCartBadge();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootProductDetailPage);
+} else {
+  bootProductDetailPage();
 }
 
