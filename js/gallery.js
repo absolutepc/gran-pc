@@ -15,31 +15,47 @@ const GALLERY_UI = {
   },
 };
 
-function getGalleryItems(item) {
-  const entries = [];
+function uniqueGalleryImages(list) {
   const seen = new Set();
-
-  function addEntry(src, filter = '', colorName = '') {
-    const key = `${src}|${filter}|${colorName}`;
-    if (!src || seen.has(key)) return;
-    seen.add(key);
-    entries.push({ src, filter, colorName });
-  }
-
-  (item.images || []).forEach(src => addEntry(src, '', ''));
-  (item.colors || []).forEach(color => {
-    addEntry(
-      color.img || getProductImg(item),
-      color.filter && color.filter !== 'none' ? color.filter : '',
-      color.name || ''
-    );
+  return list.filter(src => {
+    if (!src || seen.has(src)) return false;
+    seen.add(src);
+    return true;
   });
+}
 
-  if (!entries.length) {
-    addEntry(getProductImg(item), '', '');
+function getGalleryInitial(item, galleryItems) {
+  if (galleryItems.length) return galleryItems[0];
+
+  const firstColor = item.colors?.[0];
+  if (firstColor) {
+    return {
+      src: firstColor.img || getProductImg(item),
+      filter: firstColor.filter && firstColor.filter !== 'none' ? firstColor.filter : '',
+      colorName: firstColor.name || '',
+    };
   }
 
-  return entries;
+  const src = item.images?.[0] || getProductImg(item);
+  return { src, filter: '', colorName: '' };
+}
+
+function getGalleryItems(item) {
+  const images = uniqueGalleryImages((item.images || []).filter(Boolean));
+  const hasColorPicker = (item.colors || []).length > 1;
+
+  // Несколько фото — только они в миниатюрах; цвета переключаются отдельным блоком
+  if (images.length > 1) {
+    return images.map(src => ({ src, filter: '', colorName: '' }));
+  }
+
+  // Один снимок и выбор цвета — миниатюры не показываем, чтобы не дублировать picker
+  if (hasColorPicker) {
+    return [];
+  }
+
+  const src = images[0] || getProductImg(item);
+  return [{ src, filter: '', colorName: '' }];
 }
 
 function renderGalleryThumb(item, itemName, index, isActive) {
@@ -97,7 +113,7 @@ function renderItemColorPicker(item, ui) {
 
 function renderItemGallery(item, ui) {
   const galleryItems = getGalleryItems(item);
-  const initial = galleryItems[0];
+  const initial = getGalleryInitial(item, galleryItems);
   const initialFilter = initial.filter || item.colors?.[0]?.filter || 'none';
   const filterValue = initialFilter === 'none' ? '' : initialFilter;
   const thumbs = galleryItems.length > 1
@@ -117,8 +133,8 @@ function renderItemGallery(item, ui) {
           onerror="this.src='${DEFAULT_IMG}'"
         >
       </div>
-      ${thumbs}
       ${renderItemColorPicker(item, ui)}
+      ${thumbs}
     </div>
   `;
 }
