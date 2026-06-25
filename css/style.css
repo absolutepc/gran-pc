@@ -1972,7 +1972,8 @@ main {
   transition: filter 0.35s ease, opacity 0.2s ease;
 }
 
-.product-color-picker {
+.product-color-picker,
+.pc-color-picker {
   margin-top: 16px;
   padding: 16px;
   background: var(--bg-card);

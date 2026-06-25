@@ -455,6 +455,8 @@ function renderReadyPCsAdmin() {
           </div>
           <div class="form-group"><label>Описание (краткое)</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание</label><textarea name="fullDescription" rows="4" placeholder="Текст на странице «Подробнее»"></textarea></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|путь_к_изображению&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png"></textarea></div>
+          <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div class="form-group">
             <label>Комплектация (каждый пункт с новой строки)</label>
             <textarea name="specs" rows="5" placeholder="RTX 4070 Super&#10;Ryzen 7 7700&#10;32 ГБ DDR5"></textarea>
@@ -515,6 +517,8 @@ function fillReadyPCForm(form, pc) {
   form.img.value = pc ? getProductImg(pc) : 'img/ready/pc.svg';
   form.description.value = pc?.description || '';
   form.fullDescription.value = pc?.fullDescription || '';
+  form.colors.value = formatProductColors(pc?.colors);
+  form.images.value = formatProductImages(pc?.images);
   form.specs.value = (pc?.specs || []).join('\n');
   form.perf_gaming.value = pc?.performance?.gaming ?? 50;
   form.perf_work.value = pc?.performance?.work ?? 50;
@@ -522,13 +526,17 @@ function fillReadyPCForm(form, pc) {
 }
 
 function buildReadyPCFromForm(data, existing) {
+  const colors = parseProductColors(data.colors);
+  const images = parseProductImages(data.images);
+  const img = data.img.trim() || 'img/ready/pc.svg';
   return {
     name: data.name.trim(),
     price: +data.price,
-    img: data.img.trim() || 'img/ready/pc.svg',
+    img,
     description: data.description.trim(),
     fullDescription: (data.fullDescription || data.description || '').trim(),
-    images: existing?.images?.length ? existing.images : [data.img.trim() || 'img/ready/pc.svg'],
+    images: images || existing?.images || [img],
+    ...(colors ? { colors } : {}),
     components: existing?.components?.length ? existing.components : (DEFAULT_READY_PCS.find(d => d.id === existing?.id)?.components || []),
     badge: data.badge || undefined,
     specs: parseReadyPCSpecs(data.specs),

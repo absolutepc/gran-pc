@@ -77,12 +77,27 @@ const DEFAULT_PRODUCTS = [
   { id: 'p20', name: 'NVIDIA GeForce RTX 5090', category: 'gpu', price: 249990, img: 'img/categories/gpu.svg', description: '32 ГБ GDDR7, PCIe 5.0', badge: 'new', stock: 3, pcie: 'PCIe 5.0', specs: { vram: '32 ГБ', tdp: '575 Вт' } },
 ];
 
+const DEFAULT_READY_PC_COLORS = [
+  { name: 'Чёрный', hex: '#1a1a1a', filter: 'none' },
+  { name: 'Белый', hex: '#f5f5f5', filter: 'brightness(1.12)' },
+  { name: 'RGB', hex: '#8b5cf6', filter: 'hue-rotate(45deg) saturate(1.35)' },
+];
+
 const DEFAULT_READY_PCS = [
   {
-    id: 'rpc1', name: 'Игровой Зверь Pro', price: 189990, img: 'img/ready/pc.svg', badge: 'sale',
+    id: 'rpc1', name: 'Игровой Зверь Pro', price: 189990, img: 'img/components/case/D400-B.png', badge: 'sale',
     description: 'Топовый игровой ПК для 4K на максимальных настройках',
     fullDescription: 'Игровой Зверь Pro — флагманская сборка на Ryzen 7 7800X3D и RTX 4080 Super. Ray tracing, DLSS 3 и комфортный 4K Ultra без компромиссов. Идеален для требовательных AAA-проектов и VR.',
-    images: ['img/ready/pc.svg'],
+    images: [
+      'img/components/case/D400-B.png',
+      'img/components/case/D400-W.png',
+      'img/ready/pc.svg',
+    ],
+    colors: [
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/ready/pc.svg', filter: 'hue-rotate(45deg) saturate(1.35)' },
+    ],
     specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
     components: [
@@ -401,17 +416,22 @@ function uniqueImages(list) {
   });
 }
 
-function buildProductImages(product, def) {
-  const explicit = Array.isArray(product.images) && product.images.length
-    ? product.images
+function buildItemImages(item, def) {
+  const explicit = Array.isArray(item.images) && item.images.length
+    ? item.images
     : (Array.isArray(def?.images) && def.images.length ? def.images : []);
   if (explicit.length) {
     return uniqueImages(explicit);
   }
-  const main = getProductImg(product);
-  const fromColors = (product.colors || []).map(c => c.img).filter(Boolean);
+  const main = getProductImg(item);
+  const fromColors = (item.colors || []).map(c => c.img).filter(Boolean);
   const built = uniqueImages([main, ...fromColors]);
   return built.length ? built : [DEFAULT_IMG];
+}
+
+function buildDefaultReadyPCColors(pc) {
+  const baseImg = getProductImg(pc);
+  return DEFAULT_READY_PC_COLORS.map(c => ({ ...c, img: c.img || baseImg }));
 }
 
 function buildDefaultColors(product) {
@@ -425,7 +445,7 @@ function enrichProduct(product, def) {
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
-  merged.images = buildProductImages(merged, def);
+  merged.images = buildItemImages(merged, def);
   PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
     if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });
@@ -457,12 +477,12 @@ function enrichReadyPC(pc) {
   if (!pc) return null;
   const tmpl = DEFAULT_READY_PCS.find(d => d.id === pc.id);
   const merged = tmpl ? { ...tmpl, ...pc } : { ...pc };
+  merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
+    .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
+  merged.images = buildItemImages(merged, tmpl);
   return {
     ...merged,
     fullDescription: merged.fullDescription || merged.description || '',
-    images: Array.isArray(merged.images) && merged.images.length
-      ? merged.images
-      : [merged.img || 'img/ready/pc.svg'],
     components: Array.isArray(merged.components) ? merged.components : [],
     specs: merged.specs || [],
   };
