@@ -89,7 +89,87 @@ function getConfigCompatibilityIssues(config) {
 }
 
 function getCasePreviewImg(config) {
-  return config.case?.previewImg || config.case?.img || 'img/hero-pc.svg';
+  const caseItem = config.case;
+  if (!caseItem) return 'img/hero-pc.svg';
+  return caseItem.previewImg || caseItem.img || 'img/hero-pc.svg';
+}
+
+function configImageUrl(path) {
+  if (!path) return DEFAULT_IMG;
+  try {
+    return encodeURI(path);
+  } catch {
+    return path;
+  }
+}
+
+function renderConfigPreview() {
+  const preview = document.getElementById('configPreview');
+  if (!preview) return;
+
+  const caseImg = configImageUrl(getCasePreviewImg(selectedConfig));
+  const perf = calculateConfigPerformance(selectedConfig);
+  const badges = ['gpu', 'cpu', 'ram'].map(key => {
+    const comp = selectedConfig[key];
+    if (!comp) return '';
+    const icon = CONFIG_CATEGORY_IMAGES[key];
+    return `
+      <div class="config-preview-badge" title="${escapeHtml(CONFIG_LABELS[key])}: ${escapeHtml(comp.name)}">
+        <img src="${icon}" alt="">
+        <span>${escapeHtml(comp.name.split(' ').slice(-2).join(' '))}</span>
+      </div>
+    `;
+  }).join('');
+
+  const existingImg = preview.querySelector('.config-preview-img');
+  if (existingImg) {
+    let shouldUpdate = true;
+    try {
+      shouldUpdate = existingImg.src !== new URL(caseImg, window.location.href).href;
+    } catch {
+      shouldUpdate = (existingImg.getAttribute('src') || '') !== caseImg;
+    }
+    if (shouldUpdate) existingImg.src = caseImg;
+    const badgesWrap = preview.querySelector('.config-preview-badges');
+    if (badgesWrap) badgesWrap.innerHTML = badges;
+
+    const perfWrap = preview.querySelector('.config-preview-perf');
+    if (perfWrap) {
+      perfWrap.innerHTML = `
+        <h4>Оценка конфигурации</h4>
+        ${Object.entries(perf).map(([key, val]) => `
+          <div class="perf-bar-row">
+            <div class="perf-bar-header">
+              <span>${PERFORMANCE_LABELS[key] || key}</span>
+              <span>${val}%</span>
+            </div>
+            <div class="perf-bar-track"><div class="perf-bar-fill" style="width:${val}%"></div></div>
+          </div>
+        `).join('')}
+      `;
+    }
+    return;
+  }
+
+  preview.innerHTML = `
+    <div class="config-preview-visual">
+      <div class="config-preview-glow"></div>
+      <img class="config-preview-img" src="${caseImg}" alt="Превью сборки" onerror="this.src='img/hero-pc.svg'">
+      <div class="config-preview-badges">${badges}</div>
+    </div>
+    <div class="config-preview-perf">
+      <h4>Оценка конфигурации</h4>
+      ${Object.entries(perf).map(([key, val]) => `
+        <div class="perf-bar-row">
+          <div class="perf-bar-header">
+            <span>${PERFORMANCE_LABELS[key] || key}</span>
+            <span>${val}%</span>
+          </div>
+          <div class="perf-bar-track"><div class="perf-bar-fill" style="width:${val}%"></div></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 function renderConfigBadges(opt) {
@@ -110,7 +190,7 @@ function renderPriceDelta(category, opt) {
 }
 
 function renderComponentCard(category, opt, isSelected) {
-  const img = opt.img || CONFIG_CATEGORY_IMAGES[category] || DEFAULT_IMG;
+  const img = configImageUrl(opt.img || CONFIG_CATEGORY_IMAGES[category] || DEFAULT_IMG);
   const specTags = (opt.specs || '').split(/[,/|]/).map(s => s.trim()).filter(Boolean);
   return `
     <label class="config-option-card ${isSelected ? 'selected' : ''}" data-category="${category}" data-id="${opt.id}">
@@ -118,7 +198,7 @@ function renderComponentCard(category, opt, isSelected) {
       <span class="config-option-check" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
       ${renderConfigBadges(opt)}
       <div class="config-option-image">
-        <img src="${escapeHtml(img)}" alt="" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">
+        <img src="${img}" alt="" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">
       </div>
       <div class="config-option-body">
         <div class="config-option-name">${escapeHtml(opt.name)}</div>
@@ -131,45 +211,6 @@ function renderComponentCard(category, opt, isSelected) {
         ${renderPriceDelta(category, opt)}
       </div>
     </label>
-  `;
-}
-
-function renderConfigPreview() {
-  const preview = document.getElementById('configPreview');
-  if (!preview) return;
-
-  const caseImg = getCasePreviewImg(selectedConfig);
-  const perf = calculateConfigPerformance(selectedConfig);
-  const badges = ['gpu', 'cpu', 'ram'].map(key => {
-    const comp = selectedConfig[key];
-    if (!comp) return '';
-    const icon = CONFIG_CATEGORY_IMAGES[key];
-    return `
-      <div class="config-preview-badge" title="${escapeHtml(CONFIG_LABELS[key])}: ${escapeHtml(comp.name)}">
-        <img src="${icon}" alt="">
-        <span>${escapeHtml(comp.name.split(' ').slice(-2).join(' '))}</span>
-      </div>
-    `;
-  }).join('');
-
-  preview.innerHTML = `
-    <div class="config-preview-visual">
-      <div class="config-preview-glow"></div>
-      <img class="config-preview-img" src="${escapeHtml(caseImg)}" alt="Превью сборки" onerror="this.src='img/hero-pc.svg'">
-      <div class="config-preview-badges">${badges}</div>
-    </div>
-    <div class="config-preview-perf">
-      <h4>Оценка конфигурации</h4>
-      ${Object.entries(perf).map(([key, val]) => `
-        <div class="perf-bar-row">
-          <div class="perf-bar-header">
-            <span>${PERFORMANCE_LABELS[key] || key}</span>
-            <span>${val}%</span>
-          </div>
-          <div class="perf-bar-track"><div class="perf-bar-fill" style="width:${val}%"></div></div>
-        </div>
-      `).join('')}
-    </div>
   `;
 }
 

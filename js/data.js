@@ -242,9 +242,9 @@ const CONFIG_COMPONENTS = {
     { id: 'cl3', name: 'СЖО 360 мм', price: 14990, specs: 'LCD-дисплей', img: 'img/categories/cooling.svg', tier: 4 },
   ],
   case: [
-    { id: 'ca1', name: 'Compact Mini-ITX', price: 7990, specs: 'Малый форм-фактор', img: 'img/categories/case.svg', previewImg: 'img/config.svg', tier: 2 },
-    { id: 'ca2', name: 'Mid-Tower RGB', price: 9990, specs: 'Закалённое стекло', img: 'img/categories/case.svg', previewImg: 'img/hero-pc.svg', tier: 3, recommended: true },
-    { id: 'ca3', name: 'Full-Tower Premium', price: 16990, specs: 'Двухкамерный', img: 'img/categories/case.svg', previewImg: 'img/ready/pc.svg', tier: 4 },
+    { id: 'ca1', name: 'Compact Mini-ITX', price: 7990, specs: 'Малый форм-фактор', img: 'img/components/case/mod-3-black.png', previewImg: 'img/components/case/mod-3-black.png', tier: 2 },
+    { id: 'ca2', name: 'Mid-Tower RGB', price: 9990, specs: 'Закалённое стекло', img: 'img/components/case/D400-B.png', previewImg: 'img/components/case/D400-B.png', tier: 3, recommended: true },
+    { id: 'ca3', name: 'Full-Tower Premium', price: 16990, specs: 'Двухкамерный', img: 'img/components/case/O11VP_014a.webp', previewImg: 'img/components/case/O11VP_014a.webp', tier: 4 },
   ],
 };
 
