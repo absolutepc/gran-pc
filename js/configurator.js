@@ -44,7 +44,6 @@ const TIER_SCORES = { 1: 52, 2: 68, 3: 82, 4: 96 };
 let selectedConfig = {};
 let activeCategory = 'cpu';
 let previousTotal = 0;
-let scrollSpyBound = false;
 
 function getConfigCategories() {
   return Object.keys(CONFIG_COMPONENTS);
@@ -74,22 +73,6 @@ function getCriticalCompatibilityIssues(config) {
     return [`Несовместимость: процессор (${cpu.socket}) и материнская плата (${mb.socket})`];
   }
   return [];
-}
-
-function refreshCategoryGrid(category) {
-  const group = document.querySelector(`.config-component-group[data-category="${category}"]`);
-  if (!group) return;
-  const grid = group.querySelector('.config-option-grid');
-  if (!grid) return;
-  const selected = selectedConfig[category];
-  grid.innerHTML = CONFIG_COMPONENTS[category]
-    .map(opt => renderComponentCard(category, opt, selected?.id === opt.id))
-    .join('');
-  grid.querySelectorAll('.config-option-card').forEach(card => {
-    card.addEventListener('click', () => {
-      selectComponent(card.dataset.category, card.dataset.id);
-    });
-  });
 }
 
 function getConfigCompatibilityIssues(config) {
@@ -216,6 +199,17 @@ function renderConfigSteps() {
   }).join('');
 }
 
+function updateStepStates() {
+  document.querySelectorAll('.config-step').forEach(step => {
+    const key = step.dataset.category;
+    if (!key) return;
+    const isActive = key === activeCategory;
+    step.classList.toggle('active', isActive);
+    step.classList.toggle('completed', !!selectedConfig[key]);
+    step.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+}
+
 function renderConfigComponents() {
   const container = document.getElementById('configComponents');
   if (!container) return;
@@ -248,6 +242,17 @@ function renderConfigComponents() {
   }).join('');
 }
 
+function refreshCategoryGrid(category) {
+  const group = document.querySelector(`.config-component-group[data-category="${category}"]`);
+  if (!group) return;
+  const grid = group.querySelector('.config-option-grid');
+  if (!grid) return;
+  const selected = selectedConfig[category];
+  grid.innerHTML = CONFIG_COMPONENTS[category]
+    .map(opt => renderComponentCard(category, opt, selected?.id === opt.id))
+    .join('');
+}
+
 function renderCompatAlert() {
   const alertEl = document.getElementById('configCompatAlert');
   if (!alertEl) return;
@@ -278,22 +283,13 @@ function animatePrice(el, newTotal) {
   el.textContent = formatPrice(newTotal);
 }
 
-function updateConfigSummary() {
+function updateSummaryList() {
   const summaryItems = document.getElementById('summaryItems');
-  const totalEl = document.getElementById('configTotal');
-  const totalMobile = document.getElementById('configTotalMobile');
-  const progressFill = document.getElementById('configProgressFill');
-  const progressText = document.getElementById('configProgressText');
   if (!summaryItems) return;
 
-  const categories = getConfigCategories();
-  let total = 0;
-  const selectedCount = categories.filter(key => selectedConfig[key]).length;
-
-  summaryItems.innerHTML = categories.map(key => {
+  summaryItems.innerHTML = getConfigCategories().map(key => {
     const comp = selectedConfig[key];
     if (!comp) return '';
-    total += comp.price;
     const icon = CONFIG_CATEGORY_IMAGES[key];
     return `
       <button type="button" class="summary-item" data-scroll-category="${key}">
@@ -305,7 +301,22 @@ function updateConfigSummary() {
       </button>
     `;
   }).join('');
+}
 
+function updateConfigSummary() {
+  const totalEl = document.getElementById('configTotal');
+  const totalMobile = document.getElementById('configTotalMobile');
+  const progressFill = document.getElementById('configProgressFill');
+  const progressText = document.getElementById('configProgressText');
+
+  const categories = getConfigCategories();
+  let total = 0;
+  const selectedCount = categories.filter(key => selectedConfig[key]).length;
+  categories.forEach(key => {
+    if (selectedConfig[key]) total += selectedConfig[key].price;
+  });
+
+  updateSummaryList();
   animatePrice(totalEl, total);
   animatePrice(totalMobile, total);
   previousTotal = total;
@@ -316,8 +327,6 @@ function updateConfigSummary() {
 
   renderConfigPreview();
   renderCompatAlert();
-  renderConfigSteps();
-  updateGroupHeaders();
 }
 
 function updateGroupHeaders() {
@@ -326,29 +335,35 @@ function updateGroupHeaders() {
     const selected = selectedConfig[key];
     const label = group.querySelector('.config-group-selected');
     if (label && selected) label.textContent = selected.name;
-    group.classList.toggle('open', key === activeCategory);
+    const isOpen = key === activeCategory;
+    group.classList.toggle('open', isOpen);
     const header = group.querySelector('.config-group-header');
-    if (header) header.setAttribute('aria-expanded', key === activeCategory ? 'true' : 'false');
+    if (header) header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
+  updateStepStates();
 }
 
-function openCategory(category, scroll = true) {
+function openCategory(category, scrollIntoView = false) {
+  if (!getConfigCategories().includes(category)) return;
   activeCategory = category;
   updateGroupHeaders();
-  renderConfigSteps();
 
-  const group = document.getElementById(`config-group-${category}`);
-  if (group && scroll) {
-    const top = group.getBoundingClientRect().top + window.scrollY - 120;
-    window.scrollTo({ top, behavior: 'smooth' });
+  if (scrollIntoView) {
+    const group = document.getElementById(`config-group-${category}`);
+    group?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
 function selectComponent(category, id) {
   const comp = CONFIG_COMPONENTS[category]?.find(c => c.id === id);
-  if (!comp) return;
+  if (!comp || selectedConfig[category]?.id === id) return;
 
   selectedConfig[category] = comp;
+
+  const group = document.querySelector(`.config-component-group[data-category="${category}"]`);
+  const label = group?.querySelector('.config-group-selected');
+  if (label) label.textContent = comp.name;
+
   refreshCategoryGrid(category);
   updateConfigSummary();
 }
@@ -388,83 +403,48 @@ function resetConfig() {
   });
   activeCategory = 'cpu';
   renderConfigComponents();
-  bindComponentEvents();
   updateConfigSummary();
   openCategory('cpu', false);
   showToast('Сборка сброшена к начальной конфигурации', 'info');
 }
 
-function bindComponentEvents() {
-  const container = document.getElementById('configComponents');
-  if (!container) return;
-
-  container.querySelectorAll('.config-option-card').forEach(card => {
-    card.addEventListener('click', () => {
-      selectComponent(card.dataset.category, card.dataset.id);
-    });
-  });
-
-  container.querySelectorAll('.config-group-header').forEach(header => {
-    header.addEventListener('click', () => {
-      const category = header.closest('.config-component-group')?.dataset.category;
-      if (category) openCategory(category);
-    });
-  });
-}
-
-function bindStepEvents() {
+function bindConfiguratorEvents() {
   document.getElementById('configSteps')?.addEventListener('click', (e) => {
     const step = e.target.closest('.config-step');
     if (!step?.dataset.category) return;
-    openCategory(step.dataset.category);
+    e.preventDefault();
+    openCategory(step.dataset.category, true);
   });
-}
 
-function bindSummaryEvents() {
+  document.getElementById('configComponents')?.addEventListener('click', (e) => {
+    const card = e.target.closest('.config-option-card');
+    if (card?.dataset.category && card.dataset.id) {
+      e.preventDefault();
+      selectComponent(card.dataset.category, card.dataset.id);
+      return;
+    }
+
+    const header = e.target.closest('.config-group-header');
+    if (header) {
+      e.preventDefault();
+      const category = header.closest('.config-component-group')?.dataset.category;
+      if (category) openCategory(category, false);
+    }
+  });
+
   document.getElementById('summaryItems')?.addEventListener('click', (e) => {
     const row = e.target.closest('[data-scroll-category]');
     if (!row?.dataset.scrollCategory) return;
-    openCategory(row.dataset.scrollCategory);
+    e.preventDefault();
+    openCategory(row.dataset.scrollCategory, true);
   });
-}
-
-function bindScrollSpy() {
-  if (scrollSpyBound) return;
-  scrollSpyBound = true;
-
-  const groups = () => document.querySelectorAll('.config-component-group');
-  let ticking = false;
-
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      const scrollY = window.scrollY + 160;
-      let current = activeCategory;
-
-      groups().forEach(group => {
-        const top = group.offsetTop;
-        const bottom = top + group.offsetHeight;
-        if (scrollY >= top && scrollY < bottom) {
-          current = group.dataset.category;
-        }
-      });
-
-      if (current !== activeCategory) {
-        activeCategory = current;
-        updateGroupHeaders();
-        renderConfigSteps();
-      }
-    });
-  }, { passive: true });
 }
 
 function addConfigToCart() {
   const critical = getCriticalCompatibilityIssues(selectedConfig);
   if (critical.length) {
     showToast(critical[0], 'error');
-    openCategory('cpu');
+    openCategory('cpu', true);
     return;
   }
 
@@ -501,10 +481,7 @@ function initConfigurator() {
 
   renderConfigSteps();
   renderConfigComponents();
-  bindComponentEvents();
-  bindStepEvents();
-  bindSummaryEvents();
-  bindScrollSpy();
+  bindConfiguratorEvents();
   updateConfigSummary();
   openCategory('cpu', false);
 

@@ -873,10 +873,17 @@ main {
   border: 1px solid var(--border);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: var(--transition);
+  transition: border-color 0.12s ease, background 0.12s ease, color 0.12s ease, transform 0.1s ease, box-shadow 0.12s ease;
   scroll-snap-align: start;
   flex-shrink: 0;
   position: relative;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.config-step:active {
+  transform: scale(0.96);
 }
 
 .config-step::after {
@@ -986,7 +993,14 @@ main {
   color: inherit;
   cursor: pointer;
   text-align: left;
-  transition: var(--transition);
+  transition: background 0.12s ease;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.config-group-header:active {
+  background: var(--bg-card-hover);
 }
 
 .config-group-header:hover {
@@ -1046,8 +1060,15 @@ main {
   border: 2px solid var(--border);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: var(--transition);
+  transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease, transform 0.1s ease;
   overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.config-option-card:active {
+  transform: scale(0.98);
 }
 
 .config-option-card:hover {
@@ -1258,7 +1279,13 @@ main {
   cursor: pointer;
   text-align: left;
   width: 100%;
-  transition: var(--transition);
+  transition: background 0.12s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.summary-item:active {
+  background: var(--bg-card-hover);
 }
 
 .summary-item:hover {
