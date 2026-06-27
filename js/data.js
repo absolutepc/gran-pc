@@ -40,7 +40,7 @@ const PRODUCT_ATTRIBUTE_FIELDS = [
 
 const DEFAULT_PRODUCTS = [
   { id: 'p1', name: 'NVIDIA GeForce RTX 4070 Ti Super', category: 'gpu', price: 89990, oldPrice: 99990, img: 'img/categories/gpu.svg', description: '16 ГБ GDDR6X, DLSS 3, трассировка лучей', badge: 'sale', stock: 15, pcie: 'PCIe 4.0', specs: { vram: '16 ГБ', tdp: '285 Вт' } },
-  { id: 'p2', name: 'AMD Ryzen 7 7800X3D', category: 'cpu', price: 42990, img: 'img/categories/cpu.svg', description: '8 ядер, 16 потоков, 3D V-Cache', badge: 'new', stock: 22, socket: 'AM5', memoryType: 'DDR5', specs: { cores: '8' } },
+  { id: 'p2', name: 'AMD Ryzen 7 7800X3D', category: 'cpu', price: 26999, img: 'img/components/cpu/amd/R7 7800X3D.png', description: '8 ядер, 16 потоков, 3D V-Cache', badge: 'new', stock: 22, socket: 'AM5', memoryType: 'DDR5', specs: { cores: '8' } },
   { id: 'p3', name: 'Samsung 990 Pro 2TB NVMe', category: 'storage', price: 18990, img: 'img/categories/storage.svg', description: 'PCIe 4.0, чтение 7450 МБ/с', stock: 30, pcie: 'PCIe 4.0', specs: { capacity: '2 ТБ', type: 'NVMe' } },
   { id: 'p4', name: 'Corsair Vengeance 32GB DDR5', category: 'ram', price: 12990, img: 'img/categories/ram.svg', description: 'DDR5-6000 CL30, RGB', stock: 45, memoryType: 'DDR5', ram: '32 ГБ', specs: { capacity: '32 ГБ', speed: '6000 МГц' } },
   { id: 'p5', name: 'ASUS ROG Strix B650-E', category: 'motherboard', price: 28990, img: 'img/categories/motherboard.svg', description: 'AM5, PCIe 5.0, WiFi 6E', stock: 12, socket: 'AM5', memoryType: 'DDR5', specs: { formFactor: 'ATX' } },
