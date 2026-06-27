@@ -24,20 +24,23 @@ function uniqueGalleryImages(list) {
   });
 }
 
-function getGalleryInitial(item, galleryItems) {
-  if (galleryItems.length) return galleryItems[0];
-
+function getGalleryInitial(item) {
+  const primarySrc = getProductImg(item);
   const firstColor = item.colors?.[0];
+
   if (firstColor) {
     return {
-      src: firstColor.img || getProductImg(item),
+      src: firstColor.img || primarySrc,
       filter: firstColor.filter && firstColor.filter !== 'none' ? firstColor.filter : '',
       colorName: firstColor.name || '',
     };
   }
 
-  const src = item.images?.[0] || getProductImg(item);
-  return { src, filter: '', colorName: '' };
+  return { src: primarySrc, filter: '', colorName: '' };
+}
+
+function isSameGalleryImage(a, b) {
+  return normalizeGallerySrc(a) === normalizeGallerySrc(b);
 }
 
 function getGalleryItems(item) {
@@ -113,11 +116,15 @@ function renderItemColorPicker(item, ui) {
 
 function renderItemGallery(item, ui) {
   const galleryItems = getGalleryItems(item);
-  const initial = getGalleryInitial(item, galleryItems);
+  const initial = getGalleryInitial(item);
   const initialFilter = initial.filter || item.colors?.[0]?.filter || 'none';
   const filterValue = initialFilter === 'none' ? '' : initialFilter;
   const thumbs = galleryItems.length > 1
-    ? `<div class="pc-gallery-thumbs">${galleryItems.map((entry, i) => renderGalleryThumb(entry, item.name, i, i === 0)).join('')}</div>`
+    ? `<div class="pc-gallery-thumbs">${galleryItems.map((entry, i) => {
+      const isActive = isSameGalleryImage(entry.src, initial.src)
+        && (entry.filter || '') === (initial.filter || '');
+      return renderGalleryThumb(entry, item.name, i, isActive);
+    }).join('')}</div>`
     : '';
 
   return `
