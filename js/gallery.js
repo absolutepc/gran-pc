@@ -5,13 +5,15 @@ const GALLERY_UI = {
     colorNameId: 'selectedColorName',
     pickerClass: 'product-color-picker',
     imageWrapClass: 'product-detail-image-wrap',
+    mainImgClass: 'product-detail-main-img',
   },
   readyPc: {
     galleryId: 'pcGallery',
     mainImgId: 'pcDetailMainImg',
     colorNameId: 'pcSelectedColorName',
-    pickerClass: 'pc-color-picker',
-    imageWrapClass: 'pc-detail-image-wrap',
+    pickerClass: 'product-color-picker',
+    imageWrapClass: 'product-detail-image-wrap',
+    mainImgClass: 'product-detail-main-img',
   },
 };
 
@@ -132,7 +134,7 @@ function renderItemGallery(item, ui) {
       <div class="${ui.imageWrapClass}">
         ${item.badge ? `<span class="product-badge ${item.badge}">${BADGE_LABELS[item.badge] || item.badge}</span>` : ''}
         <img
-          class="pc-detail-main-img"
+          class="${ui.mainImgClass}"
           id="${ui.mainImgId}"
           src="${initial.src}"
           alt="${escapeHtml(item.name)}"
