@@ -2417,6 +2417,87 @@ main {
   max-width: 900px;
 }
 
+.pc-components-zigzag {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.pc-component-row {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(280px, 1.1fr);
+  gap: 32px;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  transition: var(--transition);
+}
+
+.pc-component-row:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.pc-component-row--reverse .pc-component-media {
+  order: 2;
+}
+
+.pc-component-row--reverse .pc-component-body {
+  order: 1;
+  text-align: right;
+}
+
+.pc-component-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.pc-component-media img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+}
+
+.pc-component-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pc-component-type {
+  font-size: 0.75rem;
+  color: var(--cyan);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pc-component-body h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.pc-component-body p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+.pc-component-row--reverse .pc-component-body p {
+  margin-left: auto;
+}
+
+/* Legacy card grid (unused) */
 .pc-components-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -2453,12 +2534,8 @@ main {
   object-fit: contain;
 }
 
-.pc-component-type {
+.pc-component-card .pc-component-type {
   font-size: 0.7rem;
-  color: var(--cyan);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   margin-bottom: 4px;
 }
 
@@ -2638,6 +2715,22 @@ main {
   .about-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
   .pc-detail-hero { grid-template-columns: 1fr; }
+  .pc-component-row,
+  .pc-component-row--reverse {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .pc-component-row--reverse .pc-component-media,
+  .pc-component-row--reverse .pc-component-body {
+    order: unset;
+    text-align: left;
+  }
+  .pc-component-row--reverse .pc-component-body p {
+    margin-left: 0;
+  }
+  .pc-component-media {
+    min-height: 160px;
+  }
   .product-spec-row { grid-template-columns: 1fr; gap: 4px; }
   .product-spec-value { text-align: left; }
 }
