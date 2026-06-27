@@ -5,40 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Товар — PC Market</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>#page-transition{position:fixed;inset:0;z-index:10000;background:#0a0e17}body.page-transition-active>:not(#page-transition){visibility:hidden}</style>
 </head>
-<body>
+<body class="page-transition-active">
+  <div id="page-transition" class="page-transition" role="status" aria-live="polite" aria-label="Загрузка">
+    <div class="page-transition__inner">
+      <div class="page-transition__logo"><img src="img/hero-pc.svg" alt=""></div>
+      <p class="page-transition__label">Товар</p>
+      <div class="page-transition__progress" aria-hidden="true"><span class="page-transition__progress-bar"></span></div>
+    </div>
+  </div>
+  <script src="js/transition-boot.js"></script>
+
   <div id="site-header"></div>
 
-  <main id="productDetailContent"></main>
+  <main id="productDetailContent">
+    <div class="container pc-detail-page" style="text-align:center;padding:80px 24px">
+      <p style="color:var(--text-secondary)">Загрузка товара...</p>
+    </div>
+  </main>
 
   <div id="site-footer"></div>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
+  <script src="js/transition.js"></script>
+  <script src="js/gallery.js"></script>
   <script src="js/products.js"></script>
   <script>
     initLayout('catalog');
-    try {
-      if (typeof initProductDetailPage !== 'function') {
-        throw new Error('Не загружен файл js/products.js');
-      }
+    if (typeof initProductDetailPage === 'function') {
       initProductDetailPage();
-    } catch (err) {
-      console.error(err);
-      const container = document.getElementById('productDetailContent');
-      if (container) {
-        container.innerHTML = `
-          <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
-            <h2>Не удалось загрузить страницу товара</h2>
-            <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">
-              ${err.message || err}. Убедитесь, что вы скачали последнюю версию проекта
-              и открываете сайт через локальный сервер (Live Server), а не двойным кликом по HTML-файлу.
-            </p>
-            <a href="catalog.html" class="btn btn-primary">Вернуться в каталог</a>
-          </div>
-        `;
-      }
+    } else {
+      document.getElementById('productDetailContent').innerHTML = `
+        <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
+          <h2>Не удалось загрузить страницу товара</h2>
+          <p style="color:var(--text-secondary);max-width:520px;margin:12px auto 24px">
+            Файл js/products.js не найден. Убедитесь, что вы скачали последнюю версию проекта
+            и открываете сайт через Live Server из корневой папки проекта.
+          </p>
+          <a href="catalog.html" class="btn btn-primary">Вернуться в каталог</a>
+        </div>
+      `;
     }
   </script>
 </body>

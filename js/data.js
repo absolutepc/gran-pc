@@ -77,12 +77,27 @@ const DEFAULT_PRODUCTS = [
   { id: 'p20', name: 'NVIDIA GeForce RTX 5090', category: 'gpu', price: 249990, img: 'img/categories/gpu.svg', description: '32 ГБ GDDR7, PCIe 5.0', badge: 'new', stock: 3, pcie: 'PCIe 5.0', specs: { vram: '32 ГБ', tdp: '575 Вт' } },
 ];
 
+const DEFAULT_READY_PC_COLORS = [
+  { name: 'Чёрный', hex: '#1a1a1a', filter: 'none' },
+  { name: 'Белый', hex: '#f5f5f5', filter: 'brightness(1.12)' },
+  { name: 'RGB', hex: '#8b5cf6', filter: 'hue-rotate(45deg) saturate(1.35)' },
+];
+
 const DEFAULT_READY_PCS = [
   {
-    id: 'rpc1', name: 'Игровой Зверь Pro', price: 189990, img: 'img/ready/pc.svg', badge: 'sale',
+    id: 'rpc1', name: 'Игровой Зверь Pro', price: 189990, img: 'img/components/case/D400-B.png', badge: 'sale',
     description: 'Топовый игровой ПК для 4K на максимальных настройках',
     fullDescription: 'Игровой Зверь Pro — флагманская сборка на Ryzen 7 7800X3D и RTX 4080 Super. Ray tracing, DLSS 3 и комфортный 4K Ultra без компромиссов. Идеален для требовательных AAA-проектов и VR.',
-    images: ['img/ready/pc.svg'],
+    images: [
+      'img/components/case/D400-B.png',
+      'img/components/case/D400-W.png',
+      'img/ready/pc.svg',
+    ],
+    colors: [
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/ready/pc.svg', filter: 'hue-rotate(45deg) saturate(1.35)' },
+    ],
     specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
     components: [
@@ -190,46 +205,46 @@ const DEFAULT_READY_PCS = [
 
 const CONFIG_COMPONENTS = {
   cpu: [
-    { id: 'c1', name: 'AMD Ryzen 5 7600', price: 22990, specs: '6 ядер / 12 потоков' },
-    { id: 'c2', name: 'AMD Ryzen 7 7800X3D', price: 42990, specs: '8 ядер / 16 потоков' },
-    { id: 'c3', name: 'Intel Core i5-14600K', price: 28990, specs: '14 ядер / 20 потоков' },
-    { id: 'c4', name: 'Intel Core i9-14900K', price: 54990, specs: '24 ядра / 32 потока' },
+    { id: 'c1', name: 'AMD Ryzen 5 7600', price: 22990, specs: '6 ядер / 12 потоков', img: 'img/categories/cpu.svg', socket: 'AM5', tier: 2 },
+    { id: 'c2', name: 'AMD Ryzen 7 7800X3D', price: 42990, specs: '8 ядер / 16 потоков', img: 'img/categories/cpu.svg', socket: 'AM5', tier: 4, gamingPick: true },
+    { id: 'c3', name: 'Intel Core i5-14600K', price: 28990, specs: '14 ядер / 20 потоков', img: 'img/categories/cpu.svg', socket: 'LGA1700', tier: 3, recommended: true },
+    { id: 'c4', name: 'Intel Core i9-14900K', price: 54990, specs: '24 ядра / 32 потока', img: 'img/categories/cpu.svg', socket: 'LGA1700', tier: 4 },
   ],
   gpu: [
-    { id: 'g1', name: 'NVIDIA RTX 4060 Ti', price: 44990, specs: '8 ГБ GDDR6' },
-    { id: 'g2', name: 'NVIDIA RTX 4070 Super', price: 64990, specs: '12 ГБ GDDR6X' },
-    { id: 'g3', name: 'NVIDIA RTX 4080 Super', price: 109990, specs: '16 ГБ GDDR6X' },
-    { id: 'g4', name: 'AMD RX 7900 XTX', price: 89990, specs: '24 ГБ GDDR6' },
+    { id: 'g1', name: 'NVIDIA RTX 4060 Ti', price: 44990, specs: '8 ГБ GDDR6', img: 'img/categories/gpu.svg', tier: 2 },
+    { id: 'g2', name: 'NVIDIA RTX 4070 Super', price: 64990, specs: '12 ГБ GDDR6X', img: 'img/categories/gpu.svg', tier: 3, recommended: true },
+    { id: 'g3', name: 'NVIDIA RTX 4080 Super', price: 109990, specs: '16 ГБ GDDR6X', img: 'img/categories/gpu.svg', tier: 4, gamingPick: true },
+    { id: 'g4', name: 'AMD RX 7900 XTX', price: 89990, specs: '24 ГБ GDDR6', img: 'img/categories/gpu.svg', tier: 4 },
   ],
   ram: [
-    { id: 'r1', name: '16 ГБ DDR5-5600', price: 6990, specs: 'Комплект 2x8 ГБ' },
-    { id: 'r2', name: '32 ГБ DDR5-6000', price: 12990, specs: 'Комплект 2x16 ГБ' },
-    { id: 'r3', name: '64 ГБ DDR5-6000', price: 24990, specs: 'Комплект 2x32 ГБ' },
+    { id: 'r1', name: '16 ГБ DDR5-5600', price: 6990, specs: 'Комплект 2x8 ГБ', img: 'img/categories/ram.svg', tier: 2 },
+    { id: 'r2', name: '32 ГБ DDR5-6000', price: 12990, specs: 'Комплект 2x16 ГБ', img: 'img/categories/ram.svg', tier: 3, recommended: true },
+    { id: 'r3', name: '64 ГБ DDR5-6000', price: 24990, specs: 'Комплект 2x32 ГБ', img: 'img/categories/ram.svg', tier: 4 },
   ],
   storage: [
-    { id: 's1', name: '1 ТБ NVMe Gen4', price: 8990, specs: '7000 МБ/с' },
-    { id: 's2', name: '2 ТБ NVMe Gen4', price: 15990, specs: '7400 МБ/с' },
-    { id: 's3', name: '4 ТБ NVMe Gen4', price: 29990, specs: '7400 МБ/с' },
+    { id: 's1', name: '1 ТБ NVMe Gen4', price: 8990, specs: '7000 МБ/с', img: 'img/categories/storage.svg', tier: 2 },
+    { id: 's2', name: '2 ТБ NVMe Gen4', price: 15990, specs: '7400 МБ/с', img: 'img/categories/storage.svg', tier: 3, recommended: true },
+    { id: 's3', name: '4 ТБ NVMe Gen4', price: 29990, specs: '7400 МБ/с', img: 'img/categories/storage.svg', tier: 4 },
   ],
   motherboard: [
-    { id: 'm1', name: 'ASUS B650-Plus', price: 18990, specs: 'AM5, ATX' },
-    { id: 'm2', name: 'MSI Z790 Tomahawk', price: 28990, specs: 'LGA1700, ATX' },
-    { id: 'm3', name: 'ASUS X670E Hero', price: 44990, specs: 'AM5, E-ATX' },
+    { id: 'm1', name: 'ASUS B650-Plus', price: 18990, specs: 'AM5, ATX', img: 'img/categories/motherboard.svg', socket: 'AM5', tier: 2 },
+    { id: 'm2', name: 'MSI Z790 Tomahawk', price: 28990, specs: 'LGA1700, ATX', img: 'img/categories/motherboard.svg', socket: 'LGA1700', tier: 3, recommended: true },
+    { id: 'm3', name: 'ASUS X670E Hero', price: 44990, specs: 'AM5, E-ATX', img: 'img/categories/motherboard.svg', socket: 'AM5', tier: 4 },
   ],
   psu: [
-    { id: 'ps1', name: '650W 80+ Gold', price: 8990, specs: 'Полумодульный' },
-    { id: 'ps2', name: '850W 80+ Platinum', price: 14990, specs: 'Полностью модульный' },
-    { id: 'ps3', name: '1000W 80+ Titanium', price: 22990, specs: 'Полностью модульный' },
+    { id: 'ps1', name: '650W 80+ Gold', price: 8990, specs: 'Полумодульный', img: 'img/categories/psu.svg', tier: 2 },
+    { id: 'ps2', name: '850W 80+ Platinum', price: 14990, specs: 'Полностью модульный', img: 'img/categories/psu.svg', tier: 3, recommended: true },
+    { id: 'ps3', name: '1000W 80+ Titanium', price: 22990, specs: 'Полностью модульный', img: 'img/categories/psu.svg', tier: 4 },
   ],
   cooling: [
-    { id: 'cl1', name: 'Башенный кулер', price: 4990, specs: 'Два вентилятора' },
-    { id: 'cl2', name: 'СЖО 240 мм', price: 9990, specs: 'RGB-помпа' },
-    { id: 'cl3', name: 'СЖО 360 мм', price: 14990, specs: 'LCD-дисплей' },
+    { id: 'cl1', name: 'Башенный кулер', price: 4990, specs: 'Два вентилятора', img: 'img/categories/cooling.svg', tier: 2 },
+    { id: 'cl2', name: 'СЖО 240 мм', price: 9990, specs: 'RGB-помпа', img: 'img/categories/cooling.svg', tier: 3, recommended: true },
+    { id: 'cl3', name: 'СЖО 360 мм', price: 14990, specs: 'LCD-дисплей', img: 'img/categories/cooling.svg', tier: 4 },
   ],
   case: [
-    { id: 'ca1', name: 'Compact Mini-ITX', price: 7990, specs: 'Малый форм-фактор' },
-    { id: 'ca2', name: 'Mid-Tower RGB', price: 9990, specs: 'Закалённое стекло' },
-    { id: 'ca3', name: 'Full-Tower Premium', price: 16990, specs: 'Двухкамерный' },
+    { id: 'ca1', name: 'Compact Mini-ITX', price: 7990, specs: 'Малый форм-фактор', img: 'img/components/case/mod-3-black.png', previewImg: 'img/components/case/mod-3-black.png', tier: 2 },
+    { id: 'ca2', name: 'Mid-Tower RGB', price: 9990, specs: 'Закалённое стекло', img: 'img/components/case/D400-B.png', previewImg: 'img/components/case/D400-B.png', tier: 3, recommended: true },
+    { id: 'ca3', name: 'Full-Tower Premium', price: 16990, specs: 'Двухкамерный', img: 'img/components/case/O11VP_014a.webp', previewImg: 'img/components/case/O11VP_014a.webp', tier: 4 },
   ],
 };
 
@@ -346,6 +361,15 @@ function renderProductImg(img, alt = '') {
   return `<img src="${src}" alt="${safeAlt}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
 }
 
+function escapeHtml(text) {
+  if (text == null) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function initStore() {
   if (!localStorage.getItem(STORE_KEY)) {
     localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
@@ -392,17 +416,26 @@ function uniqueImages(list) {
   });
 }
 
-function buildProductImages(product, def) {
-  const explicit = Array.isArray(product.images) && product.images.length
-    ? product.images
-    : (Array.isArray(def?.images) && def.images.length ? def.images : []);
-  if (explicit.length) {
-    return uniqueImages(explicit);
+function buildItemImages(item, def) {
+  const fromItem = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
+  const fromDef = Array.isArray(def?.images) ? def.images.filter(Boolean) : [];
+
+  if (fromItem.length > 1) {
+    return uniqueImages(fromItem);
   }
-  const main = getProductImg(product);
-  const fromColors = (product.colors || []).map(c => c.img).filter(Boolean);
-  const built = uniqueImages([main, ...fromColors]);
+  if (fromDef.length > 1) {
+    return uniqueImages(fromDef);
+  }
+
+  const main = getProductImg(item);
+  const fromColors = (item.colors || def?.colors || []).map(c => c.img).filter(Boolean);
+  const built = uniqueImages([...fromItem, ...fromDef, main, ...fromColors]);
   return built.length ? built : [DEFAULT_IMG];
+}
+
+function buildDefaultReadyPCColors(pc) {
+  const baseImg = getProductImg(pc);
+  return DEFAULT_READY_PC_COLORS.map(c => ({ ...c, img: c.img || baseImg }));
 }
 
 function buildDefaultColors(product) {
@@ -416,7 +449,7 @@ function enrichProduct(product, def) {
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
-  merged.images = buildProductImages(merged, def);
+  merged.images = buildItemImages(merged, def);
   PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
     if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });
@@ -426,9 +459,17 @@ function enrichProduct(product, def) {
 
 function getProducts() {
   initStore();
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
-  const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
-  return mergeDefaultAttributes(products);
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
+    return mergeDefaultAttributes(products);
+  } catch (e) {
+    console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return mergeDefaultAttributes(DEFAULT_PRODUCTS);
+  }
 }
 
 function getEnrichedProductById(id) {
@@ -440,12 +481,12 @@ function enrichReadyPC(pc) {
   if (!pc) return null;
   const tmpl = DEFAULT_READY_PCS.find(d => d.id === pc.id);
   const merged = tmpl ? { ...tmpl, ...pc } : { ...pc };
+  merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
+    .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
+  merged.images = buildItemImages(merged, tmpl);
   return {
     ...merged,
     fullDescription: merged.fullDescription || merged.description || '',
-    images: Array.isArray(merged.images) && merged.images.length
-      ? merged.images
-      : [merged.img || 'img/ready/pc.svg'],
     components: Array.isArray(merged.components) ? merged.components : [],
     specs: merged.specs || [],
   };
@@ -453,10 +494,18 @@ function enrichReadyPC(pc) {
 
 function getReadyPCs() {
   initStore();
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
-  const pcs = Array.isArray(data.readyPCs) ? data.readyPCs : [];
-  const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
-  return list.sort((a, b) => a.price - b.price);
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
+    const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
+    return list.sort((a, b) => a.price - b.price);
+  } catch (e) {
+    console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);
+  }
 }
 
 function getReadyPCById(id) {

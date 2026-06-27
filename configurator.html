@@ -5,52 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Конфигуратор ПК — PC Market</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>#page-transition{position:fixed;inset:0;z-index:10000;background:#0a0e17}body.page-transition-active>:not(#page-transition){visibility:hidden}</style>
 </head>
-<body>
+<body class="configurator-page page-transition-active">
+  <div id="page-transition" class="page-transition" role="status" aria-live="polite" aria-label="Загрузка">
+    <div class="page-transition__inner">
+      <div class="page-transition__logo"><img src="img/hero-pc.svg" alt=""></div>
+      <p class="page-transition__label">Конфигуратор</p>
+      <div class="page-transition__progress" aria-hidden="true"><span class="page-transition__progress-bar"></span></div>
+    </div>
+  </div>
+  <script src="js/transition-boot.js"></script>
+
   <div id="site-header"></div>
 
   <main>
-    <div class="page-header">
+    <div class="page-header config-page-header">
       <div class="container">
         <div class="breadcrumbs"><a href="index.html">Главная</a> / <span>Конфигуратор</span></div>
         <h1>Конфигуратор ПК</h1>
-        <p>Выберите каждый компонент и соберите идеальный компьютер</p>
+        <p>Соберите компьютер по шагам — мы подскажем оптимальные комплектующие и проверим совместимость</p>
+        <ul class="config-page-perks">
+          <li><i class="fa-solid fa-screwdriver-wrench"></i> Бесплатная сборка</li>
+          <li><i class="fa-solid fa-shield-halved"></i> Гарантия 2 года</li>
+          <li><i class="fa-solid fa-flask"></i> Тестирование перед отправкой</li>
+        </ul>
       </div>
     </div>
 
     <div class="container configurator-layout">
-      <div>
-        <div class="config-steps" id="configSteps">
-          <span class="config-step active">CPU</span>
-          <span class="config-step">GPU</span>
-          <span class="config-step">RAM</span>
-          <span class="config-step">SSD</span>
-          <span class="config-step">MB</span>
-          <span class="config-step">PSU</span>
-          <span class="config-step">COOL</span>
-          <span class="config-step">CASE</span>
+      <div class="configurator-main">
+        <div class="config-preview" id="configPreview"></div>
+
+        <div class="config-stepper-wrap">
+          <div class="config-stepper" id="configSteps" role="tablist" aria-label="Шаги конфигуратора"></div>
         </div>
+
+        <div class="config-compat-alert" id="configCompatAlert" hidden></div>
+
         <div class="config-components" id="configComponents"></div>
       </div>
 
-      <div class="config-summary">
-        <h3>Ваша сборка</h3>
+      <aside class="config-summary" id="configSummaryPanel">
+        <div class="config-summary-header">
+          <h3>Ваша сборка</h3>
+          <div class="config-progress">
+            <div class="config-progress-bar"><div class="config-progress-fill" id="configProgressFill"></div></div>
+            <span class="config-progress-text" id="configProgressText">0/8</span>
+          </div>
+        </div>
         <div class="summary-items" id="summaryItems"></div>
         <div class="summary-total">
           <span class="label">Итого</span>
           <span class="price" id="configTotal">₽0</span>
         </div>
-        <button class="btn btn-primary" id="addConfigToCart" style="width:100%">Добавить сборку в корзину</button>
-        <p style="text-align:center;color:var(--text-muted);font-size:0.8rem;margin-top:12px">Сборка и тестирование бесплатно</p>
-      </div>
+        <div class="config-summary-actions">
+          <button class="btn btn-primary" id="addConfigToCart">Добавить сборку в корзину</button>
+          <div class="config-summary-secondary">
+            <button type="button" class="btn btn-secondary btn-sm" id="saveConfigDraft">Сохранить</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="resetConfig">Сбросить</button>
+          </div>
+        </div>
+        <p class="config-summary-note">Сборка и тестирование бесплатно</p>
+      </aside>
     </div>
   </main>
+
+  <div class="config-mobile-bar" id="configMobileBar">
+    <div class="config-mobile-total">
+      <span class="label">Итого</span>
+      <span class="price" id="configTotalMobile">₽0</span>
+    </div>
+    <button class="btn btn-primary" id="addConfigToCartMobile">В корзину</button>
+  </div>
 
   <div id="site-footer"></div>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
+  <script src="js/transition.js"></script>
   <script src="js/configurator.js"></script>
   <script>initLayout('configurator');</script>
 </body>

@@ -22,8 +22,10 @@ function findCartItem(cart, id, type, colorName = '') {
   return cart.find(c => c.id === id && c.type === type && normalizeColorName(c.colorName) === normalized);
 }
 
-function getActiveProductColor(scope) {
-  const activeBtn = (scope || document).querySelector('.product-color-picker .color-btn.active');
+function getActiveItemColor(scope) {
+  const activeBtn = (scope || document).querySelector(
+    '.product-color-picker .color-btn.active, .pc-color-picker .color-btn.active'
+  );
   if (!activeBtn) return null;
   return {
     colorName: activeBtn.dataset.name,
@@ -32,21 +34,21 @@ function getActiveProductColor(scope) {
   };
 }
 
-function resolveProductColor(product, scope) {
-  const selected = getActiveProductColor(scope);
+function resolveItemColor(item, scope) {
+  const selected = getActiveItemColor(scope);
   if (selected) return selected;
-  const defaultColor = product.colors?.[0];
+  const defaultColor = item.colors?.[0];
   if (defaultColor) {
     return {
       colorName: defaultColor.name,
       colorHex: defaultColor.hex,
-      img: defaultColor.img || getProductImg(product),
+      img: defaultColor.img || getProductImg(item),
     };
   }
   return {
     colorName: '',
     colorHex: '',
-    img: getProductImg(product),
+    img: getProductImg(item),
   };
 }
 
@@ -272,7 +274,7 @@ function renderProductCard(product, type = 'product') {
         <div class="product-footer">
           <div class="product-price">${formatPrice(product.price)}${oldPriceHtml}</div>
           <div class="product-actions">
-            <a href="product.html?id=${product.id}" class="btn btn-secondary btn-sm">Подробнее</a>
+            <a href="product.html?id=${product.id}" class="btn btn-secondary btn-sm" data-transition-label="${escapeHtml(product.name)}">Подробнее</a>
             <button class="btn btn-primary btn-sm add-to-cart-btn" data-id="${product.id}" data-type="${type}">В корзину</button>
           </div>
         </div>
@@ -295,9 +297,7 @@ function bindAddToCartButtons(container) {
       }
       if (item) {
         const scope = btn.closest('.pc-detail-page') || btn.closest('.product-card') || container || document;
-        const color = type === 'ready-pc'
-          ? { colorName: '', colorHex: '', img: getProductImg(item) }
-          : resolveProductColor(item, scope);
+        const color = resolveItemColor(item, scope);
         addToCart({
           id: item.id,
           name: item.name,
