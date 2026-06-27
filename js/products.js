@@ -132,6 +132,9 @@ function initProductDetailPage() {
     }
 
     document.title = `${product.name} — PC Market`;
+    if (typeof updatePageTransitionLabel === 'function') {
+      updatePageTransitionLabel(product.name);
+    }
     container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
     bindItemGalleryAndColor(container, GALLERY_UI.product);
     bindAddToCartButtons(container);

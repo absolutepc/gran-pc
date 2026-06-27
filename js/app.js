@@ -274,7 +274,7 @@ function renderProductCard(product, type = 'product') {
         <div class="product-footer">
           <div class="product-price">${formatPrice(product.price)}${oldPriceHtml}</div>
           <div class="product-actions">
-            <a href="product.html?id=${product.id}" class="btn btn-secondary btn-sm">Подробнее</a>
+            <a href="product.html?id=${product.id}" class="btn btn-secondary btn-sm" data-transition-label="${escapeHtml(product.name)}">Подробнее</a>
             <button class="btn btn-primary btn-sm add-to-cart-btn" data-id="${product.id}" data-type="${type}">В корзину</button>
           </div>
         </div>

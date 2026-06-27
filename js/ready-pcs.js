@@ -34,7 +34,7 @@ function renderReadyPCCard(pc) {
         <div class="product-footer ready-pc-footer">
           <div class="product-price">${formatPrice(pc.price)}</div>
           <div class="ready-pc-actions">
-            <a href="ready-pc.html?id=${escapeHtml(pc.id)}" class="btn btn-secondary btn-sm">Подробнее</a>
+            <a href="ready-pc.html?id=${escapeHtml(pc.id)}" class="btn btn-secondary btn-sm" data-transition-label="${escapeHtml(pc.name)}">Подробнее</a>
             <button class="btn btn-primary btn-sm add-to-cart-btn" data-id="${pc.id}" data-type="ready-pc">В корзину</button>
           </div>
         </div>
@@ -129,6 +129,9 @@ function initReadyPCDetailPage() {
     }
 
     document.title = `${pc.name} — PC Market`;
+    if (typeof updatePageTransitionLabel === 'function') {
+      updatePageTransitionLabel(pc.name);
+    }
     container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
     bindItemGalleryAndColor(container, GALLERY_UI.readyPc);
     bindAddToCartButtons(container);

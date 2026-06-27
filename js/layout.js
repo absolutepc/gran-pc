@@ -222,5 +222,9 @@ function initLayout(activePage) {
 
   }
 
+  if (typeof initPageTransition === 'function') {
+    initPageTransition(getPageTransitionLabel(activePage));
+  }
+
 }
 
