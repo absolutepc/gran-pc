@@ -48,15 +48,22 @@ function renderPCComponents(pc) {
     return '<p class="section-sub">Подробная комплектация будет добавлена позже.</p>';
   }
   return `
-    <div class="pc-components-grid">
-      ${pc.components.map(comp => `
-        <div class="pc-component-card">
-          <div class="pc-component-img">${renderProductImg(comp.img, comp.name)}</div>
-          <div class="pc-component-type">${COMPONENT_TYPE_LABELS[comp.type] || comp.type}</div>
-          <h4>${escapeHtml(comp.name)}</h4>
-          <p>${escapeHtml(comp.description || '')}</p>
-        </div>
-      `).join('')}
+    <div class="pc-components-zigzag">
+      ${pc.components.map((comp, index) => {
+        const reverseClass = index % 2 === 1 ? ' pc-component-row--reverse' : '';
+        return `
+          <article class="pc-component-row${reverseClass}">
+            <div class="pc-component-media">
+              ${renderProductImg(comp.img, comp.name)}
+            </div>
+            <div class="pc-component-body">
+              <div class="pc-component-type">${COMPONENT_TYPE_LABELS[comp.type] || comp.type}</div>
+              <h4>${escapeHtml(comp.name)}</h4>
+              <p>${escapeHtml(comp.description || '')}</p>
+            </div>
+          </article>
+        `;
+      }).join('')}
     </div>
   `;
 }
