@@ -64,8 +64,6 @@ const DEFAULT_PRODUCTS = [
       { name: 'Белый', hex: '#f0f0f0', img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png' },
     ],
     images: [
-      'img/periphery/mise/Logitech G Pro X Superlight 2 B.png',
-      'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png',
       'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
       'img/periphery/mise/image-f41a6135d94e48e998c756c588068bd7.webp'
     ],
