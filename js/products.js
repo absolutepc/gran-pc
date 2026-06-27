@@ -131,7 +131,7 @@ function initProductDetailPage() {
       return;
     }
 
-    document.title = `${product.name} — ${SITE_NAME}`;
+    document.title = `${product.name} — PC Market`;
     if (typeof updatePageTransitionLabel === 'function') {
       updatePageTransitionLabel(product.name);
     }
@@ -140,7 +140,7 @@ function initProductDetailPage() {
     bindAddToCartButtons(container);
     updateCartBadge();
   } catch (err) {
-    console.error(`${SITE_NAME}: ошибка страницы товара`, err);
+    console.error('PC Market: ошибка страницы товара', err);
     showProductPageError(container, err.message || String(err));
   }
 }

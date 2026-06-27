@@ -628,7 +628,7 @@ function renderSettingsAdmin() {
     <div class="account-content">
       <h2>Информация о магазине</h2>
       <div class="admin-form-grid">
-        <div class="form-group"><label>Название</label><input value="${SITE_NAME}"></div>
+        <div class="form-group"><label>Название</label><input value="PC Market"></div>
         <div class="form-group"><label>Телефон</label><input value="+7 (495) 123-45-67"></div>
         <div class="form-group"><label>Email</label><input value="info@pcmarket.ru"></div>
         <div class="form-group"><label>Адрес</label><input value="Москва, Технопарк 42"></div>

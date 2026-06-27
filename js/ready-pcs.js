@@ -128,7 +128,7 @@ function initReadyPCDetailPage() {
       return;
     }
 
-    document.title = `${pc.name} — ${SITE_NAME}`;
+    document.title = `${pc.name} — PC Market`;
     if (typeof updatePageTransitionLabel === 'function') {
       updatePageTransitionLabel(pc.name);
     }
@@ -137,7 +137,7 @@ function initReadyPCDetailPage() {
     bindAddToCartButtons(container);
     updateCartBadge();
   } catch (err) {
-    console.error(`${SITE_NAME}: ошибка страницы готового ПК`, err);
+    console.error('PC Market: ошибка страницы готового ПК', err);
     container.innerHTML = `
       <div class="container pc-detail-page" style="text-align:center;padding:60px 24px">
         <h2>Не удалось загрузить страницу сборки</h2>

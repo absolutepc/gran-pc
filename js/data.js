@@ -1,5 +1,3 @@
-const SITE_NAME = 'Грань';
-
 const STORE_KEY = 'pcmarket_data_v3';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
@@ -400,7 +398,7 @@ function buildFullDescription(product) {
     ? Object.entries(product.specs).map(([k, v]) => `${PRODUCT_SPEC_LABELS[k] || k}: ${v}`).join(', ')
     : '';
   const parts = [
-    `${product.name} — ${cat} от ${SITE_NAME}.`,
+    `${product.name} — ${cat} от PC Market.`,
     product.description || '',
     attrs,
     specsText,
@@ -467,7 +465,7 @@ function getProducts() {
     const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
     return mergeDefaultAttributes(products);
   } catch (e) {
-    console.warn(`${SITE_NAME}: повреждённые данные каталога, восстанавливаем по умолчанию`, e);
+    console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
     localStorage.removeItem(STORE_KEY);
     initStore();
     return mergeDefaultAttributes(DEFAULT_PRODUCTS);
@@ -503,7 +501,7 @@ function getReadyPCs() {
     const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
     return list.sort((a, b) => a.price - b.price);
   } catch (e) {
-    console.warn(`${SITE_NAME}: повреждённые данные готовых ПК, восстанавливаем по умолчанию`, e);
+    console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
     localStorage.removeItem(STORE_KEY);
     initStore();
     return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);

@@ -57,7 +57,7 @@ function normalizeHref(href) {
 
 function getLabelFromHref(href) {
   const file = normalizeHref(href);
-  return PAGE_LABELS_BY_HREF[file] || (typeof SITE_NAME !== 'undefined' ? SITE_NAME : 'Грань');
+  return PAGE_LABELS_BY_HREF[file] || 'PC Market';
 }
 
 function getLabelFromLink(link, href) {
@@ -225,7 +225,7 @@ async function finishPageTransition(defaultLabel) {
   try {
     const isNavEnter = overlay.dataset.transitionMode === 'nav';
     const labelEl = overlay.querySelector('.page-transition__label');
-    const currentLabel = labelEl?.textContent.trim() || defaultLabel || (typeof SITE_NAME !== 'undefined' ? SITE_NAME : 'Грань');
+    const currentLabel = labelEl?.textContent.trim() || defaultLabel || 'PC Market';
 
     if (isNavEnter) {
       document.body.classList.remove('page-transition-active');
@@ -254,7 +254,7 @@ async function finishPageTransition(defaultLabel) {
 
     hidePageTransition(overlay);
   } catch (error) {
-    console.warn(`${typeof SITE_NAME !== 'undefined' ? SITE_NAME : 'Грань'}: ошибка анимации перехода`, error);
+    console.warn('PC Market: ошибка анимации перехода', error);
     if (!pageTransitionNavigating) hidePageTransition(overlay);
   }
 }
@@ -264,10 +264,10 @@ function initPageTransition(defaultLabel) {
 }
 
 function getPageTransitionLabel(activePage) {
-  if (!activePage) return typeof SITE_NAME !== 'undefined' ? SITE_NAME : 'Грань';
+  if (!activePage) return 'PC Market';
   return PAGE_LABELS_BY_PAGE[activePage]
     || NAV_ITEMS?.find((item) => item.page === activePage)?.label
-    || (typeof SITE_NAME !== 'undefined' ? SITE_NAME : 'Грань');
+    || 'PC Market';
 }
 
 bindPageTransitionLinks(document);
