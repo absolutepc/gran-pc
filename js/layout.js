@@ -30,9 +30,9 @@ function renderHeader(activePage) {
 
         <a href="index.html" class="logo">
 
-          <div class="logo-icon"><img src="img/hero-pc.svg" alt="PC Market"></div>
+          <div class="logo-icon"><img src="img/hero-pc.svg" alt="${SITE_NAME}"></div>
 
-          <span>PC Market</span>
+          <span>${SITE_NAME}</span>
 
         </a>
 
@@ -92,9 +92,9 @@ function renderFooter() {
 
           <a href="index.html" class="logo">
 
-            <div class="logo-icon"><img src="img/hero-pc.svg" alt="PC Market"></div>
+            <div class="logo-icon"><img src="img/hero-pc.svg" alt="${SITE_NAME}"></div>
 
-            <span>PC Market</span>
+            <span>${SITE_NAME}</span>
 
           </a>
 
@@ -176,7 +176,7 @@ function renderFooter() {
 
       <div class="container footer-bottom">
 
-        <p>&copy; 2026 PC Market. Все права защищены.</p>
+        <p>&copy; 2026 ${SITE_NAME}. Все права защищены.</p>
 
         <div class="footer-payments">
 
