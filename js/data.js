@@ -45,8 +45,18 @@ const DEFAULT_PRODUCTS = [
     specs: { vram: '12 ГБ', tdp: '250 Вт' },
     fullDescription: '12 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png', images: [
+        'img/components/gpu/RTX 5070 PALIT B.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png', images: [
+        'img/components/gpu/RTX 5070 PALIT W.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
+      ] },
     ],
     images: [
       'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
@@ -61,8 +71,16 @@ const DEFAULT_PRODUCTS = [
     specs: { dpi: '32000', weight: '60 г' },
     fullDescription: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов. Она отличается сверхмалым весом (всего 60 грамм), передовым сенсором Hero 2 с разрешением до 32 000 DPI, гибридными переключателями Lightforce и частотой опроса до 8000 Гц',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/periphery/mise/Logitech G Pro X Superlight 2 B.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/periphery/mise/Logitech G Pro X Superlight 2 B.png', images: [
+        'img/periphery/mise/Logitech G Pro X Superlight 2 B.png',
+        'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
+        'img/periphery/mise/image-f41a6135d94e48e998c756c588068bd7.webp',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png', images: [
+        'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png',
+        'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
+        'img/periphery/mise/image-f41a6135d94e48e998c756c588068bd7.webp',
+      ] },
     ],
     images: [
       'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
@@ -117,8 +135,16 @@ const DEFAULT_PRODUCTS = [
     specs: { formFactor: 'Mid-Tower', color: 'Чёрный' },
     fullDescription: 'Lian Li O11 Dynamic EVO — культовый mid-tower с двойной камерой, панорамным закалённым стеклом и модульной системой крепления радиаторов. Поддерживает E-ATX платы, до 10 вентиляторов и вертикальную установку GPU. Идеален для showcase-сборок с подсветкой.',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png', images: [
+        'img/components/case/D400-B.png',
+        'img/components/case/D300 Black.png',
+        'img/components/case/D300 Black-1.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png', images: [
+        'img/components/case/D400-W.png',
+        'img/components/case/D300 White.png',
+        'img/components/case/D300 White-1.png',
+      ] },
     ],
     images: [
       'img/components/case/D400-B.png',
@@ -201,9 +227,20 @@ const DEFAULT_READY_PCS = [
       'img/components/case/D400-B.png',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D32 PRO Black 2.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D32 PRO White 2.png' },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/D400-B.png', filter: 'hue-rotate(45deg) saturate(1.35)' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D32 PRO Black 2.png', images: [
+        'img/components/case/D32 PRO Black 2.png',
+        'img/components/case/D32 PRO Black.png',
+        'img/components/case/D32 STD Black.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D32 PRO White 2.png', images: [
+        'img/components/case/D32 PRO White 2.png',
+        'img/components/case/D32 PRO White.png',
+        'img/components/case/D32 STD White.png',
+      ] },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/D400-B.png', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
+        'img/components/case/D400-B.png',
+        'img/components/case/D41 MESH Black.png',
+      ] },
     ],
     performance: { gaming: 75, work: 70, streaming: 72 },
     components: [
@@ -227,9 +264,18 @@ const DEFAULT_READY_PCS = [
       'img/components/case/C6 MAX Black.png',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/mod-3-black.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/mod-3-white.png' },
-      { name: 'Розовый', hex: '#ec4899', img: 'img/components/case/mod-3-pink.png' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/mod-3-black.png', images: [
+        'img/components/case/mod-3-black.png',
+        'img/components/case/C6 MAX Black.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/mod-3-white.png', images: [
+        'img/components/case/mod-3-white.png',
+        'img/components/case/C6 MAX White.png',
+      ] },
+      { name: 'Розовый', hex: '#ec4899', img: 'img/components/case/mod-3-pink.png', images: [
+        'img/components/case/mod-3-pink.png',
+        'img/components/case/mod-3-black.png',
+      ] },
     ],
     specs: ['RTX 4070 Super', 'Ryzen 7 7700', '32 ГБ DDR5', '1 ТБ NVMe', 'БП 750W SFX'],
     performance: { gaming: 85, work: 80, streaming: 82 },
@@ -254,9 +300,17 @@ const DEFAULT_READY_PCS = [
       'img/components/case/D41 STD Black.png',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D41 MESH Black.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D41 MESH White.png' },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/D41 STD Black.png', filter: 'hue-rotate(45deg) saturate(1.35)' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D41 MESH Black.png', images: [
+        'img/components/case/D41 MESH Black.png',
+        'img/components/case/D41 STD Black.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D41 MESH White.png', images: [
+        'img/components/case/D41 MESH White.png',
+      ] },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/D41 STD Black.png', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
+        'img/components/case/D41 STD Black.png',
+        'img/components/case/D41 MESH Black.png',
+      ] },
     ],
     specs: ['RTX 4070 Super', 'Intel i5-14600K', '32 ГБ DDR5', '1 ТБ NVMe', 'БП 750 Вт'],
     performance: { gaming: 92, work: 75, streaming: 85 },
@@ -281,9 +335,17 @@ const DEFAULT_READY_PCS = [
       'img/components/case/O11VP_003a.webp',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/O11VP_014a.webp' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/O11VP_W01.jpg' },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/O11DERGB-000.jpg', filter: 'hue-rotate(45deg) saturate(1.35)' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/O11VP_014a.webp', images: [
+        'img/components/case/O11VP_014a.webp',
+        'img/components/case/O11VP_003a.webp',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/O11VP_W01.jpg', images: [
+        'img/components/case/O11VP_W01.jpg',
+      ] },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/O11DERGB-000.jpg', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
+        'img/components/case/O11DERGB-000.jpg',
+        'img/components/case/O11DERGB-001-1.jpg',
+      ] },
     ],
     specs: ['RTX 4070 Ti Super', 'Intel i7-14700K', '64 ГБ DDR5', '2 ТБ NVMe', 'БП 750 Вт'],
     performance: { gaming: 90, work: 95, streaming: 98 },
@@ -308,9 +370,18 @@ const DEFAULT_READY_PCS = [
       'img/ready/pc.svg',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/ready/pc.svg', filter: 'hue-rotate(45deg) saturate(1.35)' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png', images: [
+        'img/components/case/D400-B.png',
+        'img/components/case/D300 Black.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png', images: [
+        'img/components/case/D400-W.png',
+        'img/components/case/D300 White.png',
+      ] },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/ready/pc.svg', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
+        'img/ready/pc.svg',
+        'img/components/case/O11DERGB-000.jpg',
+      ] },
     ],
     specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
@@ -335,9 +406,19 @@ const DEFAULT_READY_PCS = [
       'img/components/case/O11VP_020.webp',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/O11VP_000a.webp' },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/O11VP_X01.jpg' },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/O11DEVOLB001-2.jpg', filter: 'hue-rotate(45deg) saturate(1.35)' },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/O11VP_000a.webp', images: [
+        'img/components/case/O11VP_000a.webp',
+        'img/components/case/O11VP_001a.webp',
+        'img/components/case/O11VP_020.webp',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/O11VP_X01.jpg', images: [
+        'img/components/case/O11VP_X01.jpg',
+        'img/components/case/O11VP_W01.jpg',
+      ] },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/O11DEVOLB001-2.jpg', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
+        'img/components/case/O11DEVOLB001-2.jpg',
+        'img/components/case/O11DERGB-000.jpg',
+      ] },
     ],
     specs: ['RTX 4090', 'Intel i9-14900K', '128 ГБ DDR5', '4 ТБ NVMe', 'БП 1000 Вт'],
     performance: { gaming: 99, work: 99, streaming: 97 },
@@ -567,6 +648,95 @@ function uniqueImages(list) {
   });
 }
 
+function normalizeItemSrc(src) {
+  try {
+    return decodeURI(src || '');
+  } catch {
+    return src || '';
+  }
+}
+
+function imageBelongsToColor(src, color, colorImg) {
+  if (colorImg && normalizeItemSrc(src) === normalizeItemSrc(colorImg)) return true;
+
+  const name = (color.name || '').toLowerCase();
+  const file = src.toLowerCase();
+
+  if (/чёрн|черн|black/.test(name)) {
+    return (
+      /\bblack\b|-black|black-|d400-b|d32 pro black|d32 std black|d300 black|d200 black|d41 mesh black|d41 std black|mod-3-black|c6 max black|z20 black|tk-0 black|tk-1 black|o11vp_0|o11vp_1|o11vp_2|o11dergb|o11devol|palit b\.png|rtx 5070 palit b/i.test(file)
+      && !/\bwhite\b|-white|white-|d400-w|d32 pro white|mod-3-white|d41 mesh white|o11vp_w|o11vp_x|palit w\.png/i.test(file)
+    );
+  }
+
+  if (/бел|white/.test(name)) {
+    return /\bwhite\b|-white|white-|d400-w|d32 pro white|d32 std white|d300 white|d200 white|d41 mesh white|mod-3-white|c6 max white|z20 white|o11vp_w|o11vp_x|palit w\.png|rtx 5070 palit w/i.test(file);
+  }
+
+  if (/rgb|фиолет|violet|purple/.test(name)) {
+    return /rgb|dergb|o11dergb|o11devol|pc\.svg|mesh black|d400-b/i.test(file);
+  }
+
+  if (/розов|pink/.test(name)) {
+    return /pink|роз/i.test(file);
+  }
+
+  return false;
+}
+
+function enrichColorGalleries(item) {
+  const colors = item.colors || [];
+  if (!colors.length) return item;
+
+  const flatImages = uniqueImages((item.images || []).filter(Boolean));
+  const assignedGlobal = new Set();
+
+  let enrichedColors = colors.map(color => {
+    if (color.images?.filter(Boolean).length) {
+      const images = uniqueImages(color.images.filter(Boolean));
+      images.forEach(src => assignedGlobal.add(normalizeItemSrc(src)));
+      return {
+        ...color,
+        img: color.img || images[0] || getProductImg(item),
+        images,
+      };
+    }
+
+    const colorImg = color.img || getProductImg(item);
+    const images = [];
+
+    if (colorImg) images.push(colorImg);
+
+    flatImages.forEach(src => {
+      const key = normalizeItemSrc(src);
+      if (assignedGlobal.has(key)) return;
+      if (imageBelongsToColor(src, color, colorImg)) {
+        if (!images.some(i => normalizeItemSrc(i) === key)) images.push(src);
+        assignedGlobal.add(key);
+      }
+    });
+
+    const unique = uniqueImages(images.length ? images : (colorImg ? [colorImg] : [getProductImg(item)]));
+    unique.forEach(src => assignedGlobal.add(normalizeItemSrc(src)));
+
+    return {
+      ...color,
+      img: color.img || unique[0] || getProductImg(item),
+      images: unique,
+    };
+  });
+
+  const unassigned = flatImages.filter(src => !assignedGlobal.has(normalizeItemSrc(src)));
+  if (unassigned.length) {
+    enrichedColors = enrichedColors.map(color => ({
+      ...color,
+      images: uniqueImages([...(color.images || []), ...unassigned]),
+    }));
+  }
+
+  return { ...item, colors: enrichedColors };
+}
+
 function buildItemImages(item, def) {
   const fromItem = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
   const fromDef = Array.isArray(def?.images) ? def.images.filter(Boolean) : [];
@@ -601,6 +771,7 @@ function enrichProduct(product, def) {
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, def);
+  merged.colors = enrichColorGalleries(merged).colors;
   PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
     if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });
@@ -640,11 +811,22 @@ function enrichReadyPC(pc) {
   if (tmpl && hasDefaultReadyPCGallery(pc)) {
     merged.images = tmpl.images;
     merged.img = tmpl.img || merged.img;
-    if (!pc.colors?.length) merged.colors = tmpl.colors;
+    if (!pc.colors?.length) {
+      merged.colors = tmpl.colors;
+    } else {
+      merged.colors = merged.colors.map(color => {
+        const tmplColor = tmpl.colors?.find(entry => entry.name === color.name);
+        if (tmplColor?.images?.length && !color.images?.length) {
+          return { ...tmplColor, ...color, images: tmplColor.images };
+        }
+        return color;
+      });
+    }
   }
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, tmpl);
+  merged.colors = enrichColorGalleries(merged).colors;
   return {
     ...merged,
     fullDescription: merged.fullDescription || merged.description || '',

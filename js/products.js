@@ -136,7 +136,7 @@ function initProductDetailPage() {
       updatePageTransitionLabel(product.name);
     }
     container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
-    bindItemGalleryAndColor(container, GALLERY_UI.product);
+    bindItemGalleryAndColor(container, GALLERY_UI.product, product);
     bindAddToCartButtons(container);
     updateCartBadge();
   } catch (err) {

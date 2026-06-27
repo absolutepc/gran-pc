@@ -6,6 +6,7 @@ const GALLERY_UI = {
     pickerClass: 'product-color-picker',
     imageWrapClass: 'product-detail-image-wrap',
     mainImgClass: 'product-detail-main-img',
+    thumbsClass: 'pc-gallery-thumbs',
   },
   readyPc: {
     galleryId: 'pcGallery',
@@ -14,6 +15,7 @@ const GALLERY_UI = {
     pickerClass: 'product-color-picker',
     imageWrapClass: 'product-detail-image-wrap',
     mainImgClass: 'product-detail-main-img',
+    thumbsClass: 'pc-gallery-thumbs',
   },
 };
 
@@ -26,41 +28,52 @@ function uniqueGalleryImages(list) {
   });
 }
 
-function getGalleryInitial(item) {
-  const primarySrc = getProductImg(item);
-  const firstColor = item.colors?.[0];
+function normalizeGallerySrc(src) {
+  try {
+    return decodeURI(src || '');
+  } catch {
+    return src || '';
+  }
+}
 
-  if (firstColor) {
-    return {
-      src: firstColor.img || primarySrc,
-      filter: firstColor.filter && firstColor.filter !== 'none' ? firstColor.filter : '',
-      colorName: firstColor.name || '',
-    };
+function getColorFilter(color) {
+  if (!color?.filter || color.filter === 'none') return '';
+  return color.filter;
+}
+
+function getGalleryItemsForColor(item, colorIndex = 0) {
+  const colors = item.colors || [];
+  if (colors.length) {
+    const color = colors[colorIndex] ?? colors[0];
+    const filter = getColorFilter(color);
+    const images = uniqueGalleryImages((color.images || []).filter(Boolean));
+    const fallback = color.img || getProductImg(item);
+    const sources = images.length ? images : (fallback ? [fallback] : []);
+
+    return sources.map(src => ({
+      src,
+      filter,
+      colorName: color.name || '',
+    }));
   }
 
-  return { src: primarySrc, filter: '', colorName: '' };
+  const flatImages = uniqueGalleryImages((item.images || []).filter(Boolean));
+  if (flatImages.length) {
+    return flatImages.map(src => ({ src, filter: '', colorName: '' }));
+  }
+
+  const src = getProductImg(item);
+  return src ? [{ src, filter: '', colorName: '' }] : [];
+}
+
+function getGalleryInitial(item) {
+  const items = getGalleryItemsForColor(item, 0);
+  if (items.length) return items[0];
+  return { src: getProductImg(item), filter: '', colorName: '' };
 }
 
 function isSameGalleryImage(a, b) {
   return normalizeGallerySrc(a) === normalizeGallerySrc(b);
-}
-
-function getGalleryItems(item) {
-  const images = uniqueGalleryImages((item.images || []).filter(Boolean));
-  const hasColorPicker = (item.colors || []).length > 1;
-
-  // Несколько фото — только они в миниатюрах; цвета переключаются отдельным блоком
-  if (images.length > 1) {
-    return images.map(src => ({ src, filter: '', colorName: '' }));
-  }
-
-  // Один снимок и выбор цвета — миниатюры не показываем, чтобы не дублировать picker
-  if (hasColorPicker) {
-    return [];
-  }
-
-  const src = images[0] || getProductImg(item);
-  return [{ src, filter: '', colorName: '' }];
 }
 
 function renderGalleryThumb(item, itemName, index, isActive) {
@@ -89,6 +102,15 @@ function renderGalleryThumb(item, itemName, index, isActive) {
   `;
 }
 
+function renderGalleryThumbsHtml(items, itemName, activeSrc, activeFilter) {
+  if (items.length <= 1) return '';
+  return items.map((entry, i) => {
+    const isActive = isSameGalleryImage(entry.src, activeSrc)
+      && (entry.filter || '') === (activeFilter || '');
+    return renderGalleryThumb(entry, itemName, i, isActive);
+  }).join('');
+}
+
 function renderItemColorPicker(item, ui) {
   const colors = item.colors || [];
   if (!colors.length) return '';
@@ -104,7 +126,7 @@ function renderItemColorPicker(item, ui) {
             class="color-btn ${i === 0 ? 'active' : ''}"
             data-index="${i}"
             data-name="${escapeHtml(color.name)}"
-            data-img="${color.img || getProductImg(item)}"
+            data-img="${color.images?.[0] || color.img || getProductImg(item)}"
             data-filter="${escapeHtml(color.filter || 'none')}"
             style="--swatch: ${color.hex}"
             title="${escapeHtml(color.name)}"
@@ -117,20 +139,14 @@ function renderItemColorPicker(item, ui) {
 }
 
 function renderItemGallery(item, ui) {
-  const galleryItems = getGalleryItems(item);
-  const initial = getGalleryInitial(item);
-  const initialFilter = initial.filter || item.colors?.[0]?.filter || 'none';
-  const filterValue = initialFilter === 'none' ? '' : initialFilter;
+  const galleryItems = getGalleryItemsForColor(item, 0);
+  const initial = galleryItems[0] || getGalleryInitial(item);
   const thumbs = galleryItems.length > 1
-    ? `<div class="pc-gallery-thumbs">${galleryItems.map((entry, i) => {
-      const isActive = isSameGalleryImage(entry.src, initial.src)
-        && (entry.filter || '') === (initial.filter || '');
-      return renderGalleryThumb(entry, item.name, i, isActive);
-    }).join('')}</div>`
+    ? `<div class="${ui.thumbsClass}">${renderGalleryThumbsHtml(galleryItems, item.name, initial.src, initial.filter)}</div>`
     : '';
 
   return `
-    <div class="pc-detail-gallery" id="${ui.galleryId}">
+    <div class="pc-detail-gallery" id="${ui.galleryId}" data-active-color="0">
       <div class="${ui.imageWrapClass}">
         ${item.badge ? `<span class="product-badge ${item.badge}">${BADGE_LABELS[item.badge] || item.badge}</span>` : ''}
         <img
@@ -138,7 +154,7 @@ function renderItemGallery(item, ui) {
           id="${ui.mainImgId}"
           src="${initial.src}"
           alt="${escapeHtml(item.name)}"
-          style="filter: ${filterValue}"
+          style="filter: ${initial.filter || ''}"
           onerror="this.src='${DEFAULT_IMG}'"
         >
       </div>
@@ -148,20 +164,12 @@ function renderItemGallery(item, ui) {
   `;
 }
 
-function normalizeGallerySrc(src) {
-  try {
-    return decodeURI(src || '');
-  } catch {
-    return src || '';
-  }
-}
-
 function setGalleryMainImage(container, src, filter, colorName, ui) {
   const main = container.querySelector(`#${ui.mainImgId}`);
   if (!main) return;
   const normalizedSrc = normalizeGallerySrc(src);
   main.src = normalizedSrc;
-  main.style.filter = filter;
+  main.style.filter = filter || '';
 
   container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {
     const matchesSrc = normalizeGallerySrc(btn.dataset.src) === normalizedSrc;
@@ -169,7 +177,9 @@ function setGalleryMainImage(container, src, filter, colorName, ui) {
     btn.classList.toggle('active', matchesSrc && matchesFilter);
   });
 
-  syncColorPickerWithGalleryImage(container, normalizedSrc, colorName, ui);
+  if (colorName) {
+    syncColorPickerWithGalleryImage(container, normalizedSrc, colorName, ui);
+  }
 }
 
 function syncColorPickerWithGalleryImage(container, src, preferredColorName, ui) {
@@ -195,7 +205,43 @@ function syncColorPickerWithGalleryImage(container, src, preferredColorName, ui)
   }
 }
 
-function bindItemGallery(container, ui) {
+function updateGalleryThumbs(container, item, colorIndex, ui) {
+  const gallery = container.querySelector(`#${ui.galleryId}`);
+  if (!gallery) return;
+
+  const items = getGalleryItemsForColor(item, colorIndex);
+  let thumbsWrap = gallery.querySelector(`.${ui.thumbsClass}`);
+
+  if (items.length <= 1) {
+    if (thumbsWrap) thumbsWrap.remove();
+    return;
+  }
+
+  const initial = items[0];
+  const html = renderGalleryThumbsHtml(items, item.name, initial.src, initial.filter);
+  if (thumbsWrap) {
+    thumbsWrap.innerHTML = html;
+  } else {
+    thumbsWrap = document.createElement('div');
+    thumbsWrap.className = ui.thumbsClass;
+    thumbsWrap.innerHTML = html;
+    gallery.appendChild(thumbsWrap);
+  }
+}
+
+function switchGalleryColor(container, item, colorIndex, ui) {
+  const gallery = container.querySelector(`#${ui.galleryId}`);
+  if (!gallery) return;
+
+  gallery.dataset.activeColor = String(colorIndex);
+  updateGalleryThumbs(container, item, colorIndex, ui);
+
+  const items = getGalleryItemsForColor(item, colorIndex);
+  const first = items[0] || { src: getProductImg(item), filter: '', colorName: '' };
+  setGalleryMainImage(container, first.src, first.filter, first.colorName, ui);
+}
+
+function bindItemGallery(container, ui, item) {
   const gallery = container.querySelector(`#${ui.galleryId}`);
   if (!gallery) return;
 
@@ -207,7 +253,7 @@ function bindItemGallery(container, ui) {
   });
 }
 
-function bindItemColorPicker(container, ui) {
+function bindItemColorPicker(container, ui, item) {
   const picker = container.querySelector(`.${ui.pickerClass}`);
   if (!picker) return;
 
@@ -219,13 +265,12 @@ function bindItemColorPicker(container, ui) {
       const colorNameEl = container.querySelector(`#${ui.colorNameId}`);
       if (colorNameEl) colorNameEl.textContent = btn.dataset.name;
 
-      const filter = btn.dataset.filter === 'none' ? '' : (btn.dataset.filter || '');
-      setGalleryMainImage(container, btn.dataset.img, filter, btn.dataset.name, ui);
+      switchGalleryColor(container, item, Number(btn.dataset.index) || 0, ui);
     });
   });
 }
 
-function bindItemGalleryAndColor(container, ui) {
-  bindItemGallery(container, ui);
-  bindItemColorPicker(container, ui);
+function bindItemGalleryAndColor(container, ui, item) {
+  bindItemGallery(container, ui, item);
+  bindItemColorPicker(container, ui, item);
 }
