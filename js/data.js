@@ -1,4 +1,6 @@
-const STORE_KEY = 'pcmarket_data_v3';
+const STORE_VERSION = 4;
+const STORE_KEY = 'pcmarket_data_v4';
+const LEGACY_STORE_KEYS = ['pcmarket_data_v3'];
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -477,10 +479,83 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function initStore() {
-  if (!localStorage.getItem(STORE_KEY)) {
-    localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
+function getCatalogContentHash() {
+  const payload = {
+    products: DEFAULT_PRODUCTS.map(item => ({ id: item.id, img: item.img, images: item.images, colors: item.colors })),
+    readyPCs: DEFAULT_READY_PCS.map(item => ({ id: item.id, img: item.img, images: item.images, colors: item.colors })),
+  };
+  const raw = JSON.stringify(payload);
+  let hash = 0;
+  for (let i = 0; i < raw.length; i += 1) {
+    hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0;
   }
+  return String(hash >>> 0);
+}
+
+function createDefaultStore() {
+  return {
+    version: STORE_VERSION,
+    catalogHash: getCatalogContentHash(),
+    products: DEFAULT_PRODUCTS,
+    readyPCs: DEFAULT_READY_PCS,
+  };
+}
+
+function readStoreData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoreData(data) {
+  localStorage.setItem(STORE_KEY, JSON.stringify({
+    version: STORE_VERSION,
+    catalogHash: getCatalogContentHash(),
+    ...data,
+  }));
+}
+
+function resetCatalogToDefaults() {
+  writeStoreData(createDefaultStore());
+}
+
+function purgeLegacyStoreKeys() {
+  LEGACY_STORE_KEYS.forEach(key => localStorage.removeItem(key));
+}
+
+function pickStoredOverrides(stored, template) {
+  if (!stored || !template || stored.id !== template.id) return {};
+  return {
+    id: template.id,
+    price: stored.price,
+    badge: stored.badge,
+    name: stored.name,
+  };
+}
+
+function mergeCatalogItem(stored, template) {
+  if (!template) return { ...(stored || {}) };
+  const overrides = pickStoredOverrides(stored, template);
+  return {
+    ...template,
+    price: overrides.price ?? template.price,
+    badge: overrides.badge ?? template.badge,
+    name: overrides.name || template.name,
+  };
+}
+
+function initStore() {
+  purgeLegacyStoreKeys();
+  const catalogHash = getCatalogContentHash();
+  const data = readStoreData();
+
+  if (!data || data.version !== STORE_VERSION || data.catalogHash !== catalogHash) {
+    resetCatalogToDefaults();
+  }
+
   if (!localStorage.getItem(CART_KEY)) {
     localStorage.setItem(CART_KEY, JSON.stringify([]));
   }
@@ -489,9 +564,22 @@ function initStore() {
   }
 }
 
-function mergeDefaultAttributes(products) {
-  const defaultsById = Object.fromEntries(DEFAULT_PRODUCTS.map(p => [p.id, p]));
-  return products.map(product => enrichProduct(product, defaultsById[product.id]));
+function syncProductList(products) {
+  const storedById = Object.fromEntries((products || []).map(product => [product.id, product]));
+  const defaultIds = new Set(DEFAULT_PRODUCTS.map(item => item.id));
+  return [
+    ...DEFAULT_PRODUCTS.map(def => enrichProduct(pickStoredOverrides(storedById[def.id], def), def)),
+    ...(products || []).filter(product => !defaultIds.has(product.id)).map(product => enrichProduct(product, null)),
+  ];
+}
+
+function syncReadyPCList(pcs) {
+  const storedById = Object.fromEntries((pcs || []).map(pc => [pc.id, pc]));
+  const defaultIds = new Set(DEFAULT_READY_PCS.map(item => item.id));
+  return [
+    ...DEFAULT_READY_PCS.map(def => enrichReadyPC(pickStoredOverrides(storedById[def.id], def))),
+    ...(pcs || []).filter(pc => !defaultIds.has(pc.id)).map(enrichReadyPC),
+  ];
 }
 
 function buildFullDescription(product) {
@@ -552,7 +640,7 @@ function buildDefaultColors(product) {
 }
 
 function enrichProduct(product, def) {
-  const merged = def ? { ...def, ...product } : { ...product };
+  const merged = mergeCatalogItem(product, def);
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
@@ -567,15 +655,13 @@ function enrichProduct(product, def) {
 function getProducts() {
   initStore();
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    const data = raw ? JSON.parse(raw) : null;
-    const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
-    return mergeDefaultAttributes(products);
+    const data = readStoreData();
+    const products = Array.isArray(data?.products) ? data.products : [];
+    return syncProductList(products);
   } catch (e) {
     console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
-    localStorage.removeItem(STORE_KEY);
-    initStore();
-    return mergeDefaultAttributes(DEFAULT_PRODUCTS);
+    resetCatalogToDefaults();
+    return syncProductList([]);
   }
 }
 
@@ -587,7 +673,7 @@ function getEnrichedProductById(id) {
 function enrichReadyPC(pc) {
   if (!pc) return null;
   const tmpl = DEFAULT_READY_PCS.find(d => d.id === pc.id);
-  const merged = tmpl ? { ...tmpl, ...pc } : { ...pc };
+  const merged = mergeCatalogItem(pc, tmpl);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, tmpl);
@@ -602,16 +688,13 @@ function enrichReadyPC(pc) {
 function getReadyPCs() {
   initStore();
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    const data = raw ? JSON.parse(raw) : null;
+    const data = readStoreData();
     const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
-    const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
-    return list.sort((a, b) => a.price - b.price);
+    return syncReadyPCList(pcs).sort((a, b) => a.price - b.price);
   } catch (e) {
     console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
-    localStorage.removeItem(STORE_KEY);
-    initStore();
-    return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);
+    resetCatalogToDefaults();
+    return syncReadyPCList([]).sort((a, b) => a.price - b.price);
   }
 }
 
@@ -620,15 +703,15 @@ function getReadyPCById(id) {
 }
 
 function saveProducts(products) {
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
+  const data = readStoreData() || createDefaultStore();
   data.products = products;
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  writeStoreData(data);
 }
 
 function saveReadyPCs(pcs) {
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
+  const data = readStoreData() || createDefaultStore();
   data.readyPCs = pcs;
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  writeStoreData(data);
 }
 
 function formatPrice(price) {
