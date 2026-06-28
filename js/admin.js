@@ -16,16 +16,26 @@ function pickProductFilterFields(data) {
 function parseProductColors(raw) {
   if (!raw || !raw.trim()) return undefined;
   const colors = raw.trim().split('\n').map(line => {
-    const [name, hex, img] = line.split('|').map(s => s.trim());
+    const parts = line.split('|').map(s => s.trim());
+    const [name, hex, ...images] = parts;
     if (!name || !hex) return null;
-    return { name, hex, img: img || undefined };
+    const img = images[0] || undefined;
+    return {
+      name,
+      hex,
+      ...(img ? { img } : {}),
+      ...(images.length ? { images } : {}),
+    };
   }).filter(Boolean);
   return colors.length ? colors : undefined;
 }
 
 function formatProductColors(colors) {
   if (!colors?.length) return '';
-  return colors.map(c => [c.name, c.hex, c.img || ''].filter(Boolean).join('|')).join('\n');
+  return colors.map(c => {
+    const imgs = c.images?.length ? c.images : (c.img ? [c.img] : []);
+    return [c.name, c.hex, ...imgs].filter(Boolean).join('|');
+  }).join('\n');
 }
 
 function parseProductImages(raw) {
@@ -241,7 +251,7 @@ function renderProductsAdmin() {
           </div>
           <div class="form-group"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание (страница «Подробнее»)</label><textarea name="fullDescription" rows="4" placeholder="Расширенное описание для страницы товара"></textarea></div>
-          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|путь_к_изображению&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png"></textarea></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|фото1|фото2|...&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png|img/components/case/D300 Black.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png|img/components/case/D300 White.png"></textarea></div>
           <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div style="display:flex;gap:8px;margin-top:16px">
             <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
@@ -455,7 +465,7 @@ function renderReadyPCsAdmin() {
           </div>
           <div class="form-group"><label>Описание (краткое)</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание</label><textarea name="fullDescription" rows="4" placeholder="Текст на странице «Подробнее»"></textarea></div>
-          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|путь_к_изображению&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png"></textarea></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|фото1|фото2|...&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png|img/components/case/D300 Black.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png|img/components/case/D300 White.png"></textarea></div>
           <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div class="form-group">
             <label>Комплектация (каждый пункт с новой строки)</label>

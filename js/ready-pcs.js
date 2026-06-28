@@ -140,7 +140,7 @@ function initReadyPCDetailPage() {
       updatePageTransitionLabel(pc.name);
     }
     container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
-    bindItemGalleryAndColor(container, GALLERY_UI.readyPc);
+    bindItemGalleryAndColor(container, GALLERY_UI.readyPc, pc);
     bindAddToCartButtons(container);
     updateCartBadge();
   } catch (err) {
