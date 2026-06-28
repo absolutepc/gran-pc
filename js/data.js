@@ -1,5 +1,5 @@
-const STORE_VERSION = 6;
-const STORE_KEY = 'pcmarket_data_v6';
+const STORE_VERSION = 7;
+const STORE_KEY = 'pcmarket_data_v7';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -592,6 +592,11 @@ const DEFAULT_COLOR_SETS = {
 
 const ADMIN_CREDENTIALS = { email: 'admin@pcmarket.ru', password: 'admin123' };
 
+function encodeAssetPath(src) {
+  if (!src || /^(https?:\/\/|data:)/i.test(src)) return src;
+  return src.split('/').map(segment => encodeURIComponent(segment)).join('/');
+}
+
 function getProductImg(item) {
   if (item.img) return item.img;
   if (item.category && CATEGORY_IMAGES[item.category]) return CATEGORY_IMAGES[item.category];
@@ -599,7 +604,7 @@ function getProductImg(item) {
 }
 
 function renderProductImg(img, alt = '') {
-  const src = img || DEFAULT_IMG;
+  const src = encodeAssetPath(img || DEFAULT_IMG);
   const safeAlt = alt.replace(/"/g, '&quot;');
   return `<img src="${src}" alt="${safeAlt}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
 }
@@ -635,15 +640,25 @@ function createDefaultStore() {
   };
 }
 
+function pickStoredOverrides(stored, template) {
+  if (!stored || !template || stored.id !== template.id) return {};
+  return {
+    id: template.id,
+    price: stored.price,
+    badge: stored.badge,
+    name: stored.name,
+  };
+}
+
 /** Для встроенных товаров/сборок визуальные данные всегда из data.js; из localStorage — цена, название, метка. */
 function mergeCatalogItem(stored, template) {
-  if (!template) return { ...stored };
+  if (!template) return { ...(stored || {}) };
+  const overrides = pickStoredOverrides(stored, template);
   return {
     ...template,
-    id: stored.id || template.id,
-    price: stored.price ?? template.price,
-    badge: stored.badge ?? template.badge,
-    name: stored.name || template.name,
+    price: overrides.price ?? template.price,
+    badge: overrides.badge ?? template.badge,
+    name: overrides.name || template.name,
   };
 }
 
@@ -852,7 +867,7 @@ function syncProductList(products) {
   const storedById = Object.fromEntries((products || []).map(product => [product.id, product]));
   const defaultIds = new Set(DEFAULT_PRODUCTS.map(item => item.id));
   return [
-    ...DEFAULT_PRODUCTS.map(def => enrichProduct(storedById[def.id] || def, def)),
+    ...DEFAULT_PRODUCTS.map(def => enrichProduct(pickStoredOverrides(storedById[def.id], def), def)),
     ...(products || []).filter(product => !defaultIds.has(product.id)).map(product => enrichProduct(product, null)),
   ];
 }
@@ -895,7 +910,7 @@ function syncReadyPCList(pcs) {
   const storedById = Object.fromEntries((pcs || []).map(pc => [pc.id, pc]));
   const defaultIds = new Set(DEFAULT_READY_PCS.map(item => item.id));
   return [
-    ...DEFAULT_READY_PCS.map(def => enrichReadyPC(storedById[def.id] || def)),
+    ...DEFAULT_READY_PCS.map(def => enrichReadyPC(pickStoredOverrides(storedById[def.id], def))),
     ...(pcs || []).filter(pc => !defaultIds.has(pc.id)).map(enrichReadyPC),
   ];
 }

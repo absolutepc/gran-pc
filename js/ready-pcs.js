@@ -133,7 +133,7 @@ function renderReadyPCCard(pc) {
 }
 
 function renderComponentMedia(comp) {
-  const src = comp.img || DEFAULT_IMG;
+  const src = encodeAssetPath(comp.img || DEFAULT_IMG);
   const filterStyle = comp.imgFilter ? `filter:${comp.imgFilter};` : '';
   return `<img src="${src}" alt="${escapeHtml(comp.name || '')}" data-component-img style="${filterStyle}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
 }
@@ -175,7 +175,7 @@ function updatePCComponentsForColor(container, pc, colorIndex = 0) {
     const img = row.querySelector('[data-component-img]');
     const title = row.querySelector('[data-component-name]');
     if (img) {
-      img.src = comp.img || DEFAULT_IMG;
+      img.src = encodeAssetPath(comp.img || DEFAULT_IMG);
       img.style.filter = comp.imgFilter || '';
     }
     if (title) title.textContent = comp.name;
