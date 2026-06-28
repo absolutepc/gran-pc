@@ -42,26 +42,39 @@ const PRODUCT_ATTRIBUTE_FIELDS = [
 
 const DEFAULT_PRODUCTS = [
   { id: 'p1', name: 'NVIDIA GeForce RTX™ 5070 Infinity 3', category: 'gpu', price: 59990, oldPrice: 62990, 
-    img: 'img/components/gpu/RTX 5070 PALIT B.png', 
+    img: 'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png', 
     description: '12 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, pcie: 'PCIe 5.0', 
     specs: { vram: '12 ГБ', tdp: '250 Вт' },
     fullDescription: '12 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png', images: [
-        'img/components/gpu/RTX 5070 PALIT B.png',
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png', images: [
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 9.png',
         'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 4.png',
         'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 1.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 6.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 5.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 7.png',
       ] },
       { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png', images: [
-        'img/components/gpu/RTX 5070 PALIT W.png',
-        'img/components/gpu/GeForce RTX™ 5070 White OC 1.png',
-        'img/components/gpu/GeForce RTX™ 5070 White OC 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 White OC 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 8.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 9.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 2.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 4.png',
+        'img/components/gpu/GeForce RTX™ 5070 White.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 1.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 6.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 5.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 7.png',
       ] },
     ],
   },
-  { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, 
+
+  { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 12990, 
     img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png', 
     description: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов.', stock: 2, wired: 'Беспроводной', hertz: '8000 Гц', 
     specs: { dpi: '32000', weight: '60 г' },
@@ -264,6 +277,7 @@ const DEFAULT_READY_PCS = [
       { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D32 PRO Black 2.png', description: 'Корпус с tempered glass и подсветкой.' },
     ],
   },
+
   {
     id: 'rpc2', name: 'Компактный Mini', price: 119990, img: 'img/components/case/mod-3-black.png',
     description: 'Мощная SFF-сборка в компактном корпусе',
@@ -300,6 +314,7 @@ const DEFAULT_READY_PCS = [
       { type: 'case', name: 'Compact Mini-ITX', img: 'img/components/case/mod-3-black.png', description: 'SFF с панорамным стеклом.' },
     ],
   },
+
   {
     id: 'rpc3', name: 'Киберспортивный Чемпион', price: 129990, img: 'img/components/case/D41 MESH Black.png', badge: 'new',
     description: 'Оптимизирован для соревновательного гейминга с монитором 360 Гц',
@@ -335,6 +350,7 @@ const DEFAULT_READY_PCS = [
       { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D41 MESH Black.png', description: 'Отличный airflow и RGB-подсветка.' },
     ],
   },
+
   {
     id: 'rpc4', name: 'Стрим Мастер', price: 149990, img: 'img/components/case/O11VP_014a.webp', badge: 'new',
     description: 'Идеален для стриминга и создания контента',
@@ -370,6 +386,7 @@ const DEFAULT_READY_PCS = [
       { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_014a.webp', description: 'Просторный корпус с местом для кастомизации.' },
     ],
   },
+
   {
     id: 'rpc5', name: 'Игровой Зверь Pro', price: 189990, img: 'img/components/case/D400-B.png', badge: 'sale',
     description: 'Топовый игровой ПК для 4K на максимальных настройках',
@@ -417,6 +434,7 @@ const DEFAULT_READY_PCS = [
       { type: 'case', name: 'JONSBO D-400 BLACK', img: 'img/components/case/D400-B.png', description: 'Премиальный корпус с панорамным стеклом и отличным airflow.' },
     ],
   },
+
   {
     id: 'rpc6', name: 'Рабочая Станция Elite', price: 249990, img: 'img/components/case/O11VP_000a.webp',
     description: 'Профессиональная станция для 3D, монтажа и AI',
