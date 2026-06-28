@@ -1,5 +1,5 @@
-const STORE_VERSION = 4;
-const STORE_KEY = 'pcmarket_data_v4';
+const STORE_VERSION = 5;
+const STORE_KEY = 'pcmarket_data_v5';
 const LEGACY_STORE_KEYS = ['pcmarket_data_v3', 'pcmarket_data_v2', 'pcmarket_data'];
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
@@ -623,64 +623,47 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
+function getCatalogContentHash() {
+  const payload = {
+    products: DEFAULT_PRODUCTS.map(item => ({
+      id: item.id,
+      img: item.img,
+      images: item.images,
+      colors: item.colors,
+    })),
+    readyPCs: DEFAULT_READY_PCS.map(item => ({
+      id: item.id,
+      img: item.img,
+      images: item.images,
+      colors: item.colors,
+      components: item.components,
+    })),
+  };
+  const raw = JSON.stringify(payload);
+  let hash = 0;
+  for (let i = 0; i < raw.length; i += 1) {
+    hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0;
+  }
+  return String(hash >>> 0);
+}
+
 function createDefaultStore() {
   return {
     version: STORE_VERSION,
+    contentHash: getCatalogContentHash(),
     products: DEFAULT_PRODUCTS,
     readyPCs: DEFAULT_READY_PCS,
   };
-}
-
-function colorGalleryScore(colors) {
-  if (!colors?.length) return 0;
-  return colors.reduce((sum, color) => {
-    const count = color.images?.filter(Boolean).length || (color.img ? 1 : 0);
-    return sum + count;
-  }, 0);
-}
-
-function componentPhotoScore(components) {
-  if (!components?.length) return 0;
-  return components.filter(comp => comp.img && !/\/categories\//.test(comp.img)).length;
-}
-
-function pickCatalogImages(stored, template) {
-  const storedImages = (stored?.images || []).filter(Boolean);
-  const templateImages = (template?.images || []).filter(Boolean);
-  if (!templateImages.length) return storedImages;
-  if (!storedImages.length) return templateImages;
-  if (storedImages.length === 1 && storedImages[0] === 'img/ready/pc.svg') return templateImages;
-  if (templateImages.length > storedImages.length) return templateImages;
-  return storedImages;
-}
-
-function pickCatalogColors(stored, template) {
-  if (!template?.colors?.length) return stored?.colors || [];
-  if (!stored?.colors?.length) return template.colors;
-  if (colorGalleryScore(template.colors) > colorGalleryScore(stored.colors)) return template.colors;
-  return stored.colors;
-}
-
-function pickCatalogComponents(stored, template) {
-  if (!template?.components?.length) return stored?.components || [];
-  if (!stored?.components?.length) return template.components;
-  if (componentPhotoScore(template.components) > componentPhotoScore(stored.components)) return template.components;
-  return stored.components;
 }
 
 function mergeCatalogItem(stored, template) {
   if (!template) return { ...stored };
   return {
     ...template,
-    ...stored,
-    images: pickCatalogImages(stored, template),
-    colors: pickCatalogColors(stored, template),
-    components: pickCatalogComponents(stored, template),
-    img: template.img || stored.img,
-    fullDescription: template.fullDescription || stored.fullDescription,
-    description: template.description || stored.description,
-    specs: template.specs ?? stored.specs,
-    performance: template.performance ?? stored.performance,
+    id: stored.id || template.id,
+    price: stored.price ?? template.price,
+    badge: stored.badge ?? template.badge,
+    name: stored.name || template.name,
   };
 }
 
@@ -694,7 +677,11 @@ function readStoreData() {
 }
 
 function writeStoreData(data) {
-  localStorage.setItem(STORE_KEY, JSON.stringify({ version: STORE_VERSION, ...data }));
+  localStorage.setItem(STORE_KEY, JSON.stringify({
+    version: STORE_VERSION,
+    contentHash: getCatalogContentHash(),
+    ...data,
+  }));
 }
 
 function resetCatalogToDefaults() {
@@ -702,9 +689,10 @@ function resetCatalogToDefaults() {
 }
 
 function initStore() {
+  const contentHash = getCatalogContentHash();
   let data = readStoreData();
 
-  if (!data || data.version !== STORE_VERSION) {
+  if (!data || data.version !== STORE_VERSION || data.contentHash !== contentHash) {
     resetCatalogToDefaults();
     data = readStoreData();
   }
@@ -826,10 +814,13 @@ function enrichColorGalleries(item) {
 
   const unassigned = flatImages.filter(src => !assignedGlobal.has(normalizeItemSrc(src)));
   if (unassigned.length) {
-    enrichedColors = enrichedColors.map(color => ({
-      ...color,
-      images: uniqueImages([...(color.images || []), ...unassigned]),
-    }));
+    enrichedColors = enrichedColors.map(color => {
+      if ((color.images?.filter(Boolean).length || 0) > 1) return color;
+      return {
+        ...color,
+        images: uniqueImages([...(color.images || []), ...unassigned]),
+      };
+    });
   }
 
   return { ...item, colors: enrichedColors };
