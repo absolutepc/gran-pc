@@ -13,61 +13,19 @@ function pickProductFilterFields(data) {
   return fields;
 }
 
-function parseComponentOverrides(raw) {
-  if (!raw?.trim()) return undefined;
-  const overrides = {};
-
-  raw.split(';').forEach(entry => {
-    const parts = entry.trim().split('|').filter(Boolean);
-    if (!parts.length) return;
-
-    const typeMatch = parts[0].match(/^(\w+)=(.+)$/);
-    if (!typeMatch) return;
-
-    const type = typeMatch[1];
-    const value = { img: typeMatch[2] };
-
-    parts.slice(1).forEach(part => {
-      const eq = part.indexOf('=');
-      if (eq === -1) return;
-      const key = part.slice(0, eq).trim();
-      const fieldValue = part.slice(eq + 1).trim();
-      if (key === 'name') value.name = fieldValue;
-      if (key === 'filter') value.imgFilter = fieldValue;
-    });
-
-    overrides[type] = value;
-  });
-
-  return Object.keys(overrides).length ? overrides : undefined;
-}
-
-function formatComponentOverrides(overrides) {
-  if (!overrides || !Object.keys(overrides).length) return '';
-  return Object.entries(overrides).map(([type, value]) => {
-    const parts = [`${type}=${value.img || ''}`];
-    if (value.name) parts.push(`name=${value.name}`);
-    if (value.imgFilter) parts.push(`filter=${value.imgFilter}`);
-    return parts.join('|');
-  }).join(';');
-}
-
 function parseProductColors(raw) {
   if (!raw || !raw.trim()) return undefined;
   const colors = raw.trim().split('\n').map(line => {
-    const [mainPart, overridesPart] = line.split('||').map(s => s.trim());
-    const parts = mainPart.split('|').map(s => s.trim()).filter(Boolean);
+    const parts = line.split('|').map(s => s.trim()).filter(Boolean);
     if (parts.length < 2) return null;
     const [name, hex, ...imgs] = parts;
     if (!name || !hex) return null;
     const images = imgs.length ? imgs : undefined;
-    const componentOverrides = parseComponentOverrides(overridesPart);
     return {
       name,
       hex,
       img: imgs[0] || undefined,
       ...(images ? { images } : {}),
-      ...(componentOverrides ? { componentOverrides } : {}),
     };
   }).filter(Boolean);
   return colors.length ? colors : undefined;
@@ -77,9 +35,7 @@ function formatProductColors(colors) {
   if (!colors?.length) return '';
   return colors.map(c => {
     const imgs = c.images?.length ? c.images : (c.img ? [c.img] : []);
-    const base = [c.name, c.hex, ...imgs].join('|');
-    const overrides = formatComponentOverrides(c.componentOverrides);
-    return overrides ? `${base}||${overrides}` : base;
+    return [c.name, c.hex, ...imgs].join('|');
   }).join('\n');
 }
 
@@ -296,7 +252,7 @@ function renderProductsAdmin() {
           </div>
           <div class="form-group"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание (страница «Подробнее»)</label><textarea name="fullDescription" rows="4" placeholder="Расширенное описание для страницы товара"></textarea></div>
-          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="5" placeholder="Название|#hex|фото1|фото2|…&#10;Белый|#f0f0f0|photo1.png||case=img/case/w.png|name=JONSBO White;gpu=img/gpu/w.png"></textarea><small style="display:block;margin-top:4px;color:var(--text-secondary)">После <code>||</code> — фото комплектующих: <code>case=путь|name=…;gpu=…;ram=…;cooling=…</code></small></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="4" placeholder="По одному цвету на строку: Название|#hex|фото1|фото2|...&#10;Чёрный|#1a1a1a|img/case/D400-B.png|img/case/D400-B-2.png&#10;Белый|#f0f0f0|img/case/D400-W.png"></textarea></div>
           <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div style="display:flex;gap:8px;margin-top:16px">
             <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
@@ -510,7 +466,7 @@ function renderReadyPCsAdmin() {
           </div>
           <div class="form-group"><label>Описание (краткое)</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание</label><textarea name="fullDescription" rows="4" placeholder="Текст на странице «Подробнее»"></textarea></div>
-          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="5" placeholder="Название|#hex|фото1|фото2|…&#10;Белый|#f0f0f0|photo1.png||case=img/case/w.png|name=JONSBO White;gpu=img/gpu/w.png"></textarea><small style="display:block;margin-top:4px;color:var(--text-secondary)">После <code>||</code> — фото комплектующих: <code>case=путь|name=…;gpu=…;ram=…;cooling=…</code></small></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="4" placeholder="По одному цвету на строку: Название|#hex|фото1|фото2|...&#10;Чёрный|#1a1a1a|img/case/D400-B.png|img/case/D400-B-2.png&#10;Белый|#f0f0f0|img/case/D400-W.png"></textarea></div>
           <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div class="form-group">
             <label>Комплектация (каждый пункт с новой строки)</label>

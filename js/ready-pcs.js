@@ -60,34 +60,27 @@ function resolveReadyPCComponents(pc, colorIndex = 0) {
   const caseImg = color.img || color.images?.[0];
 
   return base.map(comp => {
-    const override = overrides[comp.type];
-
-    if (override && (override.img || override.name || override.imgFilter)) {
-      return {
-        ...comp,
-        img: override.img || comp.img,
-        name: override.name || comp.name,
-        imgFilter: override.imgFilter || '',
-      };
-    }
-
-    let img = comp.img;
-    let name = comp.name;
-    let imgFilter = '';
+    const override = overrides[comp.type] || {};
+    let img = override.img || comp.img;
+    let name = override.name || comp.name;
+    let imgFilter = override.imgFilter || '';
 
     if (comp.type === 'case') {
-      img = caseImg || comp.img;
+      img = override.img || caseImg || comp.img;
       name = `${stripComponentColorSuffix(name)} (${colorName})`;
-      imgFilter = colorFilter;
+      imgFilter = override.imgFilter ?? colorFilter;
     } else if (COLOR_AWARE_COMPONENT_TYPES.has(comp.type)) {
       const swapped = swapComponentImgForColor(comp.img, colorName);
       if (swapped !== comp.img) img = swapped;
 
-      if (/\/categories\//.test(img)) {
+      if (!override.imgFilter && /\/categories\//.test(img)) {
         if (isWhiteColorName(colorName)) imgFilter = WHITE_COMPONENT_FILTER;
         else if (isPinkColorName(colorName)) imgFilter = PINK_COMPONENT_FILTER;
         else if (isRgbColorName(colorName) && colorFilter) imgFilter = colorFilter;
       }
+
+      if (override.img) img = override.img;
+      if (override.imgFilter) imgFilter = override.imgFilter;
     }
 
     return { ...comp, img, name, imgFilter };
