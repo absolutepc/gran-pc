@@ -40,35 +40,28 @@ const PRODUCT_ATTRIBUTE_FIELDS = [
 
 const DEFAULT_PRODUCTS = [
   { id: 'p1', name: 'NVIDIA GeForce RTX™ 5070 Infinity 3', category: 'gpu', price: 59990, oldPrice: 62990, 
-    img: 'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png', 
+    img: 'img/components/gpu/RTX 5070 PALIT B.png', 
     description: '12 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, pcie: 'PCIe 5.0', 
     specs: { vram: '12 ГБ', tdp: '250 Вт' },
     fullDescription: '12 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png', images: [
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 9.png',
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png', images: [
+        'img/components/gpu/RTX 5070 PALIT B.png',
         'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 3.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 4.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
         'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 1.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 6.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 5.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 7.png',
       ] },
       { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png', images: [
-        'img/components/gpu/GeForce RTX™ 5070 White 8.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 9.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 3.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 4.png',
-        'img/components/gpu/GeForce RTX™ 5070 White.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 1.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 6.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 5.png',
-        'img/components/gpu/GeForce RTX™ 5070 White 7.png',
+        'img/components/gpu/RTX 5070 PALIT W.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
       ] },
+    ],
+    images: [
+      'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
+      'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
+      'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
     ],
   },
   { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, 
@@ -124,31 +117,17 @@ const DEFAULT_PRODUCTS = [
     description: 'AM5, PCIe 5.0, WiFi 6E', stock: 12, socket: 'AM5', memoryType: 'DDR5', 
     specs: { formFactor: 'ATX' } },
 
-  { id: 'p7', name: 'SEASONIC FOUCS GX 850W ATX 3.1', category: 'psu', price: 14990, 
-    img: 'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png', 
+  { id: 'p7', name: 'be quiet! Dark Power 13 850W', category: 'psu', price: 19990, 
+    img: 'img/categories/psu.svg', 
     description: '80+ Titanium, полностью модульный', stock: 18, psutype: 'Полностью модульный', 
-    specs: { wattage: '850 Вт', efficiency: 'Titanium' },
-    fullDescription: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов. Она отличается сверхмалым весом (всего 60 грамм), передовым сенсором Hero 2 с разрешением до 32 000 DPI, гибридными переключателями Lightforce и частотой опроса до 8000 Гц',
-    colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png', images: [
-        'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png',
-        'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png',
-        'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png', images: [
-        'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png',
-        'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png',
-        'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png',
-      ] },
-    ],
-  }, 
+    specs: { wattage: '850 Вт', efficiency: 'Titanium' } },
 
   { id: 'p8', name: 'NZXT Kraken X73 RGB', category: 'cooling', price: 15990, 
     img: 'img/categories/cooling.svg', 
     description: 'СЖО 360 мм, LCD-дисплей', stock: 10, liquid: '360 мм', 
     specs: { type: 'AIO', size: '360 мм' } },
 
- {
+  {
     id: 'p9', name: 'Lian Li O11 Dynamic EVO', category: 'case', price: 16990,
     img: 'img/components/case/D400-B.png',
     description: 'Mid-tower, закалённое стекло', stock: 8, caseff: 'Mid-Tower',
@@ -271,7 +250,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS B650-Plus', img: 'img/categories/motherboard.svg', description: 'ATX плата AM5 с WiFi 6 и PCIe 4.0.' },
       { type: 'psu', name: '650W 80+ Gold', img: 'img/categories/psu.svg', description: 'Надёжный БП с запасом мощности.' },
       { type: 'cooling', name: 'Башенный кулер', img: 'img/categories/cooling.svg', description: 'Тихое воздушное охлаждение CPU.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Корпус с tempered glass и подсветкой.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D32 PRO Black 2.png', description: 'Корпус с tempered glass и подсветкой.' },
     ],
   },
   {
@@ -307,7 +286,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix B650-I', img: 'img/categories/motherboard.svg', description: 'Premium Mini-ITX с WiFi 6E.' },
       { type: 'psu', name: '750W SFX 80+ Gold', img: 'img/categories/psu.svg', description: 'Компактный SFX блок питания.' },
       { type: 'cooling', name: '240mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 240 мм для SFF-корпуса.' },
-      { type: 'case', name: 'Compact Mini-ITX', img: 'img/categories/case.svg', description: 'SFF с панорамным стеклом.' },
+      { type: 'case', name: 'Compact Mini-ITX', img: 'img/components/case/mod-3-black.png', description: 'SFF с панорамным стеклом.' },
     ],
   },
   {
@@ -342,7 +321,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'MSI Z790 Tomahawk', img: 'img/categories/motherboard.svg', description: 'Усиленный VRM для стабильного разгона.' },
       { type: 'psu', name: '750W 80+ Gold', img: 'img/categories/psu.svg', description: 'Модульный тихий БП.' },
       { type: 'cooling', name: '240mm AIO RGB', img: 'img/categories/cooling.svg', description: 'СЖО для длительных турнирных сессий.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Отличный airflow и RGB-подсветка.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D41 MESH Black.png', description: 'Отличный airflow и RGB-подсветка.' },
     ],
   },
   {
@@ -377,7 +356,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix Z790-E', img: 'img/categories/motherboard.svg', description: 'WiFi 6E, 2.5G LAN, мощная подсистема питания.' },
       { type: 'psu', name: '750W 80+ Platinum', img: 'img/categories/psu.svg', description: 'Тихий модульный БП для длительных стримов.' },
       { type: 'cooling', name: '360mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 360 мм держит CPU прохладным под нагрузкой.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'Просторный корпус с местом для кастомизации.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_014a.webp', description: 'Просторный корпус с местом для кастомизации.' },
     ],
   },
   {
@@ -414,10 +393,10 @@ const DEFAULT_READY_PCS = [
         'img/components/case/Jonsbo D400/JONSBO D400 White 10.png',
       ] },
     ],
-    specs: ['RTX 5080 16GB', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
+    specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
     components: [
-      { type: 'gpu', name: 'NVIDIA RTX 5080 16GB', img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png', description: '16 ГБ GDDR6X — уверенный 4K с ray tracing и DLSS 3.' },
+      { type: 'gpu', name: 'NVIDIA RTX 4080 Super 16GB', img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png', description: '16 ГБ GDDR6X — уверенный 4K с ray tracing и DLSS 3.' },
       { type: 'cpu', name: 'AMD Ryzen 7 7800X3D', img: 'img/components/cpu/amd/R7 7800X3D.png', description: '8 ядер с 3D V-Cache — лучший игровой процессор AM5.' },
       { type: 'ram', name: '32 ГБ DDR5-6000', img: 'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png', description: 'Комплект 2×16 ГБ с оптимальными таймингами для AM5.' },
       { type: 'storage', name: '2 ТБ Samsung 990 Pro', img: 'img/components/storage/990 pro 2tb 1.png', description: 'NVMe Gen4, скорость чтения до 7450 МБ/с.' },
@@ -461,7 +440,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Maximus Z790 Hero', img: 'img/categories/motherboard.svg', description: 'E-ATX флагман с Thunderbolt 4.' },
       { type: 'psu', name: '1000W 80+ Titanium', img: 'img/categories/psu.svg', description: 'Запас мощности для RTX 4090 и разгона.' },
       { type: 'cooling', name: '360mm AIO LCD', img: 'img/categories/cooling.svg', description: 'Охлаждение для CPU с TDP 253W.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'E-ATX корпус с множеством отсеков.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_000a.webp', description: 'E-ATX корпус с множеством отсеков.' },
     ],
   },
 ];
