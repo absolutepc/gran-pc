@@ -251,7 +251,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS B650-Plus', img: 'img/categories/motherboard.svg', description: 'ATX плата AM5 с WiFi 6 и PCIe 4.0.' },
       { type: 'psu', name: '650W 80+ Gold', img: 'img/categories/psu.svg', description: 'Надёжный БП с запасом мощности.' },
       { type: 'cooling', name: 'Башенный кулер', img: 'img/categories/cooling.svg', description: 'Тихое воздушное охлаждение CPU.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Корпус с tempered glass и подсветкой.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D32 PRO Black 2.png', description: 'Корпус с tempered glass и подсветкой.' },
     ],
   },
   {
@@ -287,7 +287,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix B650-I', img: 'img/categories/motherboard.svg', description: 'Premium Mini-ITX с WiFi 6E.' },
       { type: 'psu', name: '750W SFX 80+ Gold', img: 'img/categories/psu.svg', description: 'Компактный SFX блок питания.' },
       { type: 'cooling', name: '240mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 240 мм для SFF-корпуса.' },
-      { type: 'case', name: 'Compact Mini-ITX', img: 'img/categories/case.svg', description: 'SFF с панорамным стеклом.' },
+      { type: 'case', name: 'Compact Mini-ITX', img: 'img/components/case/mod-3-black.png', description: 'SFF с панорамным стеклом.' },
     ],
   },
   {
@@ -322,7 +322,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'MSI Z790 Tomahawk', img: 'img/categories/motherboard.svg', description: 'Усиленный VRM для стабильного разгона.' },
       { type: 'psu', name: '750W 80+ Gold', img: 'img/categories/psu.svg', description: 'Модульный тихий БП.' },
       { type: 'cooling', name: '240mm AIO RGB', img: 'img/categories/cooling.svg', description: 'СЖО для длительных турнирных сессий.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Отличный airflow и RGB-подсветка.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D41 MESH Black.png', description: 'Отличный airflow и RGB-подсветка.' },
     ],
   },
   {
@@ -357,7 +357,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix Z790-E', img: 'img/categories/motherboard.svg', description: 'WiFi 6E, 2.5G LAN, мощная подсистема питания.' },
       { type: 'psu', name: '750W 80+ Platinum', img: 'img/categories/psu.svg', description: 'Тихий модульный БП для длительных стримов.' },
       { type: 'cooling', name: '360mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 360 мм держит CPU прохладным под нагрузкой.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'Просторный корпус с местом для кастомизации.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_014a.webp', description: 'Просторный корпус с местом для кастомизации.' },
     ],
   },
   {
@@ -393,7 +393,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix B650-E', img: 'img/categories/motherboard.svg', description: 'ATX, PCIe 5.0, WiFi 6E, усиленный VRM.' },
       { type: 'psu', name: '850W 80+ Titanium', img: 'img/categories/psu.svg', description: 'be quiet! — тихая и стабильная работа под нагрузкой.' },
       { type: 'cooling', name: '360mm AIO LCD', img: 'img/categories/cooling.svg', description: 'СЖО с LCD-дисплеем для разгона и длительных сессий.' },
-      { type: 'case', name: 'Lian Li O11 Dynamic', img: 'img/categories/case.svg', description: 'Премиальный корпус с панорамным стеклом и отличным airflow.' },
+      { type: 'case', name: 'Lian Li O11 Dynamic', img: 'img/components/case/D400-B.png', description: 'Премиальный корпус с панорамным стеклом и отличным airflow.' },
     ],
   },
   {
@@ -430,7 +430,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Maximus Z790 Hero', img: 'img/categories/motherboard.svg', description: 'E-ATX флагман с Thunderbolt 4.' },
       { type: 'psu', name: '1000W 80+ Titanium', img: 'img/categories/psu.svg', description: 'Запас мощности для RTX 4090 и разгона.' },
       { type: 'cooling', name: '360mm AIO LCD', img: 'img/categories/cooling.svg', description: 'Охлаждение для CPU с TDP 253W.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'E-ATX корпус с множеством отсеков.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_000a.webp', description: 'E-ATX корпус с множеством отсеков.' },
     ],
   },
 ];
