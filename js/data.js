@@ -1,4 +1,6 @@
-const STORE_KEY = 'pcmarket_data_v3';
+const STORE_VERSION = 4;
+const STORE_KEY = 'pcmarket_data_v4';
+const LEGACY_STORE_KEYS = ['pcmarket_data_v3', 'pcmarket_data_v2', 'pcmarket_data'];
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -621,21 +623,98 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function initStore() {
-  if (!localStorage.getItem(STORE_KEY)) {
-    localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
+function createDefaultStore() {
+  return {
+    version: STORE_VERSION,
+    products: DEFAULT_PRODUCTS,
+    readyPCs: DEFAULT_READY_PCS,
+  };
+}
+
+function colorGalleryScore(colors) {
+  if (!colors?.length) return 0;
+  return colors.reduce((sum, color) => {
+    const count = color.images?.filter(Boolean).length || (color.img ? 1 : 0);
+    return sum + count;
+  }, 0);
+}
+
+function componentPhotoScore(components) {
+  if (!components?.length) return 0;
+  return components.filter(comp => comp.img && !/\/categories\//.test(comp.img)).length;
+}
+
+function pickCatalogImages(stored, template) {
+  const storedImages = (stored?.images || []).filter(Boolean);
+  const templateImages = (template?.images || []).filter(Boolean);
+  if (!templateImages.length) return storedImages;
+  if (!storedImages.length) return templateImages;
+  if (storedImages.length === 1 && storedImages[0] === 'img/ready/pc.svg') return templateImages;
+  if (templateImages.length > storedImages.length) return templateImages;
+  return storedImages;
+}
+
+function pickCatalogColors(stored, template) {
+  if (!template?.colors?.length) return stored?.colors || [];
+  if (!stored?.colors?.length) return template.colors;
+  if (colorGalleryScore(template.colors) > colorGalleryScore(stored.colors)) return template.colors;
+  return stored.colors;
+}
+
+function pickCatalogComponents(stored, template) {
+  if (!template?.components?.length) return stored?.components || [];
+  if (!stored?.components?.length) return template.components;
+  if (componentPhotoScore(template.components) > componentPhotoScore(stored.components)) return template.components;
+  return stored.components;
+}
+
+function mergeCatalogItem(stored, template) {
+  if (!template) return { ...stored };
+  return {
+    ...template,
+    ...stored,
+    images: pickCatalogImages(stored, template),
+    colors: pickCatalogColors(stored, template),
+    components: pickCatalogComponents(stored, template),
+    img: template.img || stored.img,
+    fullDescription: template.fullDescription || stored.fullDescription,
+    description: template.description || stored.description,
+    specs: template.specs ?? stored.specs,
+    performance: template.performance ?? stored.performance,
+  };
+}
+
+function readStoreData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
   }
+}
+
+function writeStoreData(data) {
+  localStorage.setItem(STORE_KEY, JSON.stringify({ version: STORE_VERSION, ...data }));
+}
+
+function resetCatalogToDefaults() {
+  writeStoreData(createDefaultStore());
+}
+
+function initStore() {
+  let data = readStoreData();
+
+  if (!data || data.version !== STORE_VERSION) {
+    resetCatalogToDefaults();
+    data = readStoreData();
+  }
+
   if (!localStorage.getItem(CART_KEY)) {
     localStorage.setItem(CART_KEY, JSON.stringify([]));
   }
   if (!localStorage.getItem(ORDERS_KEY)) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify([]));
   }
-}
-
-function mergeDefaultAttributes(products) {
-  const defaultsById = Object.fromEntries(DEFAULT_PRODUCTS.map(p => [p.id, p]));
-  return products.map(product => enrichProduct(product, defaultsById[product.id]));
 }
 
 function buildFullDescription(product) {
@@ -785,7 +864,7 @@ function buildDefaultColors(product) {
 }
 
 function enrichProduct(product, def) {
-  const merged = def ? { ...def, ...product } : { ...product };
+  const merged = mergeCatalogItem(product, def);
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
@@ -798,18 +877,25 @@ function enrichProduct(product, def) {
   return merged;
 }
 
+function syncProductList(products) {
+  const storedById = Object.fromEntries((products || []).map(product => [product.id, product]));
+  const defaultIds = new Set(DEFAULT_PRODUCTS.map(item => item.id));
+  return [
+    ...DEFAULT_PRODUCTS.map(def => enrichProduct(storedById[def.id] || def, def)),
+    ...(products || []).filter(product => !defaultIds.has(product.id)).map(product => enrichProduct(product, null)),
+  ];
+}
+
 function getProducts() {
   initStore();
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    const data = raw ? JSON.parse(raw) : null;
+    const data = readStoreData();
     const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
-    return mergeDefaultAttributes(products);
+    return syncProductList(products);
   } catch (e) {
     console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
-    localStorage.removeItem(STORE_KEY);
-    initStore();
-    return mergeDefaultAttributes(DEFAULT_PRODUCTS);
+    resetCatalogToDefaults();
+    return syncProductList(DEFAULT_PRODUCTS);
   }
 }
 
@@ -818,30 +904,10 @@ function getEnrichedProductById(id) {
   return products.find(p => p.id === id) || null;
 }
 
-function hasDefaultReadyPCGallery(item) {
-  const images = item?.images?.filter(Boolean) || [];
-  return !images.length || (images.length === 1 && images[0] === 'img/ready/pc.svg');
-}
-
 function enrichReadyPC(pc) {
   if (!pc) return null;
   const tmpl = DEFAULT_READY_PCS.find(d => d.id === pc.id);
-  const merged = tmpl ? { ...tmpl, ...pc } : { ...pc };
-  if (tmpl && hasDefaultReadyPCGallery(pc)) {
-    merged.images = tmpl.images;
-    merged.img = tmpl.img || merged.img;
-    if (!pc.colors?.length) {
-      merged.colors = tmpl.colors;
-    } else {
-      merged.colors = merged.colors.map(color => {
-        const tmplColor = tmpl.colors?.find(entry => entry.name === color.name);
-        if (tmplColor?.images?.length && !color.images?.length) {
-          return { ...tmplColor, ...color, images: tmplColor.images };
-        }
-        return color;
-      });
-    }
-  }
+  const merged = mergeCatalogItem(pc, tmpl);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, tmpl);
@@ -854,19 +920,25 @@ function enrichReadyPC(pc) {
   };
 }
 
+function syncReadyPCList(pcs) {
+  const storedById = Object.fromEntries((pcs || []).map(pc => [pc.id, pc]));
+  const defaultIds = new Set(DEFAULT_READY_PCS.map(item => item.id));
+  return [
+    ...DEFAULT_READY_PCS.map(def => enrichReadyPC(storedById[def.id] || def)),
+    ...(pcs || []).filter(pc => !defaultIds.has(pc.id)).map(enrichReadyPC),
+  ];
+}
+
 function getReadyPCs() {
   initStore();
   try {
-    const raw = localStorage.getItem(STORE_KEY);
-    const data = raw ? JSON.parse(raw) : null;
+    const data = readStoreData();
     const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
-    const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
-    return list.sort((a, b) => a.price - b.price);
+    return syncReadyPCList(pcs).sort((a, b) => a.price - b.price);
   } catch (e) {
     console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
-    localStorage.removeItem(STORE_KEY);
-    initStore();
-    return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);
+    resetCatalogToDefaults();
+    return syncReadyPCList(DEFAULT_READY_PCS).sort((a, b) => a.price - b.price);
   }
 }
 
@@ -875,15 +947,15 @@ function getReadyPCById(id) {
 }
 
 function saveProducts(products) {
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
+  const data = readStoreData() || createDefaultStore();
   data.products = products;
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  writeStoreData(data);
 }
 
 function saveReadyPCs(pcs) {
-  const data = JSON.parse(localStorage.getItem(STORE_KEY));
+  const data = readStoreData() || createDefaultStore();
   data.readyPCs = pcs;
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  writeStoreData(data);
 }
 
 function formatPrice(price) {
