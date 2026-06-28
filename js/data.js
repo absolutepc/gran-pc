@@ -1,6 +1,6 @@
 const STORE_VERSION = 9;
 const STORE_KEY = 'pcmarket_data_v9';
-const APP_BUILD = '9';
+const APP_BUILD = '10';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';

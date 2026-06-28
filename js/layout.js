@@ -156,6 +156,18 @@ function renderFooter() {
 
         <div class="footer-col">
 
+          <h4>Сервис</h4>
+
+          <ul>
+
+            <li><a href="#" id="pcmarketResetLink">Обновить каталог</a></li>
+
+          </ul>
+
+        </div>
+
+        <div class="footer-col">
+
           <h4>Контакты</h4>
 
           <ul>
@@ -224,6 +236,16 @@ function initLayout(activePage) {
 
   if (typeof initPageTransition === 'function') {
     initPageTransition(getPageTransitionLabel(activePage));
+  }
+
+  const resetLink = document.getElementById('pcmarketResetLink');
+  if (resetLink) {
+    resetLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      const url = new URL(window.location.href);
+      url.searchParams.set('pcmarket_reset', '1');
+      window.location.href = url.toString();
+    });
   }
 
 }
