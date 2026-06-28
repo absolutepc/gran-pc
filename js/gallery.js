@@ -79,7 +79,7 @@ function isSameGalleryImage(a, b) {
 function renderGalleryThumb(item, itemName, index, isActive) {
   const filterStyle = item.filter ? `filter:${item.filter};` : '';
   const safeName = escapeHtml(itemName);
-  const safeSrc = escapeHtml(item.src);
+  const safeSrc = escapeHtml(encodeAssetPath(item.src));
   const safeColorName = escapeHtml(item.colorName);
   const safeFilter = escapeHtml(item.filter || '');
   return `
@@ -92,7 +92,7 @@ function renderGalleryThumb(item, itemName, index, isActive) {
       aria-label="Фото ${index + 1}${item.colorName ? `: ${item.colorName}` : ''}"
     >
       <img
-        src="${item.src}"
+        src="${encodeAssetPath(item.src)}"
         alt="${safeName}"
         style="${filterStyle}"
         loading="lazy"
@@ -126,7 +126,7 @@ function renderItemColorPicker(item, ui) {
             class="color-btn ${i === 0 ? 'active' : ''}"
             data-index="${i}"
             data-name="${escapeHtml(color.name)}"
-            data-img="${color.images?.[0] || color.img || getProductImg(item)}"
+            data-img="${encodeAssetPath(color.images?.[0] || color.img || getProductImg(item))}"
             data-filter="${escapeHtml(color.filter || 'none')}"
             style="--swatch: ${color.hex}"
             title="${escapeHtml(color.name)}"
@@ -152,7 +152,7 @@ function renderItemGallery(item, ui) {
         <img
           class="${ui.mainImgClass}"
           id="${ui.mainImgId}"
-          src="${initial.src}"
+          src="${encodeAssetPath(initial.src)}"
           alt="${escapeHtml(item.name)}"
           style="filter: ${initial.filter || ''}"
           onerror="this.src='${DEFAULT_IMG}'"
@@ -167,7 +167,7 @@ function renderItemGallery(item, ui) {
 function setGalleryMainImage(container, src, filter, colorName, ui) {
   const main = container.querySelector(`#${ui.mainImgId}`);
   if (!main) return;
-  const normalizedSrc = normalizeGallerySrc(src);
+  const normalizedSrc = normalizeGallerySrc(encodeAssetPath(src));
   main.src = normalizedSrc;
   main.style.filter = filter || '';
 
