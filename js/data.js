@@ -40,28 +40,35 @@ const PRODUCT_ATTRIBUTE_FIELDS = [
 
 const DEFAULT_PRODUCTS = [
   { id: 'p1', name: 'NVIDIA GeForce RTX™ 5070 Infinity 3', category: 'gpu', price: 59990, oldPrice: 62990, 
-    img: 'img/components/gpu/RTX 5070 PALIT B.png', 
+    img: 'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png', 
     description: '12 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, pcie: 'PCIe 5.0', 
     specs: { vram: '12 ГБ', tdp: '250 Вт' },
     fullDescription: '12 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png', images: [
-        'img/components/gpu/RTX 5070 PALIT B.png',
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png', images: [
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 8.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 9.png',
         'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 4.png',
         'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 1.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 6.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 5.png',
+        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 7.png',
       ] },
       { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png', images: [
-        'img/components/gpu/RTX 5070 PALIT W.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 8.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 9.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 2.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 3.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 4.png',
+        'img/components/gpu/GeForce RTX™ 5070 White.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 1.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 6.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 5.png',
+        'img/components/gpu/GeForce RTX™ 5070 White 7.png',
       ] },
-    ],
-    images: [
-      'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-      'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
-      'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
     ],
   },
   { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, 
@@ -117,17 +124,31 @@ const DEFAULT_PRODUCTS = [
     description: 'AM5, PCIe 5.0, WiFi 6E', stock: 12, socket: 'AM5', memoryType: 'DDR5', 
     specs: { formFactor: 'ATX' } },
 
-  { id: 'p7', name: 'be quiet! Dark Power 13 850W', category: 'psu', price: 19990, 
-    img: 'img/categories/psu.svg', 
+  { id: 'p7', name: 'SEASONIC FOUCS GX 850W ATX 3.1', category: 'psu', price: 14990, 
+    img: 'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png', 
     description: '80+ Titanium, полностью модульный', stock: 18, psutype: 'Полностью модульный', 
-    specs: { wattage: '850 Вт', efficiency: 'Titanium' } },
+    specs: { wattage: '850 Вт', efficiency: 'Titanium' },
+    fullDescription: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов. Она отличается сверхмалым весом (всего 60 грамм), передовым сенсором Hero 2 с разрешением до 32 000 DPI, гибридными переключателями Lightforce и частотой опроса до 8000 Гц',
+    colors: [
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png', images: [
+        'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png',
+        'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png',
+        'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png',
+      ] },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png', images: [
+        'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png',
+        'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png',
+        'img/components/psu/modular/seasonic FOCUS GX White ATX 3.1.png',
+      ] },
+    ],
+  }, 
 
   { id: 'p8', name: 'NZXT Kraken X73 RGB', category: 'cooling', price: 15990, 
     img: 'img/categories/cooling.svg', 
     description: 'СЖО 360 мм, LCD-дисплей', stock: 10, liquid: '360 мм', 
     specs: { type: 'AIO', size: '360 мм' } },
 
-  {
+ {
     id: 'p9', name: 'Lian Li O11 Dynamic EVO', category: 'case', price: 16990,
     img: 'img/components/case/D400-B.png',
     description: 'Mid-tower, закалённое стекло', stock: 8, caseff: 'Mid-Tower',
@@ -393,10 +414,10 @@ const DEFAULT_READY_PCS = [
         'img/components/case/Jonsbo D400/JONSBO D400 White 10.png',
       ] },
     ],
-    specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
+    specs: ['RTX 5080 16GB', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
     components: [
-      { type: 'gpu', name: 'NVIDIA RTX 4080 Super 16GB', img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png', description: '16 ГБ GDDR6X — уверенный 4K с ray tracing и DLSS 3.' },
+      { type: 'gpu', name: 'NVIDIA RTX 5080 16GB', img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png', description: '16 ГБ GDDR6X — уверенный 4K с ray tracing и DLSS 3.' },
       { type: 'cpu', name: 'AMD Ryzen 7 7800X3D', img: 'img/components/cpu/amd/R7 7800X3D.png', description: '8 ядер с 3D V-Cache — лучший игровой процессор AM5.' },
       { type: 'ram', name: '32 ГБ DDR5-6000', img: 'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png', description: 'Комплект 2×16 ГБ с оптимальными таймингами для AM5.' },
       { type: 'storage', name: '2 ТБ Samsung 990 Pro', img: 'img/components/storage/990 pro 2tb 1.png', description: 'NVMe Gen4, скорость чтения до 7450 МБ/с.' },
