@@ -167,8 +167,8 @@ function renderItemGallery(item, ui) {
 function setGalleryMainImage(container, src, filter, colorName, ui) {
   const main = container.querySelector(`#${ui.mainImgId}`);
   if (!main) return;
-  const normalizedSrc = normalizeGallerySrc(encodeAssetPath(src));
-  main.src = normalizedSrc;
+  const normalizedSrc = normalizeGallerySrc(src);
+  main.src = encodeAssetPath(normalizedSrc);
   main.style.filter = filter || '';
 
   container.querySelectorAll('.pc-gallery-thumb').forEach(btn => {

@@ -1,5 +1,6 @@
-const STORE_VERSION = 8;
-const STORE_KEY = 'pcmarket_data_v8';
+const STORE_VERSION = 9;
+const STORE_KEY = 'pcmarket_data_v9';
+const APP_BUILD = '9';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -577,7 +578,13 @@ const ADMIN_CREDENTIALS = { email: 'admin@pcmarket.ru', password: 'admin123' };
 
 function encodeAssetPath(src) {
   if (!src || /^(https?:\/\/|data:)/i.test(src)) return src;
-  return src.split('/').map(segment => encodeURIComponent(segment)).join('/');
+  return src.split('/').map(segment => {
+    try {
+      return encodeURIComponent(decodeURIComponent(segment));
+    } catch {
+      return encodeURIComponent(segment);
+    }
+  }).join('/');
 }
 
 function getProductImg(item) {
@@ -666,7 +673,17 @@ function resetCatalogToDefaults() {
   writeStoreData(createDefaultStore());
 }
 
+function purgeLegacyStoreKeys() {
+  [
+    'pcmarket_data_v3',
+    'pcmarket_data_v6',
+    'pcmarket_data_v7',
+    'pcmarket_data_v8',
+  ].forEach(key => localStorage.removeItem(key));
+}
+
 function initStore() {
+  purgeLegacyStoreKeys();
   const catalogHash = getCatalogContentHash();
   let data = readStoreData();
 
@@ -858,13 +875,16 @@ function syncProductList(products) {
 function getProducts() {
   initStore();
   try {
+    if (typeof syncProductList !== 'function') {
+      return DEFAULT_PRODUCTS.map(def => enrichProduct({}, def));
+    }
     const data = readStoreData();
-    const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
+    const products = Array.isArray(data?.products) ? data.products : [];
     return syncProductList(products);
   } catch (e) {
     console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
     resetCatalogToDefaults();
-    return syncProductList(DEFAULT_PRODUCTS);
+    return syncProductList([]);
   }
 }
 
@@ -901,13 +921,16 @@ function syncReadyPCList(pcs) {
 function getReadyPCs() {
   initStore();
   try {
+    if (typeof syncReadyPCList !== 'function') {
+      return DEFAULT_READY_PCS.map(pc => enrichReadyPC({ id: pc.id })).sort((a, b) => a.price - b.price);
+    }
     const data = readStoreData();
     const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
     return syncReadyPCList(pcs).sort((a, b) => a.price - b.price);
   } catch (e) {
     console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
     resetCatalogToDefaults();
-    return syncReadyPCList(DEFAULT_READY_PCS).sort((a, b) => a.price - b.price);
+    return syncReadyPCList([]).sort((a, b) => a.price - b.price);
   }
 }
 
@@ -947,3 +970,37 @@ function getAvailableFilterValues(products, field, predefined) {
 }
 
 initStore();
+
+window.pcmarketReset = function pcmarketReset() {
+  Object.keys(localStorage).filter(key => key.startsWith('pcmarket_')).forEach(key => localStorage.removeItem(key));
+  resetCatalogToDefaults();
+  location.reload();
+};
+
+window.pcmarketDiag = function pcmarketDiag(id) {
+  initStore();
+  const stored = readStoreData();
+  const item = id ? (getEnrichedProductById(id) || getReadyPCById(id)) : null;
+  const report = {
+    build: APP_BUILD,
+    storeVersion: STORE_VERSION,
+    storeKey: STORE_KEY,
+    catalogHash: getCatalogContentHash(),
+    storedHash: stored?.catalogHash || null,
+    hasSync: typeof syncProductList === 'function',
+    hasColorGallery: typeof getGalleryItemsForColor === 'function',
+    item: item ? {
+      id: item.id,
+      img: item.img,
+      images: item.images,
+      colors: (item.colors || []).map(color => ({
+        name: color.name,
+        img: color.img,
+        images: color.images,
+      })),
+    } : null,
+  };
+  console.table(report.item?.colors || []);
+  console.log('PC Market diag:', report);
+  return report;
+};
