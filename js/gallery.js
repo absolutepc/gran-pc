@@ -229,7 +229,7 @@ function updateGalleryThumbs(container, item, colorIndex, ui) {
   }
 }
 
-function switchGalleryColor(container, item, colorIndex, ui, options = {}) {
+function switchGalleryColor(container, item, colorIndex, ui) {
   const gallery = container.querySelector(`#${ui.galleryId}`);
   if (!gallery) return;
 
@@ -239,10 +239,6 @@ function switchGalleryColor(container, item, colorIndex, ui, options = {}) {
   const items = getGalleryItemsForColor(item, colorIndex);
   const first = items[0] || { src: getProductImg(item), filter: '', colorName: '' };
   setGalleryMainImage(container, first.src, first.filter, first.colorName, ui);
-
-  if (typeof options.onColorChange === 'function') {
-    options.onColorChange(colorIndex, item, container);
-  }
 }
 
 function bindItemGallery(container, ui, item) {
@@ -257,7 +253,7 @@ function bindItemGallery(container, ui, item) {
   });
 }
 
-function bindItemColorPicker(container, ui, item, options = {}) {
+function bindItemColorPicker(container, ui, item) {
   const picker = container.querySelector(`.${ui.pickerClass}`);
   if (!picker) return;
 
@@ -269,12 +265,12 @@ function bindItemColorPicker(container, ui, item, options = {}) {
       const colorNameEl = container.querySelector(`#${ui.colorNameId}`);
       if (colorNameEl) colorNameEl.textContent = btn.dataset.name;
 
-      switchGalleryColor(container, item, Number(btn.dataset.index) || 0, ui, options);
+      switchGalleryColor(container, item, Number(btn.dataset.index) || 0, ui);
     });
   });
 }
 
-function bindItemGalleryAndColor(container, ui, item, options = {}) {
+function bindItemGalleryAndColor(container, ui, item) {
   bindItemGallery(container, ui, item);
-  bindItemColorPicker(container, ui, item, options);
+  bindItemColorPicker(container, ui, item);
 }

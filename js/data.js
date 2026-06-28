@@ -737,90 +737,6 @@ function enrichColorGalleries(item) {
   return { ...item, colors: enrichedColors };
 }
 
-const COLOR_VARIANT_COMPONENT_TYPES = ['case', 'gpu', 'ram', 'cooling', 'motherboard'];
-
-function swapComponentImageForColor(src, color) {
-  if (!src || /\/categories\//.test(src)) return src;
-
-  const name = (color.name || '').toLowerCase();
-
-  if (/бел|white/.test(name)) {
-    return src
-      .replace(/\bBlack\b/g, 'White')
-      .replace(/\bblack\b/g, 'white')
-      .replace(/-B\./g, '-W.')
-      .replace(/\bB\.png/g, 'W.png')
-      .replace(/ PALIT B\./g, ' PALIT W.')
-      .replace(/mod-3-black/g, 'mod-3-white')
-      .replace(/D400-B/g, 'D400-W')
-      .replace(/D32 PRO Black/g, 'D32 PRO White')
-      .replace(/D32 STD Black/g, 'D32 STD White')
-      .replace(/D41 MESH Black/g, 'D41 MESH White')
-      .replace(/D41 STD Black/g, 'D41 STD White')
-      .replace(/C6 MAX Black/g, 'C6 MAX White')
-      .replace(/O11VP_014a/g, 'O11VP_W01')
-      .replace(/O11VP_000a/g, 'O11VP_X01')
-      .replace(/O11VP_001a/g, 'O11VP_W01')
-      .replace(/O11VP_020/g, 'O11VP_W01')
-      .replace(/O11DEVOLB001-2/g, 'O11VP_W01')
-      .replace(/O11DERGB-000/g, 'O11VP_W01');
-  }
-
-  if (/розов|pink/.test(name)) {
-    if (/mod-3-(black|white)/.test(src)) return src.replace(/mod-3-(black|white)/g, 'mod-3-pink');
-  }
-
-  return src;
-}
-
-function stripColorSuffix(name) {
-  return (name || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
-}
-
-function applyColorToComponents(components, color) {
-  const caseImg = color.images?.[0] || color.img;
-  const filter = color.filter && color.filter !== 'none' ? color.filter : '';
-  const colorLabel = color.name ? ` (${color.name})` : '';
-
-  return (components || []).map(comp => {
-    let img = comp.img;
-    let name = comp.name;
-    let imgFilter = '';
-
-    if (comp.type === 'case') {
-      img = caseImg || swapComponentImageForColor(comp.img, color);
-      name = `${stripColorSuffix(name)}${colorLabel}`;
-      imgFilter = filter;
-    } else if (COLOR_VARIANT_COMPONENT_TYPES.includes(comp.type)) {
-      const swapped = swapComponentImageForColor(comp.img, color);
-      if (swapped !== comp.img) img = swapped;
-      if (filter && (comp.type === 'cooling' || comp.type === 'ram')) imgFilter = filter;
-    }
-
-    return { ...comp, img, name, imgFilter };
-  });
-}
-
-function getReadyPCComponentsForColor(pc, colorIndex = 0) {
-  const color = pc.colors?.[colorIndex];
-  if (color?.components?.length) return color.components;
-  if (color) return applyColorToComponents(pc.components || [], color);
-  return pc.components || [];
-}
-
-function enrichReadyPCColorComponents(pc) {
-  if (!pc.colors?.length) return pc;
-  return {
-    ...pc,
-    colors: pc.colors.map(color => ({
-      ...color,
-      components: color.components?.length
-        ? color.components
-        : applyColorToComponents(pc.components || [], color),
-    })),
-  };
-}
-
 function buildItemImages(item, def) {
   const fromItem = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
   const fromDef = Array.isArray(def?.images) ? def.images.filter(Boolean) : [];
@@ -911,9 +827,8 @@ function enrichReadyPC(pc) {
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, tmpl);
   merged.colors = enrichColorGalleries(merged).colors;
-  const withColorComponents = enrichReadyPCColorComponents(merged);
   return {
-    ...withColorComponents,
+    ...merged,
     fullDescription: merged.fullDescription || merged.description || '',
     components: Array.isArray(merged.components) ? merged.components : [],
     specs: merged.specs || [],

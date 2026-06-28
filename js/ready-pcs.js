@@ -43,25 +43,18 @@ function renderReadyPCCard(pc) {
   `;
 }
 
-function renderComponentMedia(comp) {
-  const src = comp.img || DEFAULT_IMG;
-  const safeAlt = escapeHtml(comp.name || '');
-  const filterStyle = comp.imgFilter ? `filter:${comp.imgFilter};` : '';
-  return `<img src="${src}" alt="${safeAlt}" style="${filterStyle}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
-}
-
-function renderPCComponents(components) {
-  if (!components?.length) {
+function renderPCComponents(pc) {
+  if (!pc.components?.length) {
     return '<p class="section-sub">Подробная комплектация будет добавлена позже.</p>';
   }
   return `
-    <div class="pc-components-zigzag" id="pcComponentsList">
-      ${components.map((comp, index) => {
+    <div class="pc-components-zigzag">
+      ${pc.components.map((comp, index) => {
         const reverseClass = index % 2 === 1 ? ' pc-component-row--reverse' : '';
         return `
           <article class="pc-component-row${reverseClass}">
             <div class="pc-component-media">
-              ${renderComponentMedia(comp)}
+              ${renderProductImg(comp.img, comp.name)}
             </div>
             <div class="pc-component-body">
               <div class="pc-component-type">${COMPONENT_TYPE_LABELS[comp.type] || comp.type}</div>
@@ -75,15 +68,7 @@ function renderPCComponents(components) {
   `;
 }
 
-function updateReadyPCComponents(container, pc, colorIndex = 0) {
-  const list = container.querySelector('#pcComponentsList');
-  if (!list) return;
-  const components = getReadyPCComponentsForColor(pc, colorIndex);
-  list.outerHTML = renderPCComponents(components);
-}
-
 function renderReadyPCDetail(pc) {
-  const initialComponents = getReadyPCComponentsForColor(pc, 0);
   return `
     <div class="pc-detail-hero">
       ${renderItemGallery(pc, GALLERY_UI.readyPc)}
@@ -113,7 +98,7 @@ function renderReadyPCDetail(pc) {
     <section class="pc-detail-section">
       <h2>Комплектация</h2>
       <p class="section-sub">Каждый компонент подобран для максимальной совместимости и производительности</p>
-      ${renderPCComponents(initialComponents)}
+      ${renderPCComponents(pc)}
     </section>
   `;
 }
@@ -155,9 +140,7 @@ function initReadyPCDetailPage() {
       updatePageTransitionLabel(pc.name);
     }
     container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
-    bindItemGalleryAndColor(container, GALLERY_UI.readyPc, pc, {
-      onColorChange: (colorIndex) => updateReadyPCComponents(container, pc, colorIndex),
-    });
+    bindItemGalleryAndColor(container, GALLERY_UI.readyPc, pc);
     bindAddToCartButtons(container);
     updateCartBadge();
   } catch (err) {
