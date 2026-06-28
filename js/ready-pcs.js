@@ -18,10 +18,19 @@ function isRgbColorName(name) {
   return /rgb|фиолет|violet|purple/i.test(name || '');
 }
 
+const WHITE_COMPONENT_IMG_MAP = {
+  'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png': 'img/components/gpu/GeForce RTX™ 5080 16G VENTUS 3X WHITE.png',
+  'img/components/gpu/GeForce RTX™ 5080 GamingPro OC.png': 'img/components/gpu/GeForce RTX™ 5080 16G VENTUS 3X WHITE.png',
+  'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png': 'img/components/memory/DELTA RGB DDR5 DESKTOP MEMORY WHITE.png',
+  'img/components/cool/LQ360 ULTRA ARGB.png': 'img/components/cool/LQ360 ULTRA ARGB WH.png',
+};
+
 function swapComponentImgForColor(src, colorName) {
   if (!src || /\/categories\//.test(src)) return src;
 
   if (isWhiteColorName(colorName)) {
+    if (WHITE_COMPONENT_IMG_MAP[src]) return WHITE_COMPONENT_IMG_MAP[src];
+
     return src
       .replace(/\bBlack\b/g, 'White')
       .replace(/\bblack\b/g, 'white')
