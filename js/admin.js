@@ -103,7 +103,7 @@ function renderAdminSection(section) {
   if (!main) return;
 
   switch (section) {
-    case 'dashboard': main.innerHTML = renderDashboard(); break;
+    case 'dashboard': main.innerHTML = renderDashboard(); bindDashboard(); break;
     case 'products': main.innerHTML = renderProductsAdmin(); bindProductAdmin(); break;
     case 'ready-pcs': main.innerHTML = renderReadyPCsAdmin(); bindReadyPCAdmin(); break;
     case 'orders': main.innerHTML = renderOrdersAdmin(); bindOrdersAdmin(); break;
@@ -119,7 +119,10 @@ function renderDashboard() {
   const revenue = orders.filter(o => o.status === 'completed').reduce((s, o) => s + o.total, 0);
 
   return `
-    <div class="admin-header"><h1>Панель управления</h1></div>
+    <div class="admin-header">
+      <h1>Панель управления</h1>
+      <button type="button" class="btn btn-secondary btn-sm" id="resetCatalogBtn">Сбросить каталог к data.js</button>
+    </div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Общая выручка</div>
@@ -144,6 +147,14 @@ function renderDashboard() {
     <h2 style="margin-bottom:16px;font-size:1.2rem">Последние заказы</h2>
     ${renderOrdersTable(orders.slice(0, 5))}
   `;
+}
+
+function bindDashboard() {
+  document.getElementById('resetCatalogBtn')?.addEventListener('click', () => {
+    if (!confirm('Сбросить каталог к значениям из data.js? Изменения цен и названий в админке будут заменены.')) return;
+    resetCatalogToDefaults();
+    renderAdminSection('dashboard');
+  });
 }
 
 function renderProductsAdmin() {
