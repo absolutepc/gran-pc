@@ -1,5 +1,4 @@
-const STORE_VERSION = 7;
-const STORE_KEY = 'pcmarket_data_v7';
+const STORE_KEY = 'pcmarket_data_v3';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -46,18 +45,8 @@ const DEFAULT_PRODUCTS = [
     specs: { vram: '12 ГБ', tdp: '250 Вт' },
     fullDescription: '12 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png', images: [
-        'img/components/gpu/RTX 5070 PALIT B.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png', images: [
-        'img/components/gpu/RTX 5070 PALIT W.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3 OC.png',
-        'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
-      ] },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/gpu/RTX 5070 PALIT B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/gpu/RTX 5070 PALIT W.png' },
     ],
     images: [
       'img/components/gpu/GeForce RTX™ 5070 Infinity 3 2.png',
@@ -65,22 +54,15 @@ const DEFAULT_PRODUCTS = [
       'img/components/gpu/GeForce RTX™ 5070 Infinity 3.png',
     ],
   },
+
   { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, 
     img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png', 
     description: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов.', stock: 2, wired: 'Беспроводной', hertz: '8000 Гц', 
     specs: { dpi: '32000', weight: '60 г' },
     fullDescription: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов. Она отличается сверхмалым весом (всего 60 грамм), передовым сенсором Hero 2 с разрешением до 32 000 DPI, гибридными переключателями Lightforce и частотой опроса до 8000 Гц',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/periphery/mise/Logitech G Pro X Superlight 2 B.png', images: [
-        'img/periphery/mise/Logitech G Pro X Superlight 2 B.png',
-        'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
-        'img/periphery/mise/image-f41a6135d94e48e998c756c588068bd7.webp',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png', images: [
-        'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png',
-        'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
-        'img/periphery/mise/image-f41a6135d94e48e998c756c588068bd7.webp',
-      ] },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/periphery/mise/Logitech G Pro X Superlight 2 B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png' },
     ],
     images: [
       'img/periphery/mise/image-497fe0a96a56422bbaa4dfb5c807a43e.webp',
@@ -135,16 +117,8 @@ const DEFAULT_PRODUCTS = [
     specs: { formFactor: 'Mid-Tower', color: 'Чёрный' },
     fullDescription: 'Lian Li O11 Dynamic EVO — культовый mid-tower с двойной камерой, панорамным закалённым стеклом и модульной системой крепления радиаторов. Поддерживает E-ATX платы, до 10 вентиляторов и вертикальную установку GPU. Идеален для showcase-сборок с подсветкой.',
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png', images: [
-        'img/components/case/D400-B.png',
-        'img/components/case/D300 Black.png',
-        'img/components/case/D300 Black-1.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png', images: [
-        'img/components/case/D400-W.png',
-        'img/components/case/D300 White.png',
-        'img/components/case/D300 White-1.png',
-      ] },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
     ],
     images: [
       'img/components/case/D400-B.png',
@@ -221,27 +195,8 @@ const DEFAULT_READY_PCS = [
     id: 'rpc1', name: 'Бюджетный Воин', price: 89990, img: 'img/components/case/D32 PRO Black 2.png',
     description: 'Отличный 1080p/1440p гейминг без переплаты',
     fullDescription: 'Бюджетный Воин — сбалансированный вход в современный гейминг. Ryzen 5 7500F и RTX 5060 обеспечивают высокий FPS в онлайн-шутерах и комфортную игру в AAA на высоких настройках Full HD.',
-    images: [
-      'img/components/case/D32 PRO Black 2.png',
-      'img/components/case/D32 PRO White 2.png',
-      'img/components/case/D400-B.png',
-    ],
-    colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D32 PRO Black 2.png', images: [
-        'img/components/case/D32 PRO Black 2.png',
-        'img/components/case/D32 PRO Black.png',
-        'img/components/case/D32 STD Black.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D32 PRO White 2.png', images: [
-        'img/components/case/D32 PRO White 2.png',
-        'img/components/case/D32 PRO White.png',
-        'img/components/case/D32 STD White.png',
-      ] },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/D400-B.png', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
-        'img/components/case/D400-B.png',
-        'img/components/case/D41 MESH Black.png',
-      ] },
-    ],
+    images: ['img/ready/pc.svg'],
+    specs: ['RTX 5060', 'Ryzen 5 7500F', '16 ГБ DDR5', '1 ТБ NVMe', 'БП 650 Вт'],
     performance: { gaming: 75, work: 70, streaming: 72 },
     components: [
       { type: 'gpu', name: 'NVIDIA RTX 5060 8GB', img: 'img/components/gpu/GeForce RTX™ 5060 WINDFORCE MAX OC 8G.png', description: 'Компактная карта с DLSS 4 для 1080p/1440p.' },
@@ -251,32 +206,14 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS B650-Plus', img: 'img/categories/motherboard.svg', description: 'ATX плата AM5 с WiFi 6 и PCIe 4.0.' },
       { type: 'psu', name: '650W 80+ Gold', img: 'img/categories/psu.svg', description: 'Надёжный БП с запасом мощности.' },
       { type: 'cooling', name: 'Башенный кулер', img: 'img/categories/cooling.svg', description: 'Тихое воздушное охлаждение CPU.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D32 PRO Black 2.png', description: 'Корпус с tempered glass и подсветкой.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Корпус с tempered glass и подсветкой.' },
     ],
   },
   {
-    id: 'rpc2', name: 'Компактный Mini', price: 119990, img: 'img/components/case/mod-3-black.png',
+    id: 'rpc2', name: 'Компактный Mini', price: 119990, img: 'img/ready/pc.svg',
     description: 'Мощная SFF-сборка в компактном корпусе',
     fullDescription: 'Компактный Mini — мощность полноразмерного ПК в формате Mini-ITX. RTX 4070 Super и Ryzen 7 7700 помещены в стильный малый корпус без потери производительности.',
-    images: [
-      'img/components/case/mod-3-black.png',
-      'img/components/case/mod-3-white.png',
-      'img/components/case/C6 MAX Black.png',
-    ],
-    colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/mod-3-black.png', images: [
-        'img/components/case/mod-3-black.png',
-        'img/components/case/C6 MAX Black.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/mod-3-white.png', images: [
-        'img/components/case/mod-3-white.png',
-        'img/components/case/C6 MAX White.png',
-      ] },
-      { name: 'Розовый', hex: '#ec4899', img: 'img/components/case/mod-3-pink.png', images: [
-        'img/components/case/mod-3-pink.png',
-        'img/components/case/mod-3-black.png',
-      ] },
-    ],
+    images: ['img/ready/pc.svg'],
     specs: ['RTX 4070 Super', 'Ryzen 7 7700', '32 ГБ DDR5', '1 ТБ NVMe', 'БП 750W SFX'],
     performance: { gaming: 85, work: 80, streaming: 82 },
     components: [
@@ -287,31 +224,14 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix B650-I', img: 'img/categories/motherboard.svg', description: 'Premium Mini-ITX с WiFi 6E.' },
       { type: 'psu', name: '750W SFX 80+ Gold', img: 'img/categories/psu.svg', description: 'Компактный SFX блок питания.' },
       { type: 'cooling', name: '240mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 240 мм для SFF-корпуса.' },
-      { type: 'case', name: 'Compact Mini-ITX', img: 'img/components/case/mod-3-black.png', description: 'SFF с панорамным стеклом.' },
+      { type: 'case', name: 'Compact Mini-ITX', img: 'img/categories/case.svg', description: 'SFF с панорамным стеклом.' },
     ],
   },
   {
-    id: 'rpc3', name: 'Киберспортивный Чемпион', price: 129990, img: 'img/components/case/D41 MESH Black.png', badge: 'new',
+    id: 'rpc3', name: 'Киберспортивный Чемпион', price: 129990, img: 'img/ready/pc.svg', badge: 'new',
     description: 'Оптимизирован для соревновательного гейминга с монитором 360 Гц',
     fullDescription: 'Киберспортивный Чемпион настроен на максимальный FPS и минимальную задержку в CS2, Valorant и других дисциплинах. i5-14600K и RTX 4070 Super дают стабильные сотни кадров в секунду.',
-    images: [
-      'img/components/case/D41 MESH Black.png',
-      'img/components/case/D41 MESH White.png',
-      'img/components/case/D41 STD Black.png',
-    ],
-    colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D41 MESH Black.png', images: [
-        'img/components/case/D41 MESH Black.png',
-        'img/components/case/D41 STD Black.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D41 MESH White.png', images: [
-        'img/components/case/D41 MESH White.png',
-      ] },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/D41 STD Black.png', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
-        'img/components/case/D41 STD Black.png',
-        'img/components/case/D41 MESH Black.png',
-      ] },
-    ],
+    images: ['img/ready/pc.svg'],
     specs: ['RTX 4070 Super', 'Intel i5-14600K', '32 ГБ DDR5', '1 ТБ NVMe', 'БП 750 Вт'],
     performance: { gaming: 92, work: 75, streaming: 85 },
     components: [
@@ -322,31 +242,14 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'MSI Z790 Tomahawk', img: 'img/categories/motherboard.svg', description: 'Усиленный VRM для стабильного разгона.' },
       { type: 'psu', name: '750W 80+ Gold', img: 'img/categories/psu.svg', description: 'Модульный тихий БП.' },
       { type: 'cooling', name: '240mm AIO RGB', img: 'img/categories/cooling.svg', description: 'СЖО для длительных турнирных сессий.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D41 MESH Black.png', description: 'Отличный airflow и RGB-подсветка.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Отличный airflow и RGB-подсветка.' },
     ],
   },
   {
-    id: 'rpc4', name: 'Стрим Мастер', price: 149990, img: 'img/components/case/O11VP_014a.webp', badge: 'new',
+    id: 'rpc4', name: 'Стрим Мастер', price: 149990, img: 'img/ready/pc.svg', badge: 'new',
     description: 'Идеален для стриминга и создания контента',
     fullDescription: 'Стрим Мастер создан для одновременной игры, стриминга и монтажа. 64 ГБ RAM, i7-14700K и RTX 4070 Ti Super с NVENC обеспечивают плавную работу OBS без просадок FPS.',
-    images: [
-      'img/components/case/O11VP_014a.webp',
-      'img/components/case/O11VP_W01.jpg',
-      'img/components/case/O11VP_003a.webp',
-    ],
-    colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/O11VP_014a.webp', images: [
-        'img/components/case/O11VP_014a.webp',
-        'img/components/case/O11VP_003a.webp',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/O11VP_W01.jpg', images: [
-        'img/components/case/O11VP_W01.jpg',
-      ] },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/O11DERGB-000.jpg', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
-        'img/components/case/O11DERGB-000.jpg',
-        'img/components/case/O11DERGB-001-1.jpg',
-      ] },
-    ],
+    images: ['img/ready/pc.svg'],
     specs: ['RTX 4070 Ti Super', 'Intel i7-14700K', '64 ГБ DDR5', '2 ТБ NVMe', 'БП 750 Вт'],
     performance: { gaming: 90, work: 95, streaming: 98 },
     components: [
@@ -357,80 +260,41 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix Z790-E', img: 'img/categories/motherboard.svg', description: 'WiFi 6E, 2.5G LAN, мощная подсистема питания.' },
       { type: 'psu', name: '750W 80+ Platinum', img: 'img/categories/psu.svg', description: 'Тихий модульный БП для длительных стримов.' },
       { type: 'cooling', name: '360mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 360 мм держит CPU прохладным под нагрузкой.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_014a.webp', description: 'Просторный корпус с местом для кастомизации.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'Просторный корпус с местом для кастомизации.' },
     ],
   },
   {
     id: 'rpc5', name: 'Игровой Зверь Pro', price: 189990, img: 'img/components/case/D400-B.png', badge: 'sale',
     description: 'Топовый игровой ПК для 4K на максимальных настройках',
-    fullDescription: 'Игровой Зверь Pro — флагманская сборка на Ryzen 7 7800X3D и RTX 5080 Super. Ray tracing, DLSS 4 и комфортный 4K Ultra без компромиссов. Идеален для требовательных AAA-проектов и VR.',
+    fullDescription: 'Игровой Зверь Pro — флагманская сборка на Ryzen 7 7800X3D и RTX 4080 Super. Ray tracing, DLSS 3 и комфортный 4K Ultra без компромиссов. Идеален для требовательных AAA-проектов и VR.',
     images: [
       'img/components/case/D400-B.png',
       'img/components/case/D400-W.png',
+      'img/ready/pc.svg',
     ],
     colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png', images: [
-        'img/components/case/D400-B.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 3.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 1.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 4.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 2.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 6.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 7.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 8.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 9.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 Black 10.png',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png', images: [
-        'img/components/case/D400-W.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 3.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 1.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 4.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 2.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 6.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 7.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 8.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 9.png',
-        'img/components/case/Jonsbo D400/JONSBO D400 White 10.png',
-      ] },
+      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/D400-B.png' },
+      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png' },
+      { name: 'RGB', hex: '#8b5cf6', img: 'img/ready/pc.svg', filter: 'hue-rotate(45deg) saturate(1.35)' },
     ],
     specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
     components: [
-      { type: 'gpu', name: 'NVIDIA RTX 4080 Super 16GB', img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png', description: '16 ГБ GDDR6X — уверенный 4K с ray tracing и DLSS 3.' },
-      { type: 'cpu', name: 'AMD Ryzen 7 7800X3D', img: 'img/components/cpu/amd/R7 7800X3D.png', description: '8 ядер с 3D V-Cache — лучший игровой процессор AM5.' },
-      { type: 'ram', name: '32 ГБ DDR5-6000', img: 'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png', description: 'Комплект 2×16 ГБ с оптимальными таймингами для AM5.' },
-      { type: 'storage', name: '2 ТБ Samsung 990 Pro', img: 'img/components/storage/990 pro 2tb 1.png', description: 'NVMe Gen4, скорость чтения до 7450 МБ/с.' },
-      { type: 'motherboard', name: 'ASUS ROG Strix B650-E', img: 'img/components/mb/ROG STRIX B650E-F GAMING WIFI.png', description: 'ATX, PCIe 5.0, WiFi 6E, усиленный VRM.' },
-      { type: 'psu', name: '850W 80+ Titanium', img: 'img/components/psu/modular/seasonic FOCUS GX ATX 3.1.png', description: 'be quiet! — тихая и стабильная работа под нагрузкой.' },
-      { type: 'cooling', name: '360mm AIO LCD', img: 'img/components/cool/LQ360 ULTRA ARGB.png', description: 'СЖО с LCD-дисплеем для разгона и длительных сессий.' },
-      { type: 'case', name: 'JONSBO D-400 BLACK', img: 'img/components/case/D400-B.png', description: 'Премиальный корпус с панорамным стеклом и отличным airflow.' },
+      { type: 'gpu', name: 'NVIDIA RTX 4080 Super 16GB', img: 'img/categories/gpu.svg', description: '16 ГБ GDDR6X — уверенный 4K с ray tracing и DLSS 3.' },
+      { type: 'cpu', name: 'AMD Ryzen 7 7800X3D', img: 'img/categories/cpu.svg', description: '8 ядер с 3D V-Cache — лучший игровой процессор AM5.' },
+      { type: 'ram', name: '32 ГБ DDR5-6000', img: 'img/categories/ram.svg', description: 'Комплект 2×16 ГБ с оптимальными таймингами для AM5.' },
+      { type: 'storage', name: '2 ТБ Samsung 990 Pro', img: 'img/categories/storage.svg', description: 'NVMe Gen4, скорость чтения до 7450 МБ/с.' },
+      { type: 'motherboard', name: 'ASUS ROG Strix B650-E', img: 'img/categories/motherboard.svg', description: 'ATX, PCIe 5.0, WiFi 6E, усиленный VRM.' },
+      { type: 'psu', name: '850W 80+ Titanium', img: 'img/categories/psu.svg', description: 'be quiet! — тихая и стабильная работа под нагрузкой.' },
+      { type: 'cooling', name: '360mm AIO LCD', img: 'img/categories/cooling.svg', description: 'СЖО с LCD-дисплеем для разгона и длительных сессий.' },
+      { type: 'case', name: 'Lian Li O11 Dynamic', img: 'img/categories/case.svg', description: 'Премиальный корпус с панорамным стеклом и отличным airflow.' },
     ],
   },
   {
-    id: 'rpc6', name: 'Рабочая Станция Elite', price: 249990, img: 'img/components/case/O11VP_000a.webp',
+    id: 'rpc6', name: 'Рабочая Станция Elite', price: 249990, img: 'img/ready/pc.svg',
     description: 'Профессиональная станция для 3D, монтажа и AI',
     fullDescription: 'Рабочая Станция Elite — RTX 4090, i9-14900K и 128 ГБ RAM для 3D-моделирования, AI, 8K-монтажа и топового гейминга. Максимум производительности для профессионалов.',
-    images: [
-      'img/components/case/O11VP_000a.webp',
-      'img/components/case/O11VP_001a.webp',
-      'img/components/case/O11VP_020.webp',
-    ],
-    colors: [
-      { name: 'Чёрный', hex: '#1a1a1a', img: 'img/components/case/O11VP_000a.webp', images: [
-        'img/components/case/O11VP_000a.webp',
-        'img/components/case/O11VP_001a.webp',
-        'img/components/case/O11VP_020.webp',
-      ] },
-      { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/O11VP_X01.jpg', images: [
-        'img/components/case/O11VP_X01.jpg',
-        'img/components/case/O11VP_W01.jpg',
-      ] },
-      { name: 'RGB', hex: '#8b5cf6', img: 'img/components/case/O11DEVOLB001-2.jpg', filter: 'hue-rotate(45deg) saturate(1.35)', images: [
-        'img/components/case/O11DEVOLB001-2.jpg',
-        'img/components/case/O11DERGB-000.jpg',
-      ] },
-    ],
+    images: ['img/ready/pc.svg'],
     specs: ['RTX 4090', 'Intel i9-14900K', '128 ГБ DDR5', '4 ТБ NVMe', 'БП 1000 Вт'],
     performance: { gaming: 99, work: 99, streaming: 97 },
     components: [
@@ -441,7 +305,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Maximus Z790 Hero', img: 'img/categories/motherboard.svg', description: 'E-ATX флагман с Thunderbolt 4.' },
       { type: 'psu', name: '1000W 80+ Titanium', img: 'img/categories/psu.svg', description: 'Запас мощности для RTX 4090 и разгона.' },
       { type: 'cooling', name: '360mm AIO LCD', img: 'img/categories/cooling.svg', description: 'Охлаждение для CPU с TDP 253W.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_000a.webp', description: 'E-ATX корпус с множеством отсеков.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'E-ATX корпус с множеством отсеков.' },
     ],
   },
 ];
@@ -592,11 +456,6 @@ const DEFAULT_COLOR_SETS = {
 
 const ADMIN_CREDENTIALS = { email: 'admin@pcmarket.ru', password: 'admin123' };
 
-function encodeAssetPath(src) {
-  if (!src || /^(https?:\/\/|data:)/i.test(src)) return src;
-  return src.split('/').map(segment => encodeURIComponent(segment)).join('/');
-}
-
 function getProductImg(item) {
   if (item.img) return item.img;
   if (item.category && CATEGORY_IMAGES[item.category]) return CATEGORY_IMAGES[item.category];
@@ -604,7 +463,7 @@ function getProductImg(item) {
 }
 
 function renderProductImg(img, alt = '') {
-  const src = encodeAssetPath(img || DEFAULT_IMG);
+  const src = img || DEFAULT_IMG;
   const safeAlt = alt.replace(/"/g, '&quot;');
   return `<img src="${src}" alt="${safeAlt}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
 }
@@ -618,86 +477,21 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function getCatalogContentHash() {
-  const payload = {
-    products: DEFAULT_PRODUCTS.map(item => ({ id: item.id, img: item.img, images: item.images, colors: item.colors })),
-    readyPCs: DEFAULT_READY_PCS.map(item => ({ id: item.id, img: item.img, images: item.images, colors: item.colors, components: item.components })),
-  };
-  const raw = JSON.stringify(payload);
-  let hash = 0;
-  for (let i = 0; i < raw.length; i += 1) {
-    hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0;
-  }
-  return String(hash >>> 0);
-}
-
-function createDefaultStore() {
-  return {
-    version: STORE_VERSION,
-    catalogHash: getCatalogContentHash(),
-    products: DEFAULT_PRODUCTS,
-    readyPCs: DEFAULT_READY_PCS,
-  };
-}
-
-function pickStoredOverrides(stored, template) {
-  if (!stored || !template || stored.id !== template.id) return {};
-  return {
-    id: template.id,
-    price: stored.price,
-    badge: stored.badge,
-    name: stored.name,
-  };
-}
-
-/** Для встроенных товаров/сборок визуальные данные всегда из data.js; из localStorage — цена, название, метка. */
-function mergeCatalogItem(stored, template) {
-  if (!template) return { ...(stored || {}) };
-  const overrides = pickStoredOverrides(stored, template);
-  return {
-    ...template,
-    price: overrides.price ?? template.price,
-    badge: overrides.badge ?? template.badge,
-    name: overrides.name || template.name,
-  };
-}
-
-function readStoreData() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeStoreData(data) {
-  localStorage.setItem(STORE_KEY, JSON.stringify({
-    version: STORE_VERSION,
-    catalogHash: getCatalogContentHash(),
-    ...data,
-  }));
-}
-
-function resetCatalogToDefaults() {
-  writeStoreData(createDefaultStore());
-}
-
 function initStore() {
-  const catalogHash = getCatalogContentHash();
-  let data = readStoreData();
-
-  if (!data || data.version !== STORE_VERSION || data.catalogHash !== catalogHash) {
-    resetCatalogToDefaults();
-    data = readStoreData();
+  if (!localStorage.getItem(STORE_KEY)) {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
   }
-
   if (!localStorage.getItem(CART_KEY)) {
     localStorage.setItem(CART_KEY, JSON.stringify([]));
   }
   if (!localStorage.getItem(ORDERS_KEY)) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify([]));
   }
+}
+
+function mergeDefaultAttributes(products) {
+  const defaultsById = Object.fromEntries(DEFAULT_PRODUCTS.map(p => [p.id, p]));
+  return products.map(product => enrichProduct(product, defaultsById[product.id]));
 }
 
 function buildFullDescription(product) {
@@ -729,98 +523,6 @@ function uniqueImages(list) {
   });
 }
 
-function normalizeItemSrc(src) {
-  try {
-    return decodeURI(src || '');
-  } catch {
-    return src || '';
-  }
-}
-
-function imageBelongsToColor(src, color, colorImg) {
-  if (colorImg && normalizeItemSrc(src) === normalizeItemSrc(colorImg)) return true;
-
-  const name = (color.name || '').toLowerCase();
-  const file = src.toLowerCase();
-
-  if (/чёрн|черн|black/.test(name)) {
-    return (
-      /\bblack\b|-black|black-|d400-b|d32 pro black|d32 std black|d300 black|d200 black|d41 mesh black|d41 std black|mod-3-black|c6 max black|z20 black|tk-0 black|tk-1 black|o11vp_0|o11vp_1|o11vp_2|o11dergb|o11devol|palit b\.png|rtx 5070 palit b/i.test(file)
-      && !/\bwhite\b|-white|white-|d400-w|d32 pro white|mod-3-white|d41 mesh white|o11vp_w|o11vp_x|palit w\.png/i.test(file)
-    );
-  }
-
-  if (/бел|white/.test(name)) {
-    return /\bwhite\b|-white|white-|d400-w|d32 pro white|d32 std white|d300 white|d200 white|d41 mesh white|mod-3-white|c6 max white|z20 white|o11vp_w|o11vp_x|palit w\.png|rtx 5070 palit w/i.test(file);
-  }
-
-  if (/rgb|фиолет|violet|purple/.test(name)) {
-    return /rgb|dergb|o11dergb|o11devol|pc\.svg|mesh black|d400-b/i.test(file);
-  }
-
-  if (/розов|pink/.test(name)) {
-    return /pink|роз/i.test(file);
-  }
-
-  return false;
-}
-
-function enrichColorGalleries(item) {
-  const colors = item.colors || [];
-  if (!colors.length) return item;
-
-  const flatImages = uniqueImages((item.images || []).filter(Boolean));
-  const assignedGlobal = new Set();
-
-  let enrichedColors = colors.map(color => {
-    if (color.images?.filter(Boolean).length) {
-      const images = uniqueImages(color.images.filter(Boolean));
-      images.forEach(src => assignedGlobal.add(normalizeItemSrc(src)));
-      return {
-        ...color,
-        img: color.img || images[0] || getProductImg(item),
-        images,
-      };
-    }
-
-    const colorImg = color.img || getProductImg(item);
-    const images = [];
-
-    if (colorImg) images.push(colorImg);
-
-    flatImages.forEach(src => {
-      const key = normalizeItemSrc(src);
-      if (assignedGlobal.has(key)) return;
-      if (imageBelongsToColor(src, color, colorImg)) {
-        if (!images.some(i => normalizeItemSrc(i) === key)) images.push(src);
-        assignedGlobal.add(key);
-      }
-    });
-
-    const unique = uniqueImages(images.length ? images : (colorImg ? [colorImg] : [getProductImg(item)]));
-    unique.forEach(src => assignedGlobal.add(normalizeItemSrc(src)));
-
-    return {
-      ...color,
-      img: color.img || unique[0] || getProductImg(item),
-      images: unique,
-    };
-  });
-
-  const unassigned = flatImages.filter(src => !assignedGlobal.has(normalizeItemSrc(src)));
-  if (unassigned.length) {
-    enrichedColors = enrichedColors.map(color => {
-      if ((color.images?.filter(Boolean).length || 0) > 1) return color;
-      return {
-        ...color,
-        images: uniqueImages([...(color.images || []), ...unassigned]),
-      };
-    });
-  }
-
-  return { ...item, colors: enrichedColors };
-}
-
 function buildItemImages(item, def) {
   const fromItem = Array.isArray(item.images) ? item.images.filter(Boolean) : [];
   const fromDef = Array.isArray(def?.images) ? def.images.filter(Boolean) : [];
@@ -850,12 +552,11 @@ function buildDefaultColors(product) {
 }
 
 function enrichProduct(product, def) {
-  const merged = mergeCatalogItem(product, def);
+  const merged = def ? { ...def, ...product } : { ...product };
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, def);
-  merged.colors = enrichColorGalleries(merged).colors;
   PRODUCT_ATTRIBUTE_FIELDS.forEach(field => {
     if (merged[field] == null && def?.[field] != null) merged[field] = def[field];
   });
@@ -863,25 +564,18 @@ function enrichProduct(product, def) {
   return merged;
 }
 
-function syncProductList(products) {
-  const storedById = Object.fromEntries((products || []).map(product => [product.id, product]));
-  const defaultIds = new Set(DEFAULT_PRODUCTS.map(item => item.id));
-  return [
-    ...DEFAULT_PRODUCTS.map(def => enrichProduct(pickStoredOverrides(storedById[def.id], def), def)),
-    ...(products || []).filter(product => !defaultIds.has(product.id)).map(product => enrichProduct(product, null)),
-  ];
-}
-
 function getProducts() {
   initStore();
   try {
-    const data = readStoreData();
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
     const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
-    return syncProductList(products);
+    return mergeDefaultAttributes(products);
   } catch (e) {
     console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
-    resetCatalogToDefaults();
-    return syncProductList(DEFAULT_PRODUCTS);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return mergeDefaultAttributes(DEFAULT_PRODUCTS);
   }
 }
 
@@ -893,11 +587,10 @@ function getEnrichedProductById(id) {
 function enrichReadyPC(pc) {
   if (!pc) return null;
   const tmpl = DEFAULT_READY_PCS.find(d => d.id === pc.id);
-  const merged = mergeCatalogItem(pc, tmpl);
+  const merged = tmpl ? { ...tmpl, ...pc } : { ...pc };
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, tmpl);
-  merged.colors = enrichColorGalleries(merged).colors;
   return {
     ...merged,
     fullDescription: merged.fullDescription || merged.description || '',
@@ -906,25 +599,19 @@ function enrichReadyPC(pc) {
   };
 }
 
-function syncReadyPCList(pcs) {
-  const storedById = Object.fromEntries((pcs || []).map(pc => [pc.id, pc]));
-  const defaultIds = new Set(DEFAULT_READY_PCS.map(item => item.id));
-  return [
-    ...DEFAULT_READY_PCS.map(def => enrichReadyPC(pickStoredOverrides(storedById[def.id], def))),
-    ...(pcs || []).filter(pc => !defaultIds.has(pc.id)).map(enrichReadyPC),
-  ];
-}
-
 function getReadyPCs() {
   initStore();
   try {
-    const data = readStoreData();
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
     const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
-    return syncReadyPCList(pcs).sort((a, b) => a.price - b.price);
+    const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
+    return list.sort((a, b) => a.price - b.price);
   } catch (e) {
     console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
-    resetCatalogToDefaults();
-    return syncReadyPCList(DEFAULT_READY_PCS).sort((a, b) => a.price - b.price);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);
   }
 }
 
@@ -933,15 +620,15 @@ function getReadyPCById(id) {
 }
 
 function saveProducts(products) {
-  const data = readStoreData() || createDefaultStore();
+  const data = JSON.parse(localStorage.getItem(STORE_KEY));
   data.products = products;
-  writeStoreData(data);
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
 }
 
 function saveReadyPCs(pcs) {
-  const data = readStoreData() || createDefaultStore();
+  const data = JSON.parse(localStorage.getItem(STORE_KEY));
   data.readyPCs = pcs;
-  writeStoreData(data);
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
 }
 
 function formatPrice(price) {
