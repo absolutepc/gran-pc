@@ -1,5 +1,13 @@
 const STORE_VERSION = 8;
 const STORE_KEY = 'pcmarket_data_v8';
+const LEGACY_STORE_KEYS = [
+  'pcmarket_data_v3',
+  'pcmarket_data_v4',
+  'pcmarket_data_v6',
+  'pcmarket_data_v7',
+  'pcmarket_data_v9',
+];
+const APP_BUILD = '8.1';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -678,7 +686,12 @@ function resetCatalogToDefaults() {
   writeStoreData(createDefaultStore());
 }
 
+function purgeLegacyStoreKeys() {
+  LEGACY_STORE_KEYS.forEach(key => localStorage.removeItem(key));
+}
+
 function initStore() {
+  purgeLegacyStoreKeys();
   const catalogHash = getCatalogContentHash();
   let data = readStoreData();
 
