@@ -379,7 +379,13 @@ const DEFAULT_READY_PCS = [
         'img/components/case/Jonsbo D400/JONSBO D400 Black 8.png',
         'img/components/case/Jonsbo D400/JONSBO D400 Black 9.png',
         'img/components/case/Jonsbo D400/JONSBO D400 Black 10.png',
-      ] },
+      ],
+      componentOverrides: {
+        case: { img: 'img/components/case/D400-B.png', name: 'JONSBO D-400 BLACK' },
+        gpu: { img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png' },
+        ram: { img: 'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png' },
+        cooling: { img: 'img/components/cool/LQ360 ULTRA ARGB.png' },
+      } },
       { name: 'Белый', hex: '#f0f0f0', img: 'img/components/case/D400-W.png', images: [
         'img/components/case/D400-W.png',
         'img/components/case/Jonsbo D400/JONSBO D400 White 3.png',
@@ -391,7 +397,13 @@ const DEFAULT_READY_PCS = [
         'img/components/case/Jonsbo D400/JONSBO D400 White 8.png',
         'img/components/case/Jonsbo D400/JONSBO D400 White 9.png',
         'img/components/case/Jonsbo D400/JONSBO D400 White 10.png',
-      ] },
+      ],
+      componentOverrides: {
+        case: { img: 'img/components/case/D400-W.png', name: 'JONSBO D-400 WHITE' },
+        gpu: { img: 'img/components/gpu/GeForce RTX™ 5080 16G VENTUS 3X WHITE.png' },
+        ram: { img: 'img/components/memory/DELTA RGB DDR5 DESKTOP MEMORY WHITE.png' },
+        cooling: { img: 'img/components/cool/LQ360 ULTRA ARGB WH.png' },
+      } },
     ],
     specs: ['RTX 4080 Super', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
@@ -826,10 +838,13 @@ function enrichReadyPC(pc) {
     } else {
       merged.colors = merged.colors.map(color => {
         const tmplColor = tmpl.colors?.find(entry => entry.name === color.name);
-        if (tmplColor?.images?.length && !color.images?.length) {
-          return { ...tmplColor, ...color, images: tmplColor.images };
-        }
-        return color;
+        if (!tmplColor) return color;
+        return {
+          ...tmplColor,
+          ...color,
+          images: color.images?.filter(Boolean).length ? color.images : tmplColor.images,
+          componentOverrides: color.componentOverrides || tmplColor.componentOverrides,
+        };
       });
     }
   }
