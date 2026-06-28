@@ -2467,7 +2467,6 @@ main {
   max-width: 100%;
   max-height: 180px;
   object-fit: contain;
-  transition: filter 0.35s ease, opacity 0.2s ease;
 }
 
 .pc-component-body {

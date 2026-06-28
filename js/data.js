@@ -1,6 +1,4 @@
-const STORE_VERSION = 5;
-const STORE_KEY = 'pcmarket_data_v5';
-const LEGACY_STORE_KEYS = ['pcmarket_data_v3', 'pcmarket_data_v2', 'pcmarket_data'];
+const STORE_KEY = 'pcmarket_data_v3';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -73,8 +71,7 @@ const DEFAULT_PRODUCTS = [
       ] },
     ],
   },
-
-  { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 12990, 
+  { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, 
     img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png', 
     description: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов.', stock: 2, wired: 'Беспроводной', hertz: '8000 Гц', 
     specs: { dpi: '32000', weight: '60 г' },
@@ -151,7 +148,7 @@ const DEFAULT_PRODUCTS = [
     description: 'СЖО 360 мм, LCD-дисплей', stock: 10, liquid: '360 мм', 
     specs: { type: 'AIO', size: '360 мм' } },
 
-  {
+ {
     id: 'p9', name: 'Lian Li O11 Dynamic EVO', category: 'case', price: 16990,
     img: 'img/components/case/D400-B.png',
     description: 'Mid-tower, закалённое стекло', stock: 8, caseff: 'Mid-Tower',
@@ -274,10 +271,9 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS B650-Plus', img: 'img/categories/motherboard.svg', description: 'ATX плата AM5 с WiFi 6 и PCIe 4.0.' },
       { type: 'psu', name: '650W 80+ Gold', img: 'img/categories/psu.svg', description: 'Надёжный БП с запасом мощности.' },
       { type: 'cooling', name: 'Башенный кулер', img: 'img/categories/cooling.svg', description: 'Тихое воздушное охлаждение CPU.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D32 PRO Black 2.png', description: 'Корпус с tempered glass и подсветкой.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Корпус с tempered glass и подсветкой.' },
     ],
   },
-
   {
     id: 'rpc2', name: 'Компактный Mini', price: 119990, img: 'img/components/case/mod-3-black.png',
     description: 'Мощная SFF-сборка в компактном корпусе',
@@ -311,10 +307,9 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix B650-I', img: 'img/categories/motherboard.svg', description: 'Premium Mini-ITX с WiFi 6E.' },
       { type: 'psu', name: '750W SFX 80+ Gold', img: 'img/categories/psu.svg', description: 'Компактный SFX блок питания.' },
       { type: 'cooling', name: '240mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 240 мм для SFF-корпуса.' },
-      { type: 'case', name: 'Compact Mini-ITX', img: 'img/components/case/mod-3-black.png', description: 'SFF с панорамным стеклом.' },
+      { type: 'case', name: 'Compact Mini-ITX', img: 'img/categories/case.svg', description: 'SFF с панорамным стеклом.' },
     ],
   },
-
   {
     id: 'rpc3', name: 'Киберспортивный Чемпион', price: 129990, img: 'img/components/case/D41 MESH Black.png', badge: 'new',
     description: 'Оптимизирован для соревновательного гейминга с монитором 360 Гц',
@@ -347,10 +342,9 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'MSI Z790 Tomahawk', img: 'img/categories/motherboard.svg', description: 'Усиленный VRM для стабильного разгона.' },
       { type: 'psu', name: '750W 80+ Gold', img: 'img/categories/psu.svg', description: 'Модульный тихий БП.' },
       { type: 'cooling', name: '240mm AIO RGB', img: 'img/categories/cooling.svg', description: 'СЖО для длительных турнирных сессий.' },
-      { type: 'case', name: 'Mid-Tower RGB', img: 'img/components/case/D41 MESH Black.png', description: 'Отличный airflow и RGB-подсветка.' },
+      { type: 'case', name: 'Mid-Tower RGB', img: 'img/categories/case.svg', description: 'Отличный airflow и RGB-подсветка.' },
     ],
   },
-
   {
     id: 'rpc4', name: 'Стрим Мастер', price: 149990, img: 'img/components/case/O11VP_014a.webp', badge: 'new',
     description: 'Идеален для стриминга и создания контента',
@@ -383,10 +377,9 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Strix Z790-E', img: 'img/categories/motherboard.svg', description: 'WiFi 6E, 2.5G LAN, мощная подсистема питания.' },
       { type: 'psu', name: '750W 80+ Platinum', img: 'img/categories/psu.svg', description: 'Тихий модульный БП для длительных стримов.' },
       { type: 'cooling', name: '360mm AIO Liquid', img: 'img/categories/cooling.svg', description: 'СЖО 360 мм держит CPU прохладным под нагрузкой.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_014a.webp', description: 'Просторный корпус с местом для кастомизации.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'Просторный корпус с местом для кастомизации.' },
     ],
   },
-
   {
     id: 'rpc5', name: 'Игровой Зверь Pro', price: 189990, img: 'img/components/case/D400-B.png', badge: 'sale',
     description: 'Топовый игровой ПК для 4K на максимальных настройках',
@@ -434,7 +427,6 @@ const DEFAULT_READY_PCS = [
       { type: 'case', name: 'JONSBO D-400 BLACK', img: 'img/components/case/D400-B.png', description: 'Премиальный корпус с панорамным стеклом и отличным airflow.' },
     ],
   },
-
   {
     id: 'rpc6', name: 'Рабочая Станция Elite', price: 249990, img: 'img/components/case/O11VP_000a.webp',
     description: 'Профессиональная станция для 3D, монтажа и AI',
@@ -469,7 +461,7 @@ const DEFAULT_READY_PCS = [
       { type: 'motherboard', name: 'ASUS ROG Maximus Z790 Hero', img: 'img/categories/motherboard.svg', description: 'E-ATX флагман с Thunderbolt 4.' },
       { type: 'psu', name: '1000W 80+ Titanium', img: 'img/categories/psu.svg', description: 'Запас мощности для RTX 4090 и разгона.' },
       { type: 'cooling', name: '360mm AIO LCD', img: 'img/categories/cooling.svg', description: 'Охлаждение для CPU с TDP 253W.' },
-      { type: 'case', name: 'Full-Tower Premium', img: 'img/components/case/O11VP_000a.webp', description: 'E-ATX корпус с множеством отсеков.' },
+      { type: 'case', name: 'Full-Tower Premium', img: 'img/categories/case.svg', description: 'E-ATX корпус с множеством отсеков.' },
     ],
   },
 ];
@@ -641,86 +633,21 @@ function escapeHtml(text) {
     .replace(/"/g, '&quot;');
 }
 
-function getCatalogContentHash() {
-  const payload = {
-    products: DEFAULT_PRODUCTS.map(item => ({
-      id: item.id,
-      img: item.img,
-      images: item.images,
-      colors: item.colors,
-    })),
-    readyPCs: DEFAULT_READY_PCS.map(item => ({
-      id: item.id,
-      img: item.img,
-      images: item.images,
-      colors: item.colors,
-      components: item.components,
-    })),
-  };
-  const raw = JSON.stringify(payload);
-  let hash = 0;
-  for (let i = 0; i < raw.length; i += 1) {
-    hash = ((hash << 5) - hash + raw.charCodeAt(i)) | 0;
-  }
-  return String(hash >>> 0);
-}
-
-function createDefaultStore() {
-  return {
-    version: STORE_VERSION,
-    contentHash: getCatalogContentHash(),
-    products: DEFAULT_PRODUCTS,
-    readyPCs: DEFAULT_READY_PCS,
-  };
-}
-
-function mergeCatalogItem(stored, template) {
-  if (!template) return { ...stored };
-  return {
-    ...template,
-    id: stored.id || template.id,
-    price: stored.price ?? template.price,
-    badge: stored.badge ?? template.badge,
-    name: stored.name || template.name,
-  };
-}
-
-function readStoreData() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function writeStoreData(data) {
-  localStorage.setItem(STORE_KEY, JSON.stringify({
-    version: STORE_VERSION,
-    contentHash: getCatalogContentHash(),
-    ...data,
-  }));
-}
-
-function resetCatalogToDefaults() {
-  writeStoreData(createDefaultStore());
-}
-
 function initStore() {
-  const contentHash = getCatalogContentHash();
-  let data = readStoreData();
-
-  if (!data || data.version !== STORE_VERSION || data.contentHash !== contentHash) {
-    resetCatalogToDefaults();
-    data = readStoreData();
+  if (!localStorage.getItem(STORE_KEY)) {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
   }
-
   if (!localStorage.getItem(CART_KEY)) {
     localStorage.setItem(CART_KEY, JSON.stringify([]));
   }
   if (!localStorage.getItem(ORDERS_KEY)) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify([]));
   }
+}
+
+function mergeDefaultAttributes(products) {
+  const defaultsById = Object.fromEntries(DEFAULT_PRODUCTS.map(p => [p.id, p]));
+  return products.map(product => enrichProduct(product, defaultsById[product.id]));
 }
 
 function buildFullDescription(product) {
@@ -832,13 +759,10 @@ function enrichColorGalleries(item) {
 
   const unassigned = flatImages.filter(src => !assignedGlobal.has(normalizeItemSrc(src)));
   if (unassigned.length) {
-    enrichedColors = enrichedColors.map(color => {
-      if ((color.images?.filter(Boolean).length || 0) > 1) return color;
-      return {
-        ...color,
-        images: uniqueImages([...(color.images || []), ...unassigned]),
-      };
-    });
+    enrichedColors = enrichedColors.map(color => ({
+      ...color,
+      images: uniqueImages([...(color.images || []), ...unassigned]),
+    }));
   }
 
   return { ...item, colors: enrichedColors };
@@ -873,7 +797,7 @@ function buildDefaultColors(product) {
 }
 
 function enrichProduct(product, def) {
-  const merged = mergeCatalogItem(product, def);
+  const merged = def ? { ...def, ...product } : { ...product };
   merged.fullDescription = buildFullDescription(merged);
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
@@ -886,25 +810,18 @@ function enrichProduct(product, def) {
   return merged;
 }
 
-function syncProductList(products) {
-  const storedById = Object.fromEntries((products || []).map(product => [product.id, product]));
-  const defaultIds = new Set(DEFAULT_PRODUCTS.map(item => item.id));
-  return [
-    ...DEFAULT_PRODUCTS.map(def => enrichProduct(storedById[def.id] || def, def)),
-    ...(products || []).filter(product => !defaultIds.has(product.id)).map(product => enrichProduct(product, null)),
-  ];
-}
-
 function getProducts() {
   initStore();
   try {
-    const data = readStoreData();
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
     const products = Array.isArray(data?.products) ? data.products : DEFAULT_PRODUCTS;
-    return syncProductList(products);
+    return mergeDefaultAttributes(products);
   } catch (e) {
     console.warn('PC Market: повреждённые данные каталога, восстанавливаем по умолчанию', e);
-    resetCatalogToDefaults();
-    return syncProductList(DEFAULT_PRODUCTS);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return mergeDefaultAttributes(DEFAULT_PRODUCTS);
   }
 }
 
@@ -913,10 +830,30 @@ function getEnrichedProductById(id) {
   return products.find(p => p.id === id) || null;
 }
 
+function hasDefaultReadyPCGallery(item) {
+  const images = item?.images?.filter(Boolean) || [];
+  return !images.length || (images.length === 1 && images[0] === 'img/ready/pc.svg');
+}
+
 function enrichReadyPC(pc) {
   if (!pc) return null;
   const tmpl = DEFAULT_READY_PCS.find(d => d.id === pc.id);
-  const merged = mergeCatalogItem(pc, tmpl);
+  const merged = tmpl ? { ...tmpl, ...pc } : { ...pc };
+  if (tmpl && hasDefaultReadyPCGallery(pc)) {
+    merged.images = tmpl.images;
+    merged.img = tmpl.img || merged.img;
+    if (!pc.colors?.length) {
+      merged.colors = tmpl.colors;
+    } else {
+      merged.colors = merged.colors.map(color => {
+        const tmplColor = tmpl.colors?.find(entry => entry.name === color.name);
+        if (tmplColor?.images?.length && !color.images?.length) {
+          return { ...tmplColor, ...color, images: tmplColor.images };
+        }
+        return color;
+      });
+    }
+  }
   merged.colors = (merged.colors?.length ? merged.colors : buildDefaultReadyPCColors(merged))
     .map(c => ({ ...c, img: c.img || getProductImg(merged) }));
   merged.images = buildItemImages(merged, tmpl);
@@ -929,25 +866,19 @@ function enrichReadyPC(pc) {
   };
 }
 
-function syncReadyPCList(pcs) {
-  const storedById = Object.fromEntries((pcs || []).map(pc => [pc.id, pc]));
-  const defaultIds = new Set(DEFAULT_READY_PCS.map(item => item.id));
-  return [
-    ...DEFAULT_READY_PCS.map(def => enrichReadyPC(storedById[def.id] || def)),
-    ...(pcs || []).filter(pc => !defaultIds.has(pc.id)).map(enrichReadyPC),
-  ];
-}
-
 function getReadyPCs() {
   initStore();
   try {
-    const data = readStoreData();
+    const raw = localStorage.getItem(STORE_KEY);
+    const data = raw ? JSON.parse(raw) : null;
     const pcs = Array.isArray(data?.readyPCs) ? data.readyPCs : [];
-    return syncReadyPCList(pcs).sort((a, b) => a.price - b.price);
+    const list = !pcs.length ? DEFAULT_READY_PCS.map(enrichReadyPC) : pcs.map(enrichReadyPC);
+    return list.sort((a, b) => a.price - b.price);
   } catch (e) {
     console.warn('PC Market: повреждённые данные готовых ПК, восстанавливаем по умолчанию', e);
-    resetCatalogToDefaults();
-    return syncReadyPCList(DEFAULT_READY_PCS).sort((a, b) => a.price - b.price);
+    localStorage.removeItem(STORE_KEY);
+    initStore();
+    return DEFAULT_READY_PCS.map(enrichReadyPC).sort((a, b) => a.price - b.price);
   }
 }
 
@@ -956,15 +887,15 @@ function getReadyPCById(id) {
 }
 
 function saveProducts(products) {
-  const data = readStoreData() || createDefaultStore();
+  const data = JSON.parse(localStorage.getItem(STORE_KEY));
   data.products = products;
-  writeStoreData(data);
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
 }
 
 function saveReadyPCs(pcs) {
-  const data = readStoreData() || createDefaultStore();
+  const data = JSON.parse(localStorage.getItem(STORE_KEY));
   data.readyPCs = pcs;
-  writeStoreData(data);
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
 }
 
 function formatPrice(price) {

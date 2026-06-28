@@ -1,101 +1,3 @@
-const COLOR_AWARE_COMPONENT_TYPES = new Set(['case', 'cooling', 'ram', 'gpu']);
-const WHITE_COMPONENT_FILTER = 'brightness(0) invert(1)';
-const PINK_COMPONENT_FILTER = 'hue-rotate(300deg) saturate(1.4)';
-
-function stripComponentColorSuffix(name) {
-  return (name || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
-}
-
-function isWhiteColorName(name) {
-  return /бел|white/i.test(name || '');
-}
-
-function isPinkColorName(name) {
-  return /розов|pink/i.test(name || '');
-}
-
-function isRgbColorName(name) {
-  return /rgb|фиолет|violet|purple/i.test(name || '');
-}
-
-const WHITE_COMPONENT_IMG_MAP = {
-  'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png': 'img/components/gpu/GeForce RTX™ 5080 16G VENTUS 3X WHITE.png',
-  'img/components/gpu/GeForce RTX™ 5080 GamingPro OC.png': 'img/components/gpu/GeForce RTX™ 5080 16G VENTUS 3X WHITE.png',
-  'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png': 'img/components/memory/DELTA RGB DDR5 DESKTOP MEMORY WHITE.png',
-  'img/components/cool/LQ360 ULTRA ARGB.png': 'img/components/cool/LQ360 ULTRA ARGB WH.png',
-};
-
-function swapComponentImgForColor(src, colorName) {
-  if (!src || /\/categories\//.test(src)) return src;
-
-  if (isWhiteColorName(colorName)) {
-    if (WHITE_COMPONENT_IMG_MAP[src]) return WHITE_COMPONENT_IMG_MAP[src];
-
-    return src
-      .replace(/\bBlack\b/g, 'White')
-      .replace(/\bblack\b/g, 'white')
-      .replace(/\bBLACK\b/g, 'WHITE')
-      .replace(/-B\./g, '-W.')
-      .replace(/\bB\.png/g, 'W.png')
-      .replace(/mod-3-black/g, 'mod-3-white')
-      .replace(/D400-B/g, 'D400-W')
-      .replace(/D32 PRO Black/g, 'D32 PRO White')
-      .replace(/D32 STD Black/g, 'D32 STD White')
-      .replace(/D41 MESH Black/g, 'D41 MESH White')
-      .replace(/D41 STD Black/g, 'D41 STD White')
-      .replace(/C6 MAX Black/g, 'C6 MAX White')
-      .replace(/JONSBO D400 Black/g, 'JONSBO D400 White')
-      .replace(/O11VP_014a/g, 'O11VP_W01')
-      .replace(/O11VP_000a/g, 'O11VP_X01')
-      .replace(/O11VP_001a/g, 'O11VP_W01')
-      .replace(/O11VP_020/g, 'O11VP_W01');
-  }
-
-  if (isPinkColorName(colorName) && /mod-3-(black|white)/.test(src)) {
-    return src.replace(/mod-3-(black|white)/g, 'mod-3-pink');
-  }
-
-  return src;
-}
-
-function resolveReadyPCComponents(pc, colorIndex = 0) {
-  const color = pc.colors?.[colorIndex];
-  const base = pc.components || [];
-  if (!color) return base;
-
-  const overrides = color.componentOverrides || {};
-  const colorName = color.name || '';
-  const colorFilter = color.filter && color.filter !== 'none' ? color.filter : '';
-  const caseImg = color.img || color.images?.[0];
-
-  return base.map(comp => {
-    const override = overrides[comp.type] || {};
-    let img = override.img || comp.img;
-    let name = override.name || comp.name;
-    let imgFilter = override.imgFilter || '';
-
-    if (comp.type === 'case') {
-      img = override.img || caseImg || comp.img;
-      name = `${stripComponentColorSuffix(name)} (${colorName})`;
-      imgFilter = override.imgFilter ?? colorFilter;
-    } else if (COLOR_AWARE_COMPONENT_TYPES.has(comp.type)) {
-      const swapped = swapComponentImgForColor(comp.img, colorName);
-      if (swapped !== comp.img) img = swapped;
-
-      if (!override.imgFilter && /\/categories\//.test(img)) {
-        if (isWhiteColorName(colorName)) imgFilter = WHITE_COMPONENT_FILTER;
-        else if (isPinkColorName(colorName)) imgFilter = PINK_COMPONENT_FILTER;
-        else if (isRgbColorName(colorName) && colorFilter) imgFilter = colorFilter;
-      }
-
-      if (override.img) img = override.img;
-      if (override.imgFilter) imgFilter = override.imgFilter;
-    }
-
-    return { ...comp, img, name, imgFilter };
-  });
-}
-
 function renderPerfBars(pc) {
   if (!pc.performance) return '';
   return Object.entries(pc.performance).map(([key, val]) => `
@@ -141,28 +43,22 @@ function renderReadyPCCard(pc) {
   `;
 }
 
-function renderComponentMedia(comp) {
-  const src = comp.img || DEFAULT_IMG;
-  const filterStyle = comp.imgFilter ? `filter:${comp.imgFilter};` : '';
-  return `<img src="${src}" alt="${escapeHtml(comp.name || '')}" data-component-img style="${filterStyle}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
-}
-
-function renderPCComponents(components) {
-  if (!components?.length) {
+function renderPCComponents(pc) {
+  if (!pc.components?.length) {
     return '<p class="section-sub">Подробная комплектация будет добавлена позже.</p>';
   }
   return `
-    <div class="pc-components-zigzag" id="pcComponentsList">
-      ${components.map((comp, index) => {
+    <div class="pc-components-zigzag">
+      ${pc.components.map((comp, index) => {
         const reverseClass = index % 2 === 1 ? ' pc-component-row--reverse' : '';
         return `
-          <article class="pc-component-row${reverseClass}" data-component-type="${escapeHtml(comp.type)}">
+          <article class="pc-component-row${reverseClass}">
             <div class="pc-component-media">
-              ${renderComponentMedia(comp)}
+              ${renderProductImg(comp.img, comp.name)}
             </div>
             <div class="pc-component-body">
               <div class="pc-component-type">${COMPONENT_TYPE_LABELS[comp.type] || comp.type}</div>
-              <h4 data-component-name>${escapeHtml(comp.name)}</h4>
+              <h4>${escapeHtml(comp.name)}</h4>
               <p>${escapeHtml(comp.description || '')}</p>
             </div>
           </article>
@@ -172,27 +68,7 @@ function renderPCComponents(components) {
   `;
 }
 
-function updatePCComponentsForColor(container, pc, colorIndex = 0) {
-  const components = resolveReadyPCComponents(pc, colorIndex);
-  const list = container.querySelector('#pcComponentsList');
-  if (!list) return;
-
-  components.forEach(comp => {
-    const row = list.querySelector(`[data-component-type="${CSS.escape(comp.type)}"]`);
-    if (!row) return;
-
-    const img = row.querySelector('[data-component-img]');
-    const title = row.querySelector('[data-component-name]');
-    if (img) {
-      img.src = comp.img || DEFAULT_IMG;
-      img.style.filter = comp.imgFilter || '';
-    }
-    if (title) title.textContent = comp.name;
-  });
-}
-
 function renderReadyPCDetail(pc) {
-  const initialComponents = resolveReadyPCComponents(pc, 0);
   return `
     <div class="pc-detail-hero">
       ${renderItemGallery(pc, GALLERY_UI.readyPc)}
@@ -222,7 +98,7 @@ function renderReadyPCDetail(pc) {
     <section class="pc-detail-section">
       <h2>Комплектация</h2>
       <p class="section-sub">Каждый компонент подобран для максимальной совместимости и производительности</p>
-      ${renderPCComponents(initialComponents)}
+      ${renderPCComponents(pc)}
     </section>
   `;
 }
@@ -264,9 +140,7 @@ function initReadyPCDetailPage() {
       updatePageTransitionLabel(pc.name);
     }
     container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
-    bindItemGalleryAndColor(container, GALLERY_UI.readyPc, pc, {
-      onColorChange: (colorIndex) => updatePCComponentsForColor(container, pc, colorIndex),
-    });
+    bindItemGalleryAndColor(container, GALLERY_UI.readyPc, pc);
     bindAddToCartButtons(container);
     updateCartBadge();
   } catch (err) {
