@@ -122,7 +122,7 @@ const DEFAULT_PRODUCTS = [
     ],
   },
   
-  { id: 'p22', name: 'NVIDIA GeForce RTX™ 5090 AORUS STEALTH ICE 32G', category: 'gpu', price: 379990, oldPrice: 399990, 
+  { id: 'p22', name: 'NVIDIA GeForce RTX™ 5090 AORUS STEALTH ICE 32G', category: 'gpu', price: 374990, oldPrice: 399990, 
     img: 'img/components/gpu/gpus/gigbayte/aorusmaster/AORUS GeForce RTX™ 5090 STEALTH ICE 32G.webp', 
     description: '32 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, brand: 'Gigabyte', pcie: 'PCIe 5.0', 
     specs: { vram: '32 ГБ', tdp: '450 Вт' },
