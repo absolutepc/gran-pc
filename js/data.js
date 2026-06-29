@@ -542,7 +542,7 @@ const DEFAULT_READY_PCS = [
     specs: ['RTX 5080 16GB', 'Ryzen 7 7800X3D', '32 ГБ DDR5', '2 ТБ NVMe', 'БП 850 Вт'],
     performance: { gaming: 98, work: 85, streaming: 92 },
     components: [
-      { type: 'gpu', name: 'NVIDIA RTX 4080 Super 16GB', img: 'img/components/gpu/GeForce RTX™ 5080 GamingPro OC 2.png', description: '16 ГБ GDDR7 — уверенный 4K с ray tracing и DLSS 4.' },
+      { type: 'gpu', name: 'NVIDIA GeForce RTX™ 5080 ASUS ROG ASTRAL 16G', img: 'img/components/gpu/gpus/asus/ASTRAL/ROG-ASTRAL-RTX5080-16G-GAMING 2.png', description: '16 ГБ GDDR7 — уверенный 4K с ray tracing и DLSS 4.' },
       { type: 'cpu', name: 'AMD Ryzen 7 7800X3D', img: 'img/components/cpu/amd/R7 7800X3D.png', description: '8 ядер с 3D V-Cache — лучший игровой процессор AM5.' },
       { type: 'ram', name: '32 ГБ DDR5-6000', img: 'img/components/memory/DELTA RGB CKD DDR5 DESKTOP MEMORY BLACK.png', description: 'Комплект 2×16 ГБ с оптимальными таймингами для AM5.' },
       { type: 'storage', name: '2 ТБ Samsung 990 Pro', img: 'img/components/storage/990 pro 2tb 1.png', description: 'NVMe Gen4, скорость чтения до 7450 МБ/с.' },
