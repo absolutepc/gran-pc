@@ -743,8 +743,23 @@ function writeStoreData(data) {
   }));
 }
 
+function getStoredCustomProducts(data) {
+  const defaultIds = new Set(DEFAULT_PRODUCTS.map(item => item.id));
+  return (data?.products || []).filter(item => item?.id && !defaultIds.has(item.id));
+}
+
+function getStoredCustomReadyPCs(data) {
+  const defaultIds = new Set(DEFAULT_READY_PCS.map(item => item.id));
+  return (data?.readyPCs || []).filter(item => item?.id && !defaultIds.has(item.id));
+}
+
 function resetCatalogToDefaults() {
-  writeStoreData(createDefaultStore());
+  const existing = readStoreData();
+  writeStoreData({
+    ...createDefaultStore(),
+    products: [...DEFAULT_PRODUCTS, ...getStoredCustomProducts(existing)],
+    readyPCs: [...DEFAULT_READY_PCS, ...getStoredCustomReadyPCs(existing)],
+  });
 }
 
 function purgeLegacyStoreKeys() {
@@ -1023,7 +1038,7 @@ function getProductById(id) {
 
 function matchesAttributeFilter(product, field, selected) {
   if (!selected.length) return true;
-  if (!product[field]) return false;
+  if (!product[field]) return true;
   return selected.includes(product[field]);
 }
 
