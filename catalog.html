@@ -23,13 +23,19 @@
   <main>
     <div class="page-header">
       <div class="container">
-        <div class="breadcrumbs"><a href="index.html">Главная</a> / <span>Каталог</span></div>
-        <h1>Каталог товаров</h1>
-        <p>Полный ассортимент комплектующих и периферии</p>
+        <div class="breadcrumbs" id="catalogBreadcrumbs">
+          <a href="index.html">Главная</a> / <span id="catalogBreadcrumbCurrent">Каталог</span>
+        </div>
+        <h1 id="catalogTitle">Каталог товаров</h1>
+        <p id="catalogSubtitle">Выберите раздел или просмотрите товары</p>
       </div>
     </div>
 
-    <div class="container page-layout">
+    <div class="container catalog-sections-wrap" id="catalogSectionsView">
+      <div class="catalog-sections-grid" id="catalogSectionsGrid"></div>
+    </div>
+
+    <div class="container page-layout catalog-products-wrap" id="catalogProductsView" hidden>
       <aside class="filters-sidebar">
         <h3>Фильтры</h3>
         <div class="filter-group">
@@ -119,112 +125,10 @@
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/transition.js"></script>
+  <script src="js/catalog.js?v=8.1"></script>
   <script>
     initLayout('catalog');
-
-    const params = new URLSearchParams(window.location.search);
-
-    const ATTRIBUTE_FILTERS = [
-      { id: 'socketFilters', field: 'socket', options: FILTER_SOCKETS, param: 'socket', className: 'socket-filter' },
-      { id: 'memoryTypeFilters', field: 'memoryType', options: FILTER_MEMORY_TYPES, param: 'memory', className: 'memory-filter' },
-      { id: 'pcieFilters', field: 'pcie', options: FILTER_PCIE, param: 'pcie', className: 'pcie-filter' },
-      { id: 'ramFilters', field: 'ram', options: FILTER_RAM, param: 'ram', className: 'ram-filter' },
-      { id: 'liquidFilters', field: 'liquid', options: FILTER_LIQUID, param: 'liquid', className: 'liquid-filter' },
-      { id: 'psutypeFilters', field: 'psutype', options: FILTER_PSUTYPE, param: 'psutype', className: 'psutype-filter' },
-      { id: 'caseffFilters', field: 'caseff', options: FILTER_CASEFF, param: 'caseff', className: 'caseff-filter' },
-      { id: 'inchFilters', field: 'inch', options: FILTER_INCH, param: 'inch', className: 'inch-filter' },
-      { id: 'matrixFilters', field: 'matrix', options: FILTER_MATRIX, param: 'matrix', className: 'matrix-filter' },
-      { id: 'hertzFilters', field: 'hertz', options: FILTER_HERTZ, param: 'hertz', className: 'hertz-filter' },
-      { id: 'qualityFilters', field: 'quality', options: FILTER_QUALITY, param: 'quality', className: 'quality-filter' },
-      { id: 'wiredFilters', field: 'wired', options: FILTER_WIRED, param: 'wired', className: 'wired-filter' },
-    ];
-
-    function renderFilterCheckboxes(containerId, values, cssClass, initialValue) {
-      const container = document.getElementById(containerId);
-      const group = container.closest('.filter-group');
-      if (!values.length) {
-        if (group) group.style.display = 'none';
-        container.innerHTML = '';
-        return;
-      }
-      if (group) group.style.display = '';
-      container.innerHTML = values.map(value => `
-        <label>
-          <input type="checkbox" value="${value}" class="${cssClass}" ${initialValue === value ? 'checked' : ''}>
-          ${value}
-        </label>
-      `).join('');
-    }
-
-    const allProducts = getProducts();
-    const initialCat = params.get('cat');
-    const maxProductPrice = Math.max(300000, ...allProducts.map(p => p.price || 0));
-    const priceRange = document.getElementById('priceRange');
-    priceRange.max = maxProductPrice;
-    priceRange.value = maxProductPrice;
-    document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(maxProductPrice)}`;
-
-    const categoryFilters = document.getElementById('categoryFilters');
-    Object.entries(CATEGORY_LABELS).forEach(([key, label]) => {
-      categoryFilters.innerHTML += `<label><input type="checkbox" value="${key}" class="cat-filter" ${initialCat === key ? 'checked' : ''}> ${label}</label>`;
-    });
-
-    ATTRIBUTE_FILTERS.forEach(({ id, field, options, param, className }) => {
-      renderFilterCheckboxes(
-        id,
-        getAvailableFilterValues(allProducts, field, options),
-        className,
-        params.get(param)
-      );
-    });
-
-    function getCheckedValues(selector) {
-      return [...document.querySelectorAll(selector + ':checked')].map(c => c.value);
-    }
-
-    function filterProducts() {
-      let products = getProducts();
-      const checkedCats = getCheckedValues('.cat-filter');
-      const checkedBadges = getCheckedValues('.badge-filter');
-      const maxPrice = +document.getElementById('priceRange').value;
-      const sort = document.getElementById('sortSelect').value;
-
-      if (checkedCats.length) products = products.filter(p => checkedCats.includes(p.category));
-      ATTRIBUTE_FILTERS.forEach(({ field, className }) => {
-        products = products.filter(p => matchesAttributeFilter(p, field, getCheckedValues('.' + className)));
-      });
-      if (checkedBadges.length) products = products.filter(p => checkedBadges.includes(p.badge));
-      products = products.filter(p => p.price <= maxPrice);
-
-      if (sort === 'price-asc') products.sort((a, b) => a.price - b.price);
-      else if (sort === 'price-desc') products.sort((a, b) => b.price - a.price);
-      else if (sort === 'name') products.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
-
-      document.getElementById('resultsCount').textContent = `Найдено: ${products.length}`;
-      document.getElementById('catalogGrid').innerHTML = products.length
-        ? products.map(p => renderProductCard(p)).join('')
-        : '<div class="no-results"><div class="no-results-icon">🔍</div><p>Нет товаров по выбранным фильтрам</p></div>';
-      bindAddToCartButtons(document.getElementById('catalogGrid'));
-    }
-
-    document.querySelector('.filters-sidebar').addEventListener('change', (e) => {
-      if (e.target.matches('input[type="checkbox"]')) filterProducts();
-    });
-    document.getElementById('priceRange').addEventListener('input', (e) => {
-      document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(+e.target.value)}`;
-      filterProducts();
-    });
-    document.getElementById('sortSelect').addEventListener('change', filterProducts);
-    document.getElementById('resetFilters').addEventListener('click', () => {
-      document.querySelectorAll('.filters-sidebar input[type="checkbox"]').forEach(c => {
-        c.checked = false;
-      });
-      document.getElementById('priceRange').value = maxProductPrice;
-      document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(maxProductPrice)}`;
-      filterProducts();
-    });
-
-    filterProducts();
+    initCatalogPage();
   </script>
 </body>
 </html>

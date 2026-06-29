@@ -24,6 +24,9 @@ const CATEGORY_IMAGES = {
   case: 'img/categories/case.svg',
   peripherals: 'img/categories/peripherals.svg',
   monitor: 'img/categories/monitor.svg',
+  laptop: 'img/categories/cpu.svg',
+  desk: 'img/default.svg',
+  chair: 'img/default.svg',
   'ready-pc': 'img/ready/pc.svg',
   config: 'img/config.svg',
 };
@@ -566,7 +569,41 @@ const CATEGORY_LABELS = {
   case: 'Корпуса',
   peripherals: 'Периферия',
   monitor: 'Мониторы',
+  laptop: 'Ноутбуки',
+  desk: 'Столы',
+  chair: 'Кресла',
 };
+
+const CATALOG_SECTIONS = [
+  {
+    id: 'components',
+    name: 'Комплектующие',
+    description: 'Видеокарты, процессоры, память, накопители, корпуса и другое',
+    img: 'img/categories/gpu.svg',
+    categories: ['gpu', 'cpu', 'storage', 'ram', 'motherboard', 'psu', 'cooling', 'case'],
+  },
+  {
+    id: 'peripherals',
+    name: 'Периферия',
+    description: 'Мыши, клавиатуры, мониторы и аксессуары',
+    img: 'img/categories/peripherals.svg',
+    categories: ['peripherals', 'monitor'],
+  },
+  {
+    id: 'laptops',
+    name: 'Ноутбуки',
+    description: 'Игровые и рабочие ноутбуки',
+    img: 'img/categories/cpu.svg',
+    categories: ['laptop'],
+  },
+  {
+    id: 'furniture',
+    name: 'Мебель',
+    description: 'Столы и кресла для комфортной игры и работы',
+    img: 'img/default.svg',
+    categories: ['desk', 'chair'],
+  },
+];
 
 const STATUS_LABELS = {
   pending: 'В обработке',
@@ -1040,6 +1077,20 @@ function matchesAttributeFilter(product, field, selected) {
   if (!selected.length) return true;
   if (!product[field]) return true;
   return selected.includes(product[field]);
+}
+
+function getCatalogSectionById(sectionId) {
+  return CATALOG_SECTIONS.find(section => section.id === sectionId) || null;
+}
+
+function getCatalogSectionForProduct(product) {
+  return CATALOG_SECTIONS.find(section => section.categories.includes(product.category)) || null;
+}
+
+function productMatchesCatalogSection(product, sectionId) {
+  if (!sectionId) return true;
+  const section = getCatalogSectionById(sectionId);
+  return section ? section.categories.includes(product.category) : true;
 }
 
 function getAvailableFilterValues(products, field, predefined) {
