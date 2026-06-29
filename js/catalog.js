@@ -16,6 +16,23 @@ const CATALOG_ATTRIBUTE_FILTERS = [
 
 let catalogMaxProductPrice = 300000;
 
+function getCatalogMaxPrice(products) {
+  const prices = (products || []).map(p => p.price || 0);
+  return Math.max(300000, ...(prices.length ? prices : [0]));
+}
+
+function syncCatalogPriceRange(products, resetValue = false) {
+  const max = getCatalogMaxPrice(products);
+  catalogMaxProductPrice = max;
+  const priceRange = document.getElementById('priceRange');
+  if (!priceRange) return max;
+  priceRange.max = max;
+  if (resetValue) priceRange.value = max;
+  else if (+priceRange.value > max) priceRange.value = max;
+  document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(+priceRange.value)}`;
+  return max;
+}
+
 function renderCatalogFilterCheckboxes(containerId, values, cssClass, initialValue) {
   const container = document.getElementById(containerId);
   const group = container?.closest('.filter-group');
@@ -133,6 +150,7 @@ function initCatalogAttributeFilters(sectionProducts, params) {
 
 function filterCatalogProducts(activeSectionId) {
   let products = getProducts().filter(product => productMatchesCatalogSection(product, activeSectionId));
+  syncCatalogPriceRange(products);
   const checkedCats = getCatalogCheckedValues('.cat-filter');
   const checkedBadges = getCatalogCheckedValues('.badge-filter');
   const maxPrice = +document.getElementById('priceRange').value;
@@ -158,12 +176,7 @@ function filterCatalogProducts(activeSectionId) {
 
 function initCatalogProductsView(section, params) {
   const sectionProducts = getCatalogSectionProducts(section.id);
-  catalogMaxProductPrice = Math.max(300000, ...getProducts().map(p => p.price || 0));
-
-  const priceRange = document.getElementById('priceRange');
-  priceRange.max = catalogMaxProductPrice;
-  priceRange.value = catalogMaxProductPrice;
-  document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(catalogMaxProductPrice)}`;
+  syncCatalogPriceRange(sectionProducts, true);
 
   initCatalogCategoryFilters(section, params.get('cat'));
   initCatalogAttributeFilters(sectionProducts, params);
