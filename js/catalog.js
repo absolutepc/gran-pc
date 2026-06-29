@@ -122,10 +122,11 @@ function handleCatalogPriceInput(sectionId, source) {
   filterCatalogProducts(sectionId);
 }
 
-function renderCatalogFilterCheckboxes(containerId, values, cssClass, initialValue) {
+function renderCatalogFilterCheckboxes(containerId, values, cssClass, checkedValues = []) {
   const container = document.getElementById(containerId);
   const group = container?.closest('.filter-group');
   if (!container) return;
+  const checked = new Set(Array.isArray(checkedValues) ? checkedValues : [checkedValues].filter(Boolean));
   if (!values.length) {
     if (group) group.style.display = 'none';
     container.innerHTML = '';
@@ -134,10 +135,32 @@ function renderCatalogFilterCheckboxes(containerId, values, cssClass, initialVal
   if (group) group.style.display = '';
   container.innerHTML = values.map(value => `
     <label>
-      <input type="checkbox" value="${value}" class="${cssClass}" ${initialValue === value ? 'checked' : ''}>
+      <input type="checkbox" value="${value}" class="${cssClass}" ${checked.has(value) ? 'checked' : ''}>
       ${value}
     </label>
   `).join('');
+}
+
+function getCatalogFilterBasis(activeSectionId) {
+  const checkedCats = getCatalogCheckedValues('.cat-filter');
+  let products = getProducts().filter(product => productMatchesCatalogSection(product, activeSectionId));
+  if (checkedCats.length) products = products.filter(p => checkedCats.includes(p.category));
+  return products;
+}
+
+function refreshCatalogAttributeFilters(activeSectionId, params = null) {
+  const basis = getCatalogFilterBasis(activeSectionId);
+
+  CATALOG_ATTRIBUTE_FILTERS.forEach(({ id, field, options, param, className }) => {
+    const available = getAvailableFilterValues(basis, field, options);
+    const preserved = getCatalogCheckedValues('.' + className).filter(value => available.includes(value));
+    const urlValue = params?.get(param);
+    const checkedValues = urlValue && available.includes(urlValue) && !preserved.includes(urlValue)
+      ? [...preserved, urlValue]
+      : preserved;
+
+    renderCatalogFilterCheckboxes(id, available, className, checkedValues);
+  });
 }
 
 function bindCatalogPriceControls(sectionId) {
@@ -239,18 +262,8 @@ function initCatalogCategoryFilters(section, initialCat) {
   `).join('');
 }
 
-function initCatalogAttributeFilters(sectionProducts, params) {
-  CATALOG_ATTRIBUTE_FILTERS.forEach(({ id, field, options, param, className }) => {
-    renderCatalogFilterCheckboxes(
-      id,
-      getAvailableFilterValues(sectionProducts, field, options),
-      className,
-      params.get(param)
-    );
-  });
-}
-
 function filterCatalogProducts(activeSectionId) {
+  refreshCatalogAttributeFilters(activeSectionId);
   let products = getProducts().filter(product => productMatchesCatalogSection(product, activeSectionId));
   syncCatalogPriceRange(getProducts());
   const checkedCats = getCatalogCheckedValues('.cat-filter');
@@ -277,11 +290,10 @@ function filterCatalogProducts(activeSectionId) {
 }
 
 function initCatalogProductsView(section, params) {
-  const sectionProducts = getCatalogSectionProducts(section.id);
   syncCatalogPriceRange(getProducts(), true);
 
   initCatalogCategoryFilters(section, params.get('cat'));
-  initCatalogAttributeFilters(sectionProducts, params);
+  refreshCatalogAttributeFilters(section.id, params);
 
   const sidebar = document.querySelector('.filters-sidebar');
   sidebar.onchange = (event) => {
