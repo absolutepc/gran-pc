@@ -106,7 +106,7 @@ function renderFooter() {
 
             <a href="#" aria-label="VK" title="VKontakte"><i class="fab fa-vk"></i></a>
 
-            <a href="#" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
             <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
 
