@@ -14,11 +14,16 @@ const CATALOG_ATTRIBUTE_FILTERS = [
   { id: 'wiredFilters', field: 'wired', options: FILTER_WIRED, param: 'wired', className: 'wired-filter' },
 ];
 
-let catalogMaxProductPrice = 300000;
+const CATALOG_PRICE_STEP = 1000;
+const CATALOG_PRICE_FLOOR = 300000;
+
+let catalogMaxProductPrice = CATALOG_PRICE_FLOOR;
 
 function getCatalogMaxPrice(products) {
   const prices = (products || []).map(p => p.price || 0);
-  return Math.max(300000, ...(prices.length ? prices : [0]));
+  const rawMax = prices.length ? Math.max(...prices) : CATALOG_PRICE_FLOOR;
+  const target = Math.max(CATALOG_PRICE_FLOOR, rawMax);
+  return Math.ceil(target / CATALOG_PRICE_STEP) * CATALOG_PRICE_STEP;
 }
 
 function syncCatalogPriceRange(products, resetValue = false) {
@@ -150,7 +155,7 @@ function initCatalogAttributeFilters(sectionProducts, params) {
 
 function filterCatalogProducts(activeSectionId) {
   let products = getProducts().filter(product => productMatchesCatalogSection(product, activeSectionId));
-  syncCatalogPriceRange(products);
+  syncCatalogPriceRange(getProducts());
   const checkedCats = getCatalogCheckedValues('.cat-filter');
   const checkedBadges = getCatalogCheckedValues('.badge-filter');
   const maxPrice = +document.getElementById('priceRange').value;
@@ -176,7 +181,7 @@ function filterCatalogProducts(activeSectionId) {
 
 function initCatalogProductsView(section, params) {
   const sectionProducts = getCatalogSectionProducts(section.id);
-  syncCatalogPriceRange(sectionProducts, true);
+  syncCatalogPriceRange(getProducts(), true);
 
   initCatalogCategoryFilters(section, params.get('cat'));
   initCatalogAttributeFilters(sectionProducts, params);
