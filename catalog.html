@@ -158,11 +158,6 @@
 
     const allProducts = getProducts();
     const initialCat = params.get('cat');
-    const maxProductPrice = Math.max(300000, ...allProducts.map(p => p.price || 0));
-    const priceRange = document.getElementById('priceRange');
-    priceRange.max = maxProductPrice;
-    priceRange.value = maxProductPrice;
-    document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(maxProductPrice)}`;
 
     const categoryFilters = document.getElementById('categoryFilters');
     Object.entries(CATEGORY_LABELS).forEach(([key, label]) => {
@@ -219,8 +214,8 @@
       document.querySelectorAll('.filters-sidebar input[type="checkbox"]').forEach(c => {
         c.checked = false;
       });
-      document.getElementById('priceRange').value = maxProductPrice;
-      document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(maxProductPrice)}`;
+      document.getElementById('priceRange').value = 300000;
+      document.getElementById('priceLabel').textContent = '₽0 — ₽300 000';
       filterProducts();
     });
 
