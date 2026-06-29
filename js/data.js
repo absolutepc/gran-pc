@@ -7,7 +7,7 @@ const LEGACY_STORE_KEYS = [
   'pcmarket_data_v7',
   'pcmarket_data_v9',
 ];
-const APP_BUILD = '8.2';
+const APP_BUILD = '8.3';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -45,9 +45,9 @@ const FILTER_HERTZ = ['60 Гц', '144 Гц', '165 Гц', '240 Гц', '260 Гц',
 const FILTER_QUALITY = ['Full HD', 'QHD', '4K UHD', 'Ultrawide QHD'];
 const FILTER_WIRED = ['Проводной', 'Беспроводной', 'Bluetooth'];
 const FILTER_BRANDS = [
-  'AMD', 'ASUS', 'be quiet!', 'Corsair', 'Crucial', 'Gigabyte', 'Intel',
-  'Keychron', 'Kingston', 'Lian Li', 'Logitech', 'MSI', 'NVIDIA', 'NZXT',
-  'Palit', 'Samsung',
+  'AMD', 'ASUS', 'be quiet!', 'COLORFUL', 'Corsair', 'Crucial', 'Gainward', 'Gigabyte',
+  'Inno3D', 'Intel', 'Keychron', 'Kingston', 'Lian Li', 'Logitech', 'MSI', 'NZXT',
+  'Palit', 'PNY', 'Samsung', 'ZOTAC',
 ];
 
 const PRODUCT_ATTRIBUTE_FIELDS = [
@@ -251,7 +251,7 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p15', name: 'NVIDIA GeForce RTX 4060 Ti', category: 'gpu', price: 44990, 
     img: 'img/categories/gpu.svg', 
-    description: '8 ГБ GDDR6, компактная версия', stock: 18, brand: 'NVIDIA', pcie: 'PCIe 4.0', 
+    description: '8 ГБ GDDR6, компактная версия', stock: 18, brand: 'ZOTAC', pcie: 'PCIe 4.0', 
     specs: { vram: '8 ГБ', tdp: '160 Вт' } },
 
   { id: 'p16', name: 'Gigabyte GTX 1660 SUPER', category: 'gpu', price: 15990, 
@@ -276,7 +276,7 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p20', name: 'NVIDIA GeForce RTX 5090', category: 'gpu', price: 249990, 
     img: 'img/categories/gpu.svg', 
-    description: '32 ГБ GDDR7, PCIe 5.0', badge: 'new', stock: 3, brand: 'NVIDIA', pcie: 'PCIe 5.0', 
+    description: '32 ГБ GDDR7, PCIe 5.0', badge: 'new', stock: 3, brand: 'ASUS', pcie: 'PCIe 5.0', 
     specs: { vram: '32 ГБ', tdp: '575 Вт' } },
 ];
 
