@@ -26,16 +26,47 @@ function getCatalogMaxPrice(products) {
   return Math.ceil(target / CATALOG_PRICE_STEP) * CATALOG_PRICE_STEP;
 }
 
+function updateCatalogPriceLabel(minVal, maxVal) {
+  const label = document.getElementById('priceLabel');
+  if (label) label.textContent = `${formatPrice(minVal)} — ${formatPrice(maxVal)}`;
+}
+
 function syncCatalogPriceRange(products, resetValue = false) {
   const max = getCatalogMaxPrice(products);
   catalogMaxProductPrice = max;
-  const priceRange = document.getElementById('priceRange');
-  if (!priceRange) return max;
-  priceRange.max = max;
-  if (resetValue) priceRange.value = max;
-  else if (+priceRange.value > max) priceRange.value = max;
-  document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(+priceRange.value)}`;
+  const minRange = document.getElementById('priceMinRange');
+  const maxRange = document.getElementById('priceMaxRange');
+  if (!minRange || !maxRange) return max;
+
+  minRange.max = max;
+  maxRange.max = max;
+
+  if (resetValue) {
+    minRange.value = 0;
+    maxRange.value = max;
+  } else {
+    if (+minRange.value > max) minRange.value = 0;
+    if (+maxRange.value > max) maxRange.value = max;
+    if (+minRange.value > +maxRange.value) minRange.value = maxRange.value;
+  }
+
+  updateCatalogPriceLabel(+minRange.value, +maxRange.value);
   return max;
+}
+
+function handleCatalogPriceInput(sectionId, source) {
+  const minRange = document.getElementById('priceMinRange');
+  const maxRange = document.getElementById('priceMaxRange');
+  if (!minRange || !maxRange) return;
+
+  if (source === 'min' && +minRange.value > +maxRange.value) {
+    maxRange.value = minRange.value;
+  } else if (source === 'max' && +maxRange.value < +minRange.value) {
+    minRange.value = maxRange.value;
+  }
+
+  updateCatalogPriceLabel(+minRange.value, +maxRange.value);
+  filterCatalogProducts(sectionId);
 }
 
 function renderCatalogFilterCheckboxes(containerId, values, cssClass, initialValue) {
@@ -158,7 +189,8 @@ function filterCatalogProducts(activeSectionId) {
   syncCatalogPriceRange(getProducts());
   const checkedCats = getCatalogCheckedValues('.cat-filter');
   const checkedBadges = getCatalogCheckedValues('.badge-filter');
-  const maxPrice = +document.getElementById('priceRange').value;
+  const minPrice = +document.getElementById('priceMinRange').value;
+  const maxPrice = +document.getElementById('priceMaxRange').value;
   const sort = document.getElementById('sortSelect').value;
 
   if (checkedCats.length) products = products.filter(p => checkedCats.includes(p.category));
@@ -166,7 +198,7 @@ function filterCatalogProducts(activeSectionId) {
     products = products.filter(p => matchesAttributeFilter(p, field, getCatalogCheckedValues('.' + className)));
   });
   if (checkedBadges.length) products = products.filter(p => checkedBadges.includes(p.badge));
-  products = products.filter(p => p.price <= maxPrice);
+  products = products.filter(p => p.price >= minPrice && p.price <= maxPrice);
 
   if (sort === 'price-asc') products.sort((a, b) => a.price - b.price);
   else if (sort === 'price-desc') products.sort((a, b) => b.price - a.price);
@@ -191,17 +223,16 @@ function initCatalogProductsView(section, params) {
     if (event.target.matches('input[type="checkbox"]')) filterCatalogProducts(section.id);
   };
 
-  document.getElementById('priceRange').oninput = (event) => {
-    document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(+event.target.value)}`;
-    filterCatalogProducts(section.id);
-  };
+  document.getElementById('priceMinRange').oninput = () => handleCatalogPriceInput(section.id, 'min');
+  document.getElementById('priceMaxRange').oninput = () => handleCatalogPriceInput(section.id, 'max');
   document.getElementById('sortSelect').onchange = () => filterCatalogProducts(section.id);
   document.getElementById('resetFilters').onclick = () => {
     document.querySelectorAll('.filters-sidebar input[type="checkbox"]').forEach(c => {
       c.checked = false;
     });
-    document.getElementById('priceRange').value = catalogMaxProductPrice;
-    document.getElementById('priceLabel').textContent = `₽0 — ${formatPrice(catalogMaxProductPrice)}`;
+    document.getElementById('priceMinRange').value = 0;
+    document.getElementById('priceMaxRange').value = catalogMaxProductPrice;
+    updateCatalogPriceLabel(0, catalogMaxProductPrice);
     filterCatalogProducts(section.id);
   };
 

@@ -94,9 +94,18 @@
           <label>Подключение</label>
           <div class="filter-checkboxes" id="wiredFilters"></div>
         </div>
-        <div class="filter-group">
+        <div class="filter-group filter-group--price">
           <label>Цена: <span id="priceLabel">₽0 — ₽380 000</span></label>
-          <input type="range" id="priceRange" min="0" max="380000" step="1000" value="380000">
+          <div class="price-range-fields">
+            <div class="price-range-row">
+              <span class="price-range-caption">От</span>
+              <input type="range" id="priceMinRange" min="0" max="380000" step="1000" value="0">
+            </div>
+            <div class="price-range-row">
+              <span class="price-range-caption">До</span>
+              <input type="range" id="priceMaxRange" min="0" max="380000" step="1000" value="380000">
+            </div>
+          </div>
         </div>
         <div class="filter-group">
           <label>Метка</label>
@@ -129,7 +138,7 @@
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/transition.js"></script>
-  <script src="js/catalog.js?v=8.4"></script>
+  <script src="js/catalog.js?v=8.5"></script>
   <script>
     initLayout('catalog');
     initCatalogPage();
