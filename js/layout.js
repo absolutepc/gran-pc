@@ -104,7 +104,7 @@ function renderFooter() {
 
             <a href="#" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
 
-            <a href="#" aria-label="VK" title="VKontakte"><i class="fab fa-vk"></i></a>
+            <a href="https://vk.com/dakaev0121" aria-label="VK" title="VKontakte" target="_blank" rel="noopener noreferrer"><i class="fab fa-vk"></i></a>
 
             <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
