@@ -16,6 +16,7 @@ function renderReadyPCCard(pc) {
     ? `<span class="product-badge ${pc.badge}">${BADGE_LABELS[pc.badge] || pc.badge}</span>`
     : '';
   const imgSrc = getProductImg(pc);
+  const transitionImg = encodeAssetPath(getItemTransitionImage(pc));
 
   return `
     <div class="product-card ready-pc-card" data-id="${pc.id}" data-type="ready-pc">
@@ -34,7 +35,7 @@ function renderReadyPCCard(pc) {
         <div class="product-footer ready-pc-footer">
           <div class="product-price">${formatPrice(pc.price)}</div>
           <div class="ready-pc-actions">
-            <a href="ready-pc.html?id=${escapeHtml(pc.id)}" class="btn btn-secondary btn-sm" data-transition-label="${escapeHtml(pc.name)}">Подробнее</a>
+            <a href="ready-pc.html?id=${escapeHtml(pc.id)}" class="btn btn-secondary btn-sm" data-transition-label="${escapeHtml(pc.name)}" data-transition-image="${escapeHtml(transitionImg)}">Подробнее</a>
             <button class="btn btn-primary btn-sm add-to-cart-btn" data-id="${pc.id}" data-type="ready-pc">В корзину</button>
           </div>
         </div>
@@ -138,6 +139,9 @@ function initReadyPCDetailPage() {
     document.title = `${pc.name} — PC Market`;
     if (typeof updatePageTransitionLabel === 'function') {
       updatePageTransitionLabel(pc.name);
+    }
+    if (typeof updatePageTransitionImage === 'function') {
+      updatePageTransitionImage(getItemTransitionImage(pc));
     }
     container.innerHTML = `<div class="container pc-detail-page">${renderReadyPCDetail(pc)}</div>`;
     bindItemGalleryAndColor(container, GALLERY_UI.readyPc, pc);

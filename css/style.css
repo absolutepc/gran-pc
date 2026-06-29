@@ -2991,6 +2991,19 @@ body.page-transition-active > :not(#page-transition) {
   object-fit: contain;
 }
 
+.page-transition__logo--product {
+  width: min(280px, 72vw);
+  height: min(280px, 72vw);
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.page-transition__logo--product img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .page-transition__label {
   font-size: 1.65rem;
   font-weight: 700;
