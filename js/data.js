@@ -7,7 +7,7 @@ const LEGACY_STORE_KEYS = [
   'pcmarket_data_v7',
   'pcmarket_data_v9',
 ];
-const APP_BUILD = '8.1';
+const APP_BUILD = '8.2';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
@@ -44,16 +44,21 @@ const FILTER_MATRIX = ['IPS', 'VA', 'OLED', 'TN'];
 const FILTER_HERTZ = ['60 Гц', '144 Гц', '165 Гц', '240 Гц', '260 Гц', '360 Гц', '2000 Гц', '4000 Гц', '8000 Гц'];
 const FILTER_QUALITY = ['Full HD', 'QHD', '4K UHD', 'Ultrawide QHD'];
 const FILTER_WIRED = ['Проводной', 'Беспроводной', 'Bluetooth'];
+const FILTER_BRANDS = [
+  'AMD', 'ASUS', 'be quiet!', 'Corsair', 'Crucial', 'Gigabyte', 'Intel',
+  'Keychron', 'Kingston', 'Lian Li', 'Logitech', 'MSI', 'NVIDIA', 'NZXT',
+  'Palit', 'Samsung',
+];
 
 const PRODUCT_ATTRIBUTE_FIELDS = [
-  'socket', 'memoryType', 'pcie', 'atx', 'ram', 'liquid',
+  'brand', 'socket', 'memoryType', 'pcie', 'atx', 'ram', 'liquid',
   'psutype', 'caseff', 'inch', 'matrix', 'hertz', 'quality', 'wired',
 ];
 
 const DEFAULT_PRODUCTS = [
   { id: 'p1', name: 'NVIDIA GeForce RTX™ 5070 Infinity 3', category: 'gpu', price: 59990, oldPrice: 62990, 
     img: 'img/components/gpu/gpus/palit/infinity/GeForce RTX™ 5070 Infinity 3.png', 
-    description: '12 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, pcie: 'PCIe 5.0', 
+    description: '12 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, brand: 'Palit', pcie: 'PCIe 5.0', 
     specs: { vram: '12 ГБ', tdp: '250 Вт' },
     fullDescription: '12 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
@@ -86,7 +91,7 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p21', name: 'NVIDIA GeForce RTX™ 5090 AORUS MASTER 32G', category: 'gpu', price: 359990, oldPrice: 362990, 
     img: 'img/components/gpu/gpus/gigbayte/aorusmaster/AORUS GeForce RTX™ 5090 MASTER 32G.webp', 
-    description: '32 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, pcie: 'PCIe 5.0', 
+    description: '32 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, brand: 'Gigabyte', pcie: 'PCIe 5.0', 
     specs: { vram: '32 ГБ', tdp: '450 Вт' },
     fullDescription: '32 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
@@ -119,7 +124,7 @@ const DEFAULT_PRODUCTS = [
   
   { id: 'p22', name: 'NVIDIA GeForce RTX™ 5090 AORUS STEALTH ICE 32G', category: 'gpu', price: 379990, oldPrice: 399990, 
     img: 'img/components/gpu/gpus/gigbayte/aorusmaster/AORUS GeForce RTX™ 5090 STEALTH ICE 32G.webp', 
-    description: '32 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, pcie: 'PCIe 5.0', 
+    description: '32 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, brand: 'Gigabyte', pcie: 'PCIe 5.0', 
     specs: { vram: '32 ГБ', tdp: '450 Вт' },
     fullDescription: '32 ГБ GDDR7, DLSS 4, трассировка лучей',
     colors: [
@@ -140,7 +145,7 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p2', name: 'Logitech G Pro X Superlight 2', category: 'peripherals', price: 14990, 
     img: 'img/periphery/mise/28011_1-no-bg-preview (carve.photos).png', 
-    description: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов.', stock: 2, wired: 'Беспроводной', hertz: '8000 Гц', 
+    description: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов.', stock: 2, brand: 'Logitech', wired: 'Беспроводной', hertz: '8000 Гц', 
     specs: { dpi: '32000', weight: '60 г' },
     fullDescription: 'Беспроводная мышь Logitech G Pro X Superlight 2 — это премиальный выбор киберспортсменов. Она отличается сверхмалым весом (всего 60 грамм), передовым сенсором Hero 2 с разрешением до 32 000 DPI, гибридными переключателями Lightforce и частотой опроса до 8000 Гц',
     colors: [
@@ -155,7 +160,7 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p3', name: 'AMD Ryzen 7 7800X3D', category: 'cpu', price: 26999, 
     img: 'img/components/cpu/amd/R7 7800X3D.png', 
-    description: '8 ядер, 16 потоков, 3D V-Cache', badge: 'new', stock: 2, socket: 'AM5', memoryType: 'DDR5', 
+    description: '8 ядер, 16 потоков, 3D V-Cache', badge: 'new', stock: 2, brand: 'AMD', socket: 'AM5', memoryType: 'DDR5', 
     specs: { cores: '8' },
     fullDescription: 'AMD Ryzen 7 7800X3D — это один из самых производительных и легендарных процессоров для гейминга на архитектуре Zen 4, оснащенный увеличенным кэшем 3D V-Cache. Он обеспечивает непревзойденную частоту кадров благодаря огромному объему кэш-памяти третьего уровня, оставаясь выбором номер один для многих игровых сборок.',
     colors: [
@@ -170,33 +175,33 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p4', name: 'Samsung 990 Pro 2TB NVMe', category: 'storage', price: 18990, 
     img: 'img/categories/storage.svg', 
-    description: 'PCIe 4.0, чтение 7450 МБ/с', stock: 30, pcie: 'PCIe 4.0', 
+    description: 'PCIe 4.0, чтение 7450 МБ/с', stock: 30, brand: 'Samsung', pcie: 'PCIe 4.0', 
     specs: { capacity: '2 ТБ', type: 'NVMe' } },
 
   { id: 'p5', name: 'Corsair Vengeance 32GB DDR5', category: 'ram', price: 12990, 
     img: 'img/categories/ram.svg', 
-    description: 'DDR5-6000 CL30, RGB', stock: 45, memoryType: 'DDR5', ram: '32 ГБ', 
+    description: 'DDR5-6000 CL30, RGB', stock: 45, brand: 'Corsair', memoryType: 'DDR5', ram: '32 ГБ', 
     specs: { capacity: '32 ГБ', speed: '6000 МГц' } },
 
   { id: 'p6', name: 'ASUS ROG Strix B650-E', category: 'motherboard', price: 28990, 
     img: 'img/categories/motherboard.svg', 
-    description: 'AM5, PCIe 5.0, WiFi 6E', stock: 12, socket: 'AM5', memoryType: 'DDR5', 
+    description: 'AM5, PCIe 5.0, WiFi 6E', stock: 12, brand: 'ASUS', socket: 'AM5', memoryType: 'DDR5', 
     specs: { formFactor: 'ATX' } },
 
   { id: 'p7', name: 'be quiet! Dark Power 13 850W', category: 'psu', price: 19990, 
     img: 'img/categories/psu.svg', 
-    description: '80+ Titanium, полностью модульный', stock: 18, psutype: 'Полностью модульный', 
+    description: '80+ Titanium, полностью модульный', stock: 18, brand: 'be quiet!', psutype: 'Полностью модульный', 
     specs: { wattage: '850 Вт', efficiency: 'Titanium' } },
 
   { id: 'p8', name: 'NZXT Kraken X73 RGB', category: 'cooling', price: 15990, 
     img: 'img/categories/cooling.svg', 
-    description: 'СЖО 360 мм, LCD-дисплей', stock: 10, liquid: '360 мм', 
+    description: 'СЖО 360 мм, LCD-дисплей', stock: 10, brand: 'NZXT', liquid: '360 мм', 
     specs: { type: 'AIO', size: '360 мм' } },
 
   {
     id: 'p9', name: 'Lian Li O11 Dynamic EVO', category: 'case', price: 16990,
     img: 'img/components/case/D400-B.png',
-    description: 'Mid-tower, закалённое стекло', stock: 8, caseff: 'Mid-Tower',
+    description: 'Mid-tower, закалённое стекло', stock: 8, brand: 'Lian Li', caseff: 'Mid-Tower',
     specs: { formFactor: 'Mid-Tower', color: 'Чёрный' },
     fullDescription: 'Lian Li O11 Dynamic EVO — культовый mid-tower с двойной камерой, панорамным закалённым стеклом и модульной системой крепления радиаторов. Поддерживает E-ATX платы, до 10 вентиляторов и вертикальную установку GPU. Идеален для showcase-сборок с подсветкой.',
     colors: [
@@ -221,57 +226,57 @@ const DEFAULT_PRODUCTS = [
 
   { id: 'p10', name: 'Keychron Q1 Pro', category: 'peripherals', price: 19990, 
     img: 'img/categories/peripherals.svg', 
-    description: 'Механическая клавиатура, QMK/VIA', badge: 'new', stock: 20, wired: 'Bluetooth', 
+    description: 'Механическая клавиатура, QMK/VIA', badge: 'new', stock: 20, brand: 'Keychron', wired: 'Bluetooth', 
     pecs: { switches: 'Gateron', layout: '75%' } },
 
   { id: 'p11', name: 'ASUS ROG Swift PG27AQDM', category: 'monitor', price: 89990, oldPrice: 99990, 
     img: 'img/categories/monitor.svg', 
-    description: '27" OLED, 240 Гц, 0.03 мс', badge: 'sale', stock: 5, inch: '27"', matrix: 'OLED', hertz: '240 Гц', quality: 'QHD', 
+    description: '27" OLED, 240 Гц, 0.03 мс', badge: 'sale', stock: 5, brand: 'ASUS', inch: '27"', matrix: 'OLED', hertz: '240 Гц', quality: 'QHD', 
     specs: { size: '27"', refresh: '240 Гц' } },
 
   { id: 'p12', name: 'Intel Core i9-14900K', category: 'cpu', price: 54990, 
     img: 'img/categories/cpu.svg', 
-    description: '24 ядра, 32 потока, разгон до 6.0 ГГц', stock: 14, socket: 'LGA1700', memoryType: 'DDR5', 
+    description: '24 ядра, 32 потока, разгон до 6.0 ГГц', stock: 14, brand: 'Intel', socket: 'LGA1700', memoryType: 'DDR5', 
     specs: { cores: '24' } },
 
   { id: 'p13', name: 'AMD Ryzen 5 5600', category: 'cpu', price: 12990, 
     img: 'img/categories/cpu.svg', 
-    description: '6 ядер, 12 потоков, AM4', stock: 35, socket: 'AM4', memoryType: 'DDR4', 
+    description: '6 ядер, 12 потоков, AM4', stock: 35, brand: 'AMD', socket: 'AM4', memoryType: 'DDR4', 
     specs: { cores: '6' } },
 
   { id: 'p14', name: 'MSI PRO B760M-P DDR4', category: 'motherboard', price: 9990, 
     img: 'img/categories/motherboard.svg', 
-    description: 'LGA1700, mATX, 4 слота DDR4', stock: 20, socket: 'LGA1700', memoryType: 'DDR4', 
+    description: 'LGA1700, mATX, 4 слота DDR4', stock: 20, brand: 'MSI', socket: 'LGA1700', memoryType: 'DDR4', 
     specs: { formFactor: 'mATX' } },
 
   { id: 'p15', name: 'NVIDIA GeForce RTX 4060 Ti', category: 'gpu', price: 44990, 
     img: 'img/categories/gpu.svg', 
-    description: '8 ГБ GDDR6, компактная версия', stock: 18, pcie: 'PCIe 4.0', 
+    description: '8 ГБ GDDR6, компактная версия', stock: 18, brand: 'NVIDIA', pcie: 'PCIe 4.0', 
     specs: { vram: '8 ГБ', tdp: '160 Вт' } },
 
   { id: 'p16', name: 'Gigabyte GTX 1660 SUPER', category: 'gpu', price: 15990, 
     img: 'img/categories/gpu.svg', 
-    description: '6 ГБ GDDR6, PCIe 3.0', stock: 8, pcie: 'PCIe 3.0',
+    description: '6 ГБ GDDR6, PCIe 3.0', stock: 8, brand: 'Gigabyte', pcie: 'PCIe 3.0',
     specs: { vram: '6 ГБ', tdp: '125 Вт' } },
 
   { id: 'p17', name: 'Crucial P3 Plus 1TB NVMe', category: 'storage', price: 5990, 
     img: 'img/categories/storage.svg', 
-    description: 'PCIe 4.0, до 5000 МБ/с', stock: 40, pcie: 'PCIe 4.0', 
+    description: 'PCIe 4.0, до 5000 МБ/с', stock: 40, brand: 'Crucial', pcie: 'PCIe 4.0', 
     specs: { capacity: '1 ТБ', type: 'NVMe' } },
 
   { id: 'p18', name: 'Kingston NV2 500GB NVMe', category: 'storage', price: 3990, 
     img: 'img/categories/storage.svg', 
-    description: 'PCIe 4.0, бюджетный NVMe', stock: 50, pcie: 'PCIe 4.0', 
+    description: 'PCIe 4.0, бюджетный NVMe', stock: 50, brand: 'Kingston', pcie: 'PCIe 4.0', 
     specs: { capacity: '500 ГБ', type: 'NVMe' } },
 
   { id: 'p19', name: 'ASUS ROG Strix Z790-E', category: 'motherboard', price: 38990, 
     img: 'img/categories/motherboard.svg', 
-    description: 'LGA1700, DDR5, PCIe 5.0', stock: 10, socket: 'LGA1700', memoryType: 'DDR5', 
+    description: 'LGA1700, DDR5, PCIe 5.0', stock: 10, brand: 'ASUS', socket: 'LGA1700', memoryType: 'DDR5', 
     specs: { formFactor: 'ATX' } },
 
   { id: 'p20', name: 'NVIDIA GeForce RTX 5090', category: 'gpu', price: 249990, 
     img: 'img/categories/gpu.svg', 
-    description: '32 ГБ GDDR7, PCIe 5.0', badge: 'new', stock: 3, pcie: 'PCIe 5.0', 
+    description: '32 ГБ GDDR7, PCIe 5.0', badge: 'new', stock: 3, brand: 'NVIDIA', pcie: 'PCIe 5.0', 
     specs: { vram: '32 ГБ', tdp: '575 Вт' } },
 ];
 
@@ -653,6 +658,7 @@ const PRODUCT_SPEC_LABELS = {
 };
 
 const ATTRIBUTE_LABELS = {
+  brand: 'Бренд',
   socket: 'Сокет',
   memoryType: 'Тип памяти',
   pcie: 'PCI-E',
@@ -1094,8 +1100,16 @@ function productMatchesCatalogSection(product, sectionId) {
 }
 
 function getAvailableFilterValues(products, field, predefined) {
-  const fromProducts = new Set(products.map(p => p[field]).filter(Boolean));
-  return predefined.filter(v => fromProducts.has(v));
+  const fromProducts = [...new Set(products.map(p => p[field]).filter(Boolean))];
+  if (field === 'brand') {
+    const ordered = predefined.filter(v => fromProducts.includes(v));
+    const extras = fromProducts
+      .filter(v => !predefined.includes(v))
+      .sort((a, b) => a.localeCompare(b, 'ru'));
+    return [...ordered, ...extras];
+  }
+  const set = new Set(fromProducts);
+  return predefined.filter(v => set.has(v));
 }
 
 initStore();

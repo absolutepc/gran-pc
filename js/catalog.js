@@ -1,4 +1,5 @@
 const CATALOG_ATTRIBUTE_FILTERS = [
+  { id: 'brandFilters', field: 'brand', options: FILTER_BRANDS, param: 'brand', className: 'brand-filter' },
   { id: 'socketFilters', field: 'socket', options: FILTER_SOCKETS, param: 'socket', className: 'socket-filter' },
   { id: 'memoryTypeFilters', field: 'memoryType', options: FILTER_MEMORY_TYPES, param: 'memory', className: 'memory-filter' },
   { id: 'pcieFilters', field: 'pcie', options: FILTER_PCIE, param: 'pcie', className: 'pcie-filter' },

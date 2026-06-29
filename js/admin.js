@@ -1,7 +1,7 @@
 let adminSection = 'dashboard';
 
 const PRODUCT_FILTER_FIELDS = [
-  'badge', 'socket', 'memoryType', 'pcie', 'atx', 'ram', 'liquid',
+  'badge', 'brand', 'socket', 'memoryType', 'pcie', 'atx', 'ram', 'liquid',
   'psutype', 'caseff', 'inch', 'matrix', 'hertz', 'quality', 'wired',
 ];
 
@@ -169,6 +169,12 @@ function renderProductsAdmin() {
             <div class="form-group"><label>Изображение (URL или путь)</label><input name="img" value="img/default.svg"></div>
             <div class="form-group"><label>Метка</label>
               <select name="badge"><option value="">Нет</option><option value="new">Новинка</option><option value="sale">Скидка</option></select>
+            </div>
+            <div class="form-group"><label>Бренд</label>
+              <select name="brand">
+                <option value="">—</option>
+                ${FILTER_BRANDS.map(b => `<option value="${b}">${b}</option>`).join('')}
+              </select>
             </div>
             <div class="form-group"><label>Сокет</label>
               <select name="socket">

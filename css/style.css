@@ -632,6 +632,13 @@ main {
   grid-template-columns: 260px 1fr;
   gap: 32px;
   padding: 40px 0 80px;
+  align-items: start;
+}
+
+.catalog-products-wrap .filters-sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + 24px);
+  z-index: 10;
 }
 
 .filters-sidebar {
@@ -644,6 +651,7 @@ main {
   align-self: start;
   max-height: calc(100vh - var(--header-height) - 48px);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .filters-sidebar h3 {
@@ -2777,6 +2785,11 @@ main {
   .catalog-sections-grid { grid-template-columns: 1fr; }
   .page-layout { grid-template-columns: 1fr; }
   .filters-sidebar { position: static; }
+  .catalog-products-wrap .filters-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + 16px);
+    max-height: calc(100vh - var(--header-height) - 32px);
+  }
   .configurator-layout { grid-template-columns: 1fr; }
   .config-summary { position: static; }
   .config-preview { grid-template-columns: 1fr; }
