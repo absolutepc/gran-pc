@@ -135,6 +135,9 @@ function initProductDetailPage() {
     if (typeof updatePageTransitionLabel === 'function') {
       updatePageTransitionLabel(product.name);
     }
+    if (typeof updatePageTransitionImage === 'function') {
+      updatePageTransitionImage(getItemTransitionImage(product));
+    }
     container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
     bindItemGalleryAndColor(container, GALLERY_UI.product, product);
     bindAddToCartButtons(container);

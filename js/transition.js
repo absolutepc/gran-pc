@@ -1,5 +1,7 @@
 const PAGE_TRANSITION_KEY = 'pageTransitionLabel';
 const PAGE_TRANSITION_NAV_KEY = 'pageTransitionNav';
+const PAGE_TRANSITION_IMAGE_KEY = 'pageTransitionImage';
+const DEFAULT_TRANSITION_IMAGE = 'img/hero-pc.svg';
 const PAGE_TRANSITION_MIN_MS = 2600;
 const PAGE_TRANSITION_REDUCE_MS = 650;
 
@@ -37,10 +39,12 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function storeNavigationTransition(label) {
+function storeNavigationTransition(label, image = '') {
   try {
     sessionStorage.setItem(PAGE_TRANSITION_KEY, label);
     sessionStorage.setItem(PAGE_TRANSITION_NAV_KEY, '1');
+    if (image) sessionStorage.setItem(PAGE_TRANSITION_IMAGE_KEY, image);
+    else sessionStorage.removeItem(PAGE_TRANSITION_IMAGE_KEY);
   } catch {
     // sessionStorage недоступен
   }
@@ -58,6 +62,63 @@ function normalizeHref(href) {
 function getLabelFromHref(href) {
   const file = normalizeHref(href);
   return PAGE_LABELS_BY_HREF[file] || 'PC Market';
+}
+
+function getImageFromLink(link) {
+  return link?.dataset?.transitionImage?.trim() || '';
+}
+
+function getTransitionImageFromHref(href, link) {
+  const fromLink = getImageFromLink(link);
+  if (fromLink) return fromLink;
+
+  const file = normalizeHref(href);
+  if (file !== 'product.html' && file !== 'ready-pc.html') return '';
+
+  try {
+    const url = new URL(href, window.location.href);
+    const id = url.searchParams.get('id');
+    if (!id) return '';
+
+    if (file === 'product.html' && typeof getEnrichedProductById === 'function') {
+      const product = getEnrichedProductById(id);
+      return product && typeof getItemTransitionImage === 'function'
+        ? getItemTransitionImage(product)
+        : '';
+    }
+
+    if (file === 'ready-pc.html' && typeof getReadyPCById === 'function') {
+      const pc = getReadyPCById(id);
+      return pc && typeof getItemTransitionImage === 'function'
+        ? getItemTransitionImage(pc)
+        : '';
+    }
+  } catch {
+    return '';
+  }
+
+  return '';
+}
+
+function encodeTransitionImage(src) {
+  if (!src) return DEFAULT_TRANSITION_IMAGE;
+  return typeof encodeAssetPath === 'function' ? encodeAssetPath(src) : src;
+}
+
+function setPageTransitionImage(src, { isProduct = false } = {}) {
+  const overlay = getPageTransitionOverlay();
+  const logoWrap = overlay?.querySelector('.page-transition__logo');
+  const img = overlay?.querySelector('.page-transition__logo img');
+  if (!img || !logoWrap) return;
+
+  const useProduct = Boolean(isProduct && src);
+  logoWrap.classList.toggle('page-transition__logo--product', useProduct);
+  img.src = useProduct ? encodeTransitionImage(src) : DEFAULT_TRANSITION_IMAGE;
+  img.alt = useProduct ? '' : '';
+}
+
+function updatePageTransitionImage(src) {
+  setPageTransitionImage(src, { isProduct: Boolean(src) });
 }
 
 function getLabelFromLink(link, href) {
@@ -138,18 +199,19 @@ function waitForTransitionAssets(overlay) {
   return Promise.all([logoReady, animationDone]);
 }
 
-function showPageTransition(label, { animate = true } = {}) {
+function showPageTransition(label, { animate = true, image = '' } = {}) {
   const overlay = getPageTransitionOverlay();
   if (!overlay) return null;
 
   overlay.style.display = '';
-  setPageTransitionLabel(label);
   overlay.classList.remove('page-transition--hide');
   overlay.classList.add('page-transition--visible');
   overlay.setAttribute('aria-hidden', 'false');
   document.body.classList.add('page-transition-active');
 
   resetTransitionVisuals(overlay);
+  setPageTransitionLabel(label);
+  setPageTransitionImage(image, { isProduct: Boolean(image) });
   if (animate) {
     requestAnimationFrame(() => {
       overlay.classList.add('page-transition--animate');
@@ -178,12 +240,14 @@ function hidePageTransition(overlay) {
   setTimeout(cleanup, 700);
 }
 
-async function navigateWithTransition(href, label) {
+async function navigateWithTransition(href, label, image = '') {
   pageTransitionNavigating = true;
-  storeNavigationTransition(label);
+  const transitionImage = image || getTransitionImageFromHref(href);
+  storeNavigationTransition(label, transitionImage);
   setPageTransitionLabel(label);
+  setPageTransitionImage(transitionImage, { isProduct: Boolean(transitionImage) });
 
-  const overlay = showPageTransition(label, { animate: true });
+  const overlay = showPageTransition(label, { animate: true, image: transitionImage });
   if (!overlay) {
     window.location.href = href;
     return;
@@ -208,7 +272,11 @@ function bindPageTransitionLinks(root = document) {
 
     event.preventDefault();
     event.stopPropagation();
-    navigateWithTransition(link.href, getLabelFromLink(link, link.href));
+    navigateWithTransition(
+      link.href,
+      getLabelFromLink(link, link.href),
+      getTransitionImageFromHref(link.href, link)
+    );
   }, true);
 }
 

@@ -747,6 +747,15 @@ function getProductImg(item) {
   return DEFAULT_IMG;
 }
 
+function getItemTransitionImage(item) {
+  if (!item) return DEFAULT_IMG;
+  if (Array.isArray(item.images) && item.images.length) return item.images[0];
+  const colorImages = item.colors?.find(color => color.images?.length)?.images;
+  if (colorImages?.length) return colorImages[0];
+  if (item.colors?.[0]?.img) return item.colors[0].img;
+  return getProductImg(item);
+}
+
 function renderProductImg(img, alt = '') {
   const src = encodeAssetPath(img || DEFAULT_IMG);
   const safeAlt = alt.replace(/"/g, '&quot;');
