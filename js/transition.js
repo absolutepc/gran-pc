@@ -100,9 +100,30 @@ function getTransitionImageFromHref(href, link) {
   return '';
 }
 
+function normalizeTransitionImageSrc(src) {
+  if (!src || /^(https?:\/\/|data:)/i.test(src)) return src || '';
+
+  let current = src;
+  for (let i = 0; i < 3; i += 1) {
+    const next = current.split('/').map((segment) => {
+      if (!segment) return segment;
+      try {
+        return decodeURIComponent(segment);
+      } catch {
+        return segment;
+      }
+    }).join('/');
+    if (next === current) break;
+    current = next;
+  }
+
+  return current;
+}
+
 function encodeTransitionImage(src) {
-  if (!src) return DEFAULT_TRANSITION_IMAGE;
-  return typeof encodeAssetPath === 'function' ? encodeAssetPath(src) : src;
+  const normalized = normalizeTransitionImageSrc(src);
+  if (!normalized) return DEFAULT_TRANSITION_IMAGE;
+  return typeof encodeAssetPath === 'function' ? encodeAssetPath(normalized) : normalized;
 }
 
 function setPageTransitionImage(src, { isProduct = false } = {}) {
@@ -113,6 +134,13 @@ function setPageTransitionImage(src, { isProduct = false } = {}) {
 
   const useProduct = Boolean(isProduct && src);
   logoWrap.classList.toggle('page-transition__logo--product', useProduct);
+
+  img.onerror = () => {
+    img.onerror = null;
+    logoWrap.classList.remove('page-transition__logo--product');
+    img.src = DEFAULT_TRANSITION_IMAGE;
+  };
+
   img.src = useProduct ? encodeTransitionImage(src) : DEFAULT_TRANSITION_IMAGE;
   img.alt = useProduct ? '' : '';
 }
