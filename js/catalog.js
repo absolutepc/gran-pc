@@ -31,41 +31,94 @@ function updateCatalogPriceLabel(minVal, maxVal) {
   if (label) label.textContent = `${formatPrice(minVal)} — ${formatPrice(maxVal)}`;
 }
 
+function readCatalogPriceControls() {
+  return {
+    minRange: document.getElementById('priceMinRange'),
+    maxRange: document.getElementById('priceMaxRange'),
+    minInput: document.getElementById('priceMinInput'),
+    maxInput: document.getElementById('priceMaxInput'),
+  };
+}
+
+function snapCatalogPrice(value, ceiling) {
+  const parsed = Math.round(+value / CATALOG_PRICE_STEP) * CATALOG_PRICE_STEP;
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.min(ceiling, parsed));
+}
+
+function applyCatalogPriceValues(minVal, maxVal) {
+  const { minRange, maxRange, minInput, maxInput } = readCatalogPriceControls();
+  const ceiling = catalogMaxProductPrice;
+  let min = snapCatalogPrice(minVal, ceiling);
+  let max = snapCatalogPrice(maxVal, ceiling);
+  if (min > max) max = min;
+
+  if (minRange) {
+    minRange.max = ceiling;
+    minRange.value = min;
+  }
+  if (maxRange) {
+    maxRange.max = ceiling;
+    maxRange.value = max;
+  }
+  if (minInput) {
+    minInput.max = ceiling;
+    minInput.value = min;
+  }
+  if (maxInput) {
+    maxInput.max = ceiling;
+    maxInput.value = max;
+  }
+
+  updateCatalogPriceLabel(min, max);
+  return { min, max };
+}
+
+function getCatalogSelectedPrices() {
+  const { minRange, maxRange } = readCatalogPriceControls();
+  return {
+    min: +(minRange?.value || 0),
+    max: +(maxRange?.value || catalogMaxProductPrice),
+  };
+}
+
 function syncCatalogPriceRange(products, resetValue = false) {
   const max = getCatalogMaxPrice(products);
   catalogMaxProductPrice = max;
-  const minRange = document.getElementById('priceMinRange');
-  const maxRange = document.getElementById('priceMaxRange');
+  const { minRange, maxRange } = readCatalogPriceControls();
   if (!minRange || !maxRange) return max;
 
-  minRange.max = max;
-  maxRange.max = max;
-
   if (resetValue) {
-    minRange.value = 0;
-    maxRange.value = max;
-  } else {
-    if (+minRange.value > max) minRange.value = 0;
-    if (+maxRange.value > max) maxRange.value = max;
-    if (+minRange.value > +maxRange.value) minRange.value = maxRange.value;
+    applyCatalogPriceValues(0, max);
+    return max;
   }
 
-  updateCatalogPriceLabel(+minRange.value, +maxRange.value);
+  applyCatalogPriceValues(+minRange.value, +maxRange.value);
   return max;
 }
 
 function handleCatalogPriceInput(sectionId, source) {
-  const minRange = document.getElementById('priceMinRange');
-  const maxRange = document.getElementById('priceMaxRange');
+  const { minRange, maxRange, minInput, maxInput } = readCatalogPriceControls();
   if (!minRange || !maxRange) return;
 
-  if (source === 'min' && +minRange.value > +maxRange.value) {
-    maxRange.value = minRange.value;
-  } else if (source === 'max' && +maxRange.value < +minRange.value) {
-    minRange.value = maxRange.value;
+  let minVal = +minRange.value;
+  let maxVal = +maxRange.value;
+
+  if (source === 'minInput') {
+    minVal = minInput?.value ?? minVal;
+    if (minVal > maxVal) maxVal = minVal;
+  } else if (source === 'maxInput') {
+    maxVal = maxInput?.value ?? maxVal;
+    if (maxVal < minVal) minVal = maxVal;
+  } else if (source === 'min') {
+    minVal = +minRange.value;
+    if (minVal > maxVal) maxVal = minVal;
+  } else if (source === 'max') {
+    maxVal = +maxRange.value;
+    if (maxVal < minVal) minVal = maxVal;
   }
 
-  updateCatalogPriceLabel(+minRange.value, +maxRange.value);
+  applyCatalogPriceValues(minVal, maxVal);
   filterCatalogProducts(sectionId);
 }
 
@@ -85,6 +138,19 @@ function renderCatalogFilterCheckboxes(containerId, values, cssClass, initialVal
       ${value}
     </label>
   `).join('');
+}
+
+function bindCatalogPriceControls(sectionId) {
+  document.getElementById('priceMinRange').oninput = () => handleCatalogPriceInput(sectionId, 'min');
+  document.getElementById('priceMaxRange').oninput = () => handleCatalogPriceInput(sectionId, 'max');
+  document.getElementById('priceMinInput').onchange = () => handleCatalogPriceInput(sectionId, 'minInput');
+  document.getElementById('priceMaxInput').onchange = () => handleCatalogPriceInput(sectionId, 'maxInput');
+  document.getElementById('priceMinInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') handleCatalogPriceInput(sectionId, 'minInput');
+  });
+  document.getElementById('priceMaxInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') handleCatalogPriceInput(sectionId, 'maxInput');
+  });
 }
 
 function getCatalogCheckedValues(selector) {
@@ -189,8 +255,7 @@ function filterCatalogProducts(activeSectionId) {
   syncCatalogPriceRange(getProducts());
   const checkedCats = getCatalogCheckedValues('.cat-filter');
   const checkedBadges = getCatalogCheckedValues('.badge-filter');
-  const minPrice = +document.getElementById('priceMinRange').value;
-  const maxPrice = +document.getElementById('priceMaxRange').value;
+  const { min: minPrice, max: maxPrice } = getCatalogSelectedPrices();
   const sort = document.getElementById('sortSelect').value;
 
   if (checkedCats.length) products = products.filter(p => checkedCats.includes(p.category));
@@ -223,16 +288,13 @@ function initCatalogProductsView(section, params) {
     if (event.target.matches('input[type="checkbox"]')) filterCatalogProducts(section.id);
   };
 
-  document.getElementById('priceMinRange').oninput = () => handleCatalogPriceInput(section.id, 'min');
-  document.getElementById('priceMaxRange').oninput = () => handleCatalogPriceInput(section.id, 'max');
+  bindCatalogPriceControls(section.id);
   document.getElementById('sortSelect').onchange = () => filterCatalogProducts(section.id);
   document.getElementById('resetFilters').onclick = () => {
     document.querySelectorAll('.filters-sidebar input[type="checkbox"]').forEach(c => {
       c.checked = false;
     });
-    document.getElementById('priceMinRange').value = 0;
-    document.getElementById('priceMaxRange').value = catalogMaxProductPrice;
-    updateCatalogPriceLabel(0, catalogMaxProductPrice);
+    applyCatalogPriceValues(0, catalogMaxProductPrice);
     filterCatalogProducts(section.id);
   };
 
