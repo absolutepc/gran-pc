@@ -16,7 +16,7 @@ function renderReadyPCCard(pc) {
     ? `<span class="product-badge ${pc.badge}">${BADGE_LABELS[pc.badge] || pc.badge}</span>`
     : '';
   const imgSrc = getProductImg(pc);
-  const transitionImg = encodeAssetPath(getItemTransitionImage(pc));
+  const transitionImg = getItemTransitionImage(pc);
 
   return `
     <div class="product-card ready-pc-card" data-id="${pc.id}" data-type="ready-pc">

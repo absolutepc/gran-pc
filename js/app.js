@@ -244,7 +244,7 @@ function renderProductCard(product, type = 'product') {
     : '';
   const categoryLabel = type === 'ready-pc' ? 'Готовый ПК' : (CATEGORY_LABELS[product.category] || product.category);
   const imgSrc = getProductImg(product);
-  const transitionImg = encodeAssetPath(getItemTransitionImage(product));
+  const transitionImg = getItemTransitionImage(product);
   const attrTags = [
     product.socket && `<span class="product-attr-tag">${product.socket}</span>`,
     product.memoryType && `<span class="product-attr-tag">${product.memoryType}</span>`,
