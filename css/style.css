@@ -2566,7 +2566,7 @@ main {
 
 .pc-component-row {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) minmax(280px, 1.1fr);
+  grid-template-columns: minmax(300px, 1.15fr) minmax(280px, 1.1fr);
   gap: 32px;
   align-items: center;
   background: var(--bg-card);
@@ -2594,16 +2594,16 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
+  min-height: 260px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 24px;
+  padding: 28px;
 }
 
 .pc-component-media img {
   max-width: 100%;
-  max-height: 180px;
+  max-height: 240px;
   object-fit: contain;
 }
 
@@ -2879,7 +2879,11 @@ main {
     margin-left: 0;
   }
   .pc-component-media {
-    min-height: 160px;
+    min-height: 200px;
+  }
+
+  .pc-component-media img {
+    max-height: 220px;
   }
   .product-spec-row { grid-template-columns: 1fr; gap: 4px; }
   .product-spec-value { text-align: left; }
