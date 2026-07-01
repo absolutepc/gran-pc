@@ -143,7 +143,7 @@ const DEFAULT_PRODUCTS = [
     ],
   },
 
-  { id: 'p23', name: 'NVIDIA GeForce RTX™ 5090 ASUS ROG ASTRAL 32G', category: 'gpu', price: 359990, oldPrice: 362990, 
+  { id: 'p23', name: 'NVIDIA GeForce RTX™ 5090 ASUS ROG ASTRAL 32G', category: 'gpu', price: 394990, oldPrice: 362990, 
     img: 'img/components/gpu/gpus/asus/ASTRAL/ROG-ASTRAL-RTX5090-O32G-GAMING 1.png', 
     description: '32 ГБ GDDR7, DLSS 4, трассировка лучей', badge: 'sale', stock: 1, brand: 'ASUS', pcie: 'PCIe 5.0', 
     specs: { vram: '32 ГБ', tdp: '450 Вт' },
