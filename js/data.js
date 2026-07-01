@@ -546,7 +546,7 @@ const DEFAULT_READY_PCS = [
       ],
       componentOverrides: {
         case: { img: 'img/components/case/D400-W.png', name: 'JONSBO D-400 WHITE' },
-        gpu: { img: 'img/components/gpu/gpus/asus/ASTRAL/ROG-ASTRAL-RTX5080-16G-WHITE.png' },
+        gpu: { img: 'img/components/gpu/gpus/asus/ASTRAL/ROG-ASTRAL-RTX5080-16G-WHITE 2.png' },
         ram: { img: 'img/components/memory/DELTA RGB DDR5 DESKTOP MEMORY WHITE.png' },
         cooling: { img: 'img/components/cool/LQ360 ULTRA ARGB WH.png' },
       } },
