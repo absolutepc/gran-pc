@@ -12,7 +12,7 @@ const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
 const REVIEWS_KEY = 'pcmarket_reviews';
-const REVIEWS_VERSION = 1;
+const REVIEWS_VERSION = 2;
 const DEFAULT_IMG = 'img/default.svg';
 
 const CATEGORY_IMAGES = {
@@ -788,13 +788,14 @@ const DEFAULT_COLOR_SETS = {
 const ADMIN_CREDENTIALS = { email: 'admin@pcmarket.ru', password: 'admin123' };
 
 const DEFAULT_REVIEWS = [
-  { id: 'rev1', itemId: 'p1', itemType: 'product', userId: 'u-demo1', userName: 'Алексей М.', rating: 5, text: 'Отличная карта для 4K. Температуры в норме, DLSS 3 работает безупречно. Доставка быстрая, упаковка надёжная.', createdAt: '2025-11-12T10:00:00.000Z' },
+  { id: 'rev1', itemId: 'p1', itemType: 'product', userId: 'u-demo1', userName: 'Алексей М.', rating: 5, text: 'Отличная карта для 1440p и 4K. Температуры в норме, DLSS 4 работает безупречно. Доставка быстрая, упаковка надёжная.', createdAt: '2025-11-12T10:00:00.000Z' },
   { id: 'rev2', itemId: 'p1', itemType: 'product', userId: 'u-demo2', userName: 'Дмитрий К.', rating: 4, text: 'Мощная видеокарта, но шумновата под полной нагрузкой. В целом доволен покупкой.', createdAt: '2025-12-03T14:30:00.000Z' },
-  { id: 'rev3', itemId: 'p2', itemType: 'product', userId: 'u-demo3', userName: 'Игорь В.', rating: 5, text: 'Лучший игровой процессор на AM5. FPS в играх заметно вырос по сравнению с 7700X.', createdAt: '2025-10-20T09:15:00.000Z' },
-  { id: 'rev4', itemId: 'p2', itemType: 'product', userId: 'u-demo4', userName: 'Сергей П.', rating: 5, text: '3D V-Cache реально чувствуется в играх. Рекомендую для игровой сборки.', createdAt: '2026-01-08T16:45:00.000Z' },
-  { id: 'rev5', itemId: 'p3', itemType: 'product', userId: 'u-demo5', userName: 'Максим Л.', rating: 5, text: 'SSD летает, загрузка Windows за секунды. Samsung как всегда на высоте.', createdAt: '2025-11-28T11:00:00.000Z' },
-  { id: 'rev6', itemId: 'p8', itemType: 'product', userId: 'u-demo6', userName: 'Анна С.', rating: 5, text: 'Красивый корпус, много места для кабелей. Сборка выглядит шикарно с RGB.', createdAt: '2025-12-15T13:20:00.000Z' },
-  { id: 'rev7', itemId: 'p8', itemType: 'product', userId: 'u-demo7', userName: 'Павел Р.', rating: 4, text: 'Качество стекла отличное, но цена кусается. Зато airflow реально хороший.', createdAt: '2026-02-01T08:50:00.000Z' },
+  { id: 'rev3', itemId: 'p2', itemType: 'product', userId: 'u-demo3', userName: 'Игорь В.', rating: 5, text: 'Невероятно лёгкая — 60 грамм чувствуются сразу. Сенсор Hero 2 точный, в CS2 и Valorant идеальна.', createdAt: '2025-10-20T09:15:00.000Z' },
+  { id: 'rev4', itemId: 'p2', itemType: 'product', userId: 'u-demo4', userName: 'Сергей П.', rating: 5, text: '8000 Гц опрос — реально заметная разница в aim. Батарея держит несколько дней активной игры.', createdAt: '2026-01-08T16:45:00.000Z' },
+  { id: 'rev5', itemId: 'p3', itemType: 'product', userId: 'u-demo5', userName: 'Максим Л.', rating: 5, text: 'Лучший игровой процессор на AM5. FPS в играх заметно вырос, 3D V-Cache реально чувствуется.', createdAt: '2025-11-28T11:00:00.000Z' },
+  { id: 'rev5b', itemId: 'p4', itemType: 'product', userId: 'u-demo5b', userName: 'Максим Л.', rating: 5, text: 'SSD летает, загрузка Windows за секунды. Samsung как всегда на высоте.', createdAt: '2025-11-28T11:30:00.000Z' },
+  { id: 'rev6', itemId: 'p9', itemType: 'product', userId: 'u-demo6', userName: 'Анна С.', rating: 5, text: 'Красивый корпус, много места для кабелей. Сборка выглядит шикарно с RGB.', createdAt: '2025-12-15T13:20:00.000Z' },
+  { id: 'rev7', itemId: 'p9', itemType: 'product', userId: 'u-demo7', userName: 'Павел Р.', rating: 4, text: 'Качество стекла отличное, но цена кусается. Зато airflow реально хороший.', createdAt: '2026-02-01T08:50:00.000Z' },
   { id: 'rev8', itemId: 'p11', itemType: 'product', userId: 'u-demo8', userName: 'Елена Т.', rating: 5, text: 'OLED — это другой мир. Цвета невероятные, 240 Гц в CS2 — сказка.', createdAt: '2025-12-22T19:10:00.000Z' },
   { id: 'rev9', itemId: 'p20', itemType: 'product', userId: 'u-demo9', userName: 'Владислав Н.', rating: 5, text: 'Дорого, но оно того стоит. 4K Ultra без компромиссов во всех новых играх.', createdAt: '2026-03-01T12:00:00.000Z' },
   { id: 'rev10', itemId: 'rpc1', itemType: 'ready-pc', userId: 'u-demo10', userName: 'Никита О.', rating: 5, text: 'Заказал готовую сборку — приехала полностью настроенная. Включил и сразу играю. Кабель-менеджмент на высоте!', createdAt: '2025-11-05T15:30:00.000Z' },
@@ -803,7 +804,7 @@ const DEFAULT_REVIEWS = [
   { id: 'rev13', itemId: 'rpc3', itemType: 'ready-pc', userId: 'u-demo13', userName: 'Артём Д.', rating: 4, text: 'Отличный бюджетный вариант. В Valorant 300+ FPS, в AAA тоже комфортно на высоких.', createdAt: '2025-10-30T14:15:00.000Z' },
   { id: 'rev14', itemId: 'rpc4', itemType: 'ready-pc', userId: 'u-demo14', userName: 'Мария К.', rating: 5, text: 'Работаю в Blender и DaVinci — рендер летит. RTX 4090 + 128 ГБ RAM — мощь.', createdAt: '2026-02-10T11:25:00.000Z' },
   { id: 'rev15', itemId: 'rpc6', itemType: 'ready-pc', userId: 'u-demo15', userName: 'Роман Г.', rating: 5, text: 'Купил для киберспорта — 360 Гц монитор + эта сборка = идеальная связка. Задержка минимальная.', createdAt: '2026-03-10T09:00:00.000Z' },
-  { id: 'rev16', itemId: 'p4', itemType: 'product', userId: 'u-demo16', userName: 'Тимур А.', rating: 4, text: 'Хорошая память, RGB яркий. Тайминги CL30 — отличный выбор для AM5.', createdAt: '2025-11-19T20:30:00.000Z' },
+  { id: 'rev16', itemId: 'p5', itemType: 'product', userId: 'u-demo16', userName: 'Тимур А.', rating: 4, text: 'Хорошая память, RGB яркий. Тайминги CL30 — отличный выбор для AM5.', createdAt: '2025-11-19T20:30:00.000Z' },
   { id: 'rev17', itemId: 'rpc5', itemType: 'ready-pc', userId: 'u-demo17', userName: 'Денис Ф.', rating: 4, text: 'Компактный, но мощный. Помещается на столе, шум умеренный. Единственное — хотелось бы больше USB на передней панели.', createdAt: '2026-01-25T13:50:00.000Z' },
 ];
 
