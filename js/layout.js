@@ -106,9 +106,9 @@ function renderFooter() {
 
             <a href="#" aria-label="Telegram" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
 
-            <a href="#" aria-label="VK" title="VKontakte"><i class="fab fa-vk"></i></a>
+            <a href="https://vk.com/dakaev0121" aria-label="VK" title="VKontakte" target="_blank" rel="noopener noreferrer"><i class="fab fa-vk"></i></a>
 
-            <a href="#" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 
             <a href="#" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
 
@@ -224,6 +224,10 @@ function initLayout(activePage) {
 
     menuBtn.addEventListener('click', () => nav.classList.toggle('open'));
 
+  }
+
+  if (typeof initPageTransition === 'function') {
+    initPageTransition(getPageTransitionLabel(activePage));
   }
 
 }

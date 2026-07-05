@@ -1,7 +1,7 @@
 let adminSection = 'dashboard';
 
 const PRODUCT_FILTER_FIELDS = [
-  'badge', 'socket', 'memoryType', 'pcie', 'atx', 'ram', 'liquid',
+  'badge', 'brand', 'socket', 'memoryType', 'pcie', 'atx', 'ram', 'liquid',
   'psutype', 'caseff', 'inch', 'matrix', 'hertz', 'quality', 'wired',
 ];
 
@@ -16,16 +16,37 @@ function pickProductFilterFields(data) {
 function parseProductColors(raw) {
   if (!raw || !raw.trim()) return undefined;
   const colors = raw.trim().split('\n').map(line => {
-    const [name, hex, img] = line.split('|').map(s => s.trim());
+    const parts = line.split('|').map(s => s.trim());
+    const [name, hex, ...images] = parts;
     if (!name || !hex) return null;
-    return { name, hex, img: img || undefined };
+    const img = images[0] || undefined;
+    return {
+      name,
+      hex,
+      ...(img ? { img } : {}),
+      ...(images.length ? { images } : {}),
+    };
   }).filter(Boolean);
   return colors.length ? colors : undefined;
 }
 
 function formatProductColors(colors) {
   if (!colors?.length) return '';
-  return colors.map(c => [c.name, c.hex, c.img || ''].filter(Boolean).join('|')).join('\n');
+  return colors.map(c => {
+    const imgs = c.images?.length ? c.images : (c.img ? [c.img] : []);
+    return [c.name, c.hex, ...imgs].filter(Boolean).join('|');
+  }).join('\n');
+}
+
+function parseProductImages(raw) {
+  if (!raw || !raw.trim()) return undefined;
+  const images = raw.trim().split('\n').map(line => line.trim()).filter(Boolean);
+  return images.length ? images : undefined;
+}
+
+function formatProductImages(images) {
+  if (!images?.length) return '';
+  return images.join('\n');
 }
 
 function fillProductFilterFields(form, product) {
@@ -149,6 +170,12 @@ function renderProductsAdmin() {
             <div class="form-group"><label>Метка</label>
               <select name="badge"><option value="">Нет</option><option value="new">Новинка</option><option value="sale">Скидка</option></select>
             </div>
+            <div class="form-group"><label>Бренд</label>
+              <select name="brand">
+                <option value="">—</option>
+                ${FILTER_BRANDS.map(b => `<option value="${b}">${b}</option>`).join('')}
+              </select>
+            </div>
             <div class="form-group"><label>Сокет</label>
               <select name="socket">
                 <option value="">—</option>
@@ -230,7 +257,8 @@ function renderProductsAdmin() {
           </div>
           <div class="form-group"><label>Описание</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание (страница «Подробнее»)</label><textarea name="fullDescription" rows="4" placeholder="Расширенное описание для страницы товара"></textarea></div>
-          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|путь_к_изображению&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png"></textarea></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|фото1|фото2|...&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png|img/components/case/D300 Black.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png|img/components/case/D300 White.png"></textarea></div>
+          <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div style="display:flex;gap:8px;margin-top:16px">
             <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
             <button type="button" class="btn btn-secondary btn-sm" id="cancelProductForm">Отмена</button>
@@ -280,6 +308,7 @@ function bindProductAdmin() {
     const data = Object.fromEntries(new FormData(form));
     const filterFields = pickProductFilterFields(data);
     const colors = parseProductColors(data.colors);
+    const images = parseProductImages(data.images);
     const productFields = {
       name: data.name,
       category: data.category,
@@ -289,6 +318,7 @@ function bindProductAdmin() {
       description: data.description,
       fullDescription: data.fullDescription || undefined,
       ...(colors ? { colors } : {}),
+      ...(images ? { images } : {}),
       ...filterFields,
     };
     if (data.editId) {
@@ -324,6 +354,7 @@ function bindProductAdmin() {
       form.description.value = product.description || '';
       form.fullDescription.value = product.fullDescription || '';
       form.colors.value = formatProductColors(product.colors);
+      form.images.value = formatProductImages(product.images);
       document.getElementById('productFormTitle').textContent = 'Редактировать товар';
     });
   });
@@ -440,6 +471,8 @@ function renderReadyPCsAdmin() {
           </div>
           <div class="form-group"><label>Описание (краткое)</label><textarea name="description" rows="2"></textarea></div>
           <div class="form-group"><label>Полное описание</label><textarea name="fullDescription" rows="4" placeholder="Текст на странице «Подробнее»"></textarea></div>
+          <div class="form-group"><label>Цветовые варианты</label><textarea name="colors" rows="3" placeholder="По одному на строку: Название|#hex|фото1|фото2|...&#10;Чёрный|#1a1a1a|img/components/case/D400-B.png|img/components/case/D300 Black.png&#10;Белый|#f0f0f0|img/components/case/D400-W.png|img/components/case/D300 White.png"></textarea></div>
+          <div class="form-group"><label>Галерея изображений</label><textarea name="images" rows="4" placeholder="По одному пути на строку&#10;img/components/case/D400-B.png&#10;img/components/case/D400-W.png"></textarea></div>
           <div class="form-group">
             <label>Комплектация (каждый пункт с новой строки)</label>
             <textarea name="specs" rows="5" placeholder="RTX 4070 Super&#10;Ryzen 7 7700&#10;32 ГБ DDR5"></textarea>
@@ -500,6 +533,8 @@ function fillReadyPCForm(form, pc) {
   form.img.value = pc ? getProductImg(pc) : 'img/ready/pc.svg';
   form.description.value = pc?.description || '';
   form.fullDescription.value = pc?.fullDescription || '';
+  form.colors.value = formatProductColors(pc?.colors);
+  form.images.value = formatProductImages(pc?.images);
   form.specs.value = (pc?.specs || []).join('\n');
   form.perf_gaming.value = pc?.performance?.gaming ?? 50;
   form.perf_work.value = pc?.performance?.work ?? 50;
@@ -507,13 +542,17 @@ function fillReadyPCForm(form, pc) {
 }
 
 function buildReadyPCFromForm(data, existing) {
+  const colors = parseProductColors(data.colors);
+  const images = parseProductImages(data.images);
+  const img = data.img.trim() || 'img/ready/pc.svg';
   return {
     name: data.name.trim(),
     price: +data.price,
-    img: data.img.trim() || 'img/ready/pc.svg',
+    img,
     description: data.description.trim(),
     fullDescription: (data.fullDescription || data.description || '').trim(),
-    images: existing?.images?.length ? existing.images : [data.img.trim() || 'img/ready/pc.svg'],
+    images: images || existing?.images || [img],
+    ...(colors ? { colors } : {}),
     components: existing?.components?.length ? existing.components : (DEFAULT_READY_PCS.find(d => d.id === existing?.id)?.components || []),
     badge: data.badge || undefined,
     specs: parseReadyPCSpecs(data.specs),

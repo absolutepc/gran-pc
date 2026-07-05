@@ -7,27 +7,74 @@ function saveCart(cart) {
   updateCartBadge();
 }
 
+function normalizeColorName(colorName) {
+  return colorName || '';
+}
+
+function cartItemsMatch(a, b) {
+  return a.id === b.id
+    && a.type === b.type
+    && normalizeColorName(a.colorName) === normalizeColorName(b.colorName);
+}
+
+function findCartItem(cart, id, type, colorName = '') {
+  const normalized = normalizeColorName(colorName);
+  return cart.find(c => c.id === id && c.type === type && normalizeColorName(c.colorName) === normalized);
+}
+
+function getActiveItemColor(scope) {
+  const activeBtn = (scope || document).querySelector(
+    '.product-color-picker .color-btn.active, .pc-color-picker .color-btn.active'
+  );
+  if (!activeBtn) return null;
+  return {
+    colorName: activeBtn.dataset.name,
+    colorHex: activeBtn.style.getPropertyValue('--swatch').trim(),
+    img: activeBtn.dataset.img,
+  };
+}
+
+function resolveItemColor(item, scope) {
+  const selected = getActiveItemColor(scope);
+  if (selected) return selected;
+  const defaultColor = item.colors?.[0];
+  if (defaultColor) {
+    return {
+      colorName: defaultColor.name,
+      colorHex: defaultColor.hex,
+      img: defaultColor.img || getProductImg(item),
+    };
+  }
+  return {
+    colorName: '',
+    colorHex: '',
+    img: getProductImg(item),
+  };
+}
+
 function addToCart(item) {
   const cart = getCart();
-  const existing = cart.find(c => c.id === item.id && c.type === item.type);
+  const existing = cart.find(c => cartItemsMatch(c, item));
   if (existing) {
     existing.qty += item.qty || 1;
   } else {
     cart.push({ ...item, qty: item.qty || 1 });
   }
   saveCart(cart);
-  showToast('Товар добавлен в корзину', 'success');
+  const colorLabel = item.colorName ? ` (${item.colorName})` : '';
+  showToast(`Товар добавлен в корзину${colorLabel}`, 'success');
 }
 
-function removeFromCart(id, type) {
+function removeFromCart(id, type, colorName = '') {
   let cart = getCart();
-  cart = cart.filter(c => !(c.id === id && c.type === type));
+  const normalized = normalizeColorName(colorName);
+  cart = cart.filter(c => !(c.id === id && c.type === type && normalizeColorName(c.colorName) === normalized));
   saveCart(cart);
 }
 
-function updateCartQty(id, type, qty) {
+function updateCartQty(id, type, qty, colorName = '') {
   const cart = getCart();
-  const item = cart.find(c => c.id === id && c.type === type);
+  const item = findCartItem(cart, id, type, colorName);
   if (item) {
     item.qty = Math.max(1, qty);
     saveCart(cart);
@@ -197,6 +244,7 @@ function renderProductCard(product, type = 'product') {
     : '';
   const categoryLabel = type === 'ready-pc' ? 'Готовый ПК' : (CATEGORY_LABELS[product.category] || product.category);
   const imgSrc = getProductImg(product);
+  const transitionImg = getItemTransitionImage(product);
   const attrTags = [
     product.socket && `<span class="product-attr-tag">${product.socket}</span>`,
     product.memoryType && `<span class="product-attr-tag">${product.memoryType}</span>`,
@@ -228,7 +276,7 @@ function renderProductCard(product, type = 'product') {
         <div class="product-footer">
           <div class="product-price">${formatPrice(product.price)}${oldPriceHtml}</div>
           <div class="product-actions">
-            <a href="product.html?id=${product.id}" class="btn btn-secondary btn-sm">Подробнее</a>
+            <a href="product.html?id=${product.id}" class="btn btn-secondary btn-sm" data-transition-label="${escapeHtml(product.name)}" data-transition-image="${escapeHtml(transitionImg)}">Подробнее</a>
             <button class="btn btn-primary btn-sm add-to-cart-btn" data-id="${product.id}" data-type="${type}">В корзину</button>
           </div>
         </div>
@@ -250,11 +298,15 @@ function bindAddToCartButtons(container) {
         item = getProducts().find(p => p.id === id);
       }
       if (item) {
+        const scope = btn.closest('.pc-detail-page') || btn.closest('.product-card') || container || document;
+        const color = resolveItemColor(item, scope);
         addToCart({
           id: item.id,
           name: item.name,
           price: item.price,
-          img: getProductImg(item),
+          img: color.img,
+          colorName: color.colorName,
+          colorHex: color.colorHex,
           type: type === 'ready-pc' ? 'ready-pc' : 'product',
           category: type === 'ready-pc' ? 'Готовый ПК' : (CATEGORY_LABELS[item.category] || item.category),
         });
