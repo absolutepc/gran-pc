@@ -6,6 +6,8 @@ const NAV_ITEMS = [
 
   { href: 'configurator.html', label: 'Конфигуратор', page: 'configurator' },
 
+  { href: 'reviews.html', label: 'Отзывы', page: 'reviews' },
+
   { href: 'about.html', label: 'О нас', page: 'about' },
 
 ];
@@ -143,6 +145,8 @@ function renderFooter() {
             <li><a href="ready-pcs.html">Готовые ПК</a></li>
 
             <li><a href="configurator.html">Конфигуратор ПК</a></li>
+
+            <li><a href="reviews.html">Отзывы</a></li>
 
             <li><a href="about.html">О нас</a></li>
 

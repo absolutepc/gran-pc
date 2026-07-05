@@ -2,6 +2,8 @@ const STORE_KEY = 'pcmarket_data_v3';
 const CART_KEY = 'pcmarket_cart';
 const USER_KEY = 'pcmarket_user';
 const ORDERS_KEY = 'pcmarket_orders';
+const REVIEWS_KEY = 'pcmarket_reviews';
+const REVIEWS_VERSION = 1;
 const DEFAULT_IMG = 'img/default.svg';
 
 const CATEGORY_IMAGES = {
@@ -328,6 +330,26 @@ const DEFAULT_COLOR_SETS = {
 
 const ADMIN_CREDENTIALS = { email: 'admin@pcmarket.ru', password: 'admin123' };
 
+const DEFAULT_REVIEWS = [
+  { id: 'rev1', itemId: 'p1', itemType: 'product', userId: 'u-demo1', userName: 'Алексей М.', rating: 5, text: 'Отличная карта для 4K. Температуры в норме, DLSS 3 работает безупречно. Доставка быстрая, упаковка надёжная.', createdAt: '2025-11-12T10:00:00.000Z' },
+  { id: 'rev2', itemId: 'p1', itemType: 'product', userId: 'u-demo2', userName: 'Дмитрий К.', rating: 4, text: 'Мощная видеокарта, но шумновата под полной нагрузкой. В целом доволен покупкой.', createdAt: '2025-12-03T14:30:00.000Z' },
+  { id: 'rev3', itemId: 'p2', itemType: 'product', userId: 'u-demo3', userName: 'Игорь В.', rating: 5, text: 'Лучший игровой процессор на AM5. FPS в играх заметно вырос по сравнению с 7700X.', createdAt: '2025-10-20T09:15:00.000Z' },
+  { id: 'rev4', itemId: 'p2', itemType: 'product', userId: 'u-demo4', userName: 'Сергей П.', rating: 5, text: '3D V-Cache реально чувствуется в играх. Рекомендую для игровой сборки.', createdAt: '2026-01-08T16:45:00.000Z' },
+  { id: 'rev5', itemId: 'p3', itemType: 'product', userId: 'u-demo5', userName: 'Максим Л.', rating: 5, text: 'SSD летает, загрузка Windows за секунды. Samsung как всегда на высоте.', createdAt: '2025-11-28T11:00:00.000Z' },
+  { id: 'rev6', itemId: 'p8', itemType: 'product', userId: 'u-demo6', userName: 'Анна С.', rating: 5, text: 'Красивый корпус, много места для кабелей. Сборка выглядит шикарно с RGB.', createdAt: '2025-12-15T13:20:00.000Z' },
+  { id: 'rev7', itemId: 'p8', itemType: 'product', userId: 'u-demo7', userName: 'Павел Р.', rating: 4, text: 'Качество стекла отличное, но цена кусается. Зато airflow реально хороший.', createdAt: '2026-02-01T08:50:00.000Z' },
+  { id: 'rev8', itemId: 'p11', itemType: 'product', userId: 'u-demo8', userName: 'Елена Т.', rating: 5, text: 'OLED — это другой мир. Цвета невероятные, 240 Гц в CS2 — сказка.', createdAt: '2025-12-22T19:10:00.000Z' },
+  { id: 'rev9', itemId: 'p20', itemType: 'product', userId: 'u-demo9', userName: 'Владислав Н.', rating: 5, text: 'Дорого, но оно того стоит. 4K Ultra без компромиссов во всех новых играх.', createdAt: '2026-03-01T12:00:00.000Z' },
+  { id: 'rev10', itemId: 'rpc1', itemType: 'ready-pc', userId: 'u-demo10', userName: 'Никита О.', rating: 5, text: 'Заказал готовую сборку — приехала полностью настроенная. Включил и сразу играю. Кабель-менеджмент на высоте!', createdAt: '2025-11-05T15:30:00.000Z' },
+  { id: 'rev11', itemId: 'rpc1', itemType: 'ready-pc', userId: 'u-demo11', userName: 'Олег Ж.', rating: 5, text: '4K в Cyberpunk на максималках — мечта сбылась. Тихая работа, температуры отличные.', createdAt: '2025-12-18T10:40:00.000Z' },
+  { id: 'rev12', itemId: 'rpc2', itemType: 'ready-pc', userId: 'u-demo12', userName: 'Кирилл Б.', rating: 5, text: 'Стримлю каждый день — OBS не лагает, NVENC справляется на ура. Идеальная машина для контента.', createdAt: '2026-01-14T17:00:00.000Z' },
+  { id: 'rev13', itemId: 'rpc3', itemType: 'ready-pc', userId: 'u-demo13', userName: 'Артём Д.', rating: 4, text: 'Отличный бюджетный вариант. В Valorant 300+ FPS, в AAA тоже комфортно на высоких.', createdAt: '2025-10-30T14:15:00.000Z' },
+  { id: 'rev14', itemId: 'rpc4', itemType: 'ready-pc', userId: 'u-demo14', userName: 'Мария К.', rating: 5, text: 'Работаю в Blender и DaVinci — рендер летит. RTX 4090 + 128 ГБ RAM — мощь.', createdAt: '2026-02-10T11:25:00.000Z' },
+  { id: 'rev15', itemId: 'rpc6', itemType: 'ready-pc', userId: 'u-demo15', userName: 'Роман Г.', rating: 5, text: 'Купил для киберспорта — 360 Гц монитор + эта сборка = идеальная связка. Задержка минимальная.', createdAt: '2026-03-10T09:00:00.000Z' },
+  { id: 'rev16', itemId: 'p4', itemType: 'product', userId: 'u-demo16', userName: 'Тимур А.', rating: 4, text: 'Хорошая память, RGB яркий. Тайминги CL30 — отличный выбор для AM5.', createdAt: '2025-11-19T20:30:00.000Z' },
+  { id: 'rev17', itemId: 'rpc5', itemType: 'ready-pc', userId: 'u-demo17', userName: 'Денис Ф.', rating: 4, text: 'Компактный, но мощный. Помещается на столе, шум умеренный. Единственное — хотелось бы больше USB на передней панели.', createdAt: '2026-01-25T13:50:00.000Z' },
+];
+
 function getProductImg(item) {
   if (item.img) return item.img;
   if (item.category && CATEGORY_IMAGES[item.category]) return CATEGORY_IMAGES[item.category];
@@ -340,6 +362,94 @@ function renderProductImg(img, alt = '') {
   return `<img src="${src}" alt="${safeAlt}" loading="lazy" onerror="this.src='${DEFAULT_IMG}'">`;
 }
 
+function initReviewsStore() {
+  const raw = localStorage.getItem(REVIEWS_KEY);
+  if (!raw) {
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify({ version: REVIEWS_VERSION, reviews: DEFAULT_REVIEWS }));
+    return;
+  }
+  try {
+    const data = JSON.parse(raw);
+    if (data.version !== REVIEWS_VERSION) {
+      localStorage.setItem(REVIEWS_KEY, JSON.stringify({ version: REVIEWS_VERSION, reviews: DEFAULT_REVIEWS }));
+    }
+  } catch {
+    localStorage.setItem(REVIEWS_KEY, JSON.stringify({ version: REVIEWS_VERSION, reviews: DEFAULT_REVIEWS }));
+  }
+}
+
+function getReviews() {
+  initReviewsStore();
+  const data = JSON.parse(localStorage.getItem(REVIEWS_KEY));
+  return Array.isArray(data?.reviews) ? data.reviews : DEFAULT_REVIEWS;
+}
+
+function saveReviews(reviews) {
+  localStorage.setItem(REVIEWS_KEY, JSON.stringify({ version: REVIEWS_VERSION, reviews }));
+}
+
+function getReviewsForItem(itemId, itemType) {
+  return getReviews()
+    .filter(r => r.itemId === itemId && r.itemType === itemType)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function getRatingSummary(itemId, itemType) {
+  const reviews = getReviewsForItem(itemId, itemType);
+  const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  if (!reviews.length) {
+    return { average: 0, count: 0, distribution };
+  }
+  let sum = 0;
+  reviews.forEach(r => {
+    const star = Math.min(5, Math.max(1, Math.round(r.rating)));
+    distribution[star] += 1;
+    sum += r.rating;
+  });
+  return {
+    average: Math.round((sum / reviews.length) * 10) / 10,
+    count: reviews.length,
+    distribution,
+  };
+}
+
+function hasUserReviewedItem(itemId, itemType, userId) {
+  if (!userId) return false;
+  return getReviewsForItem(itemId, itemType).some(r => r.userId === userId);
+}
+
+function addReview({ itemId, itemType, rating, text, userId, userName }) {
+  const reviews = getReviews();
+  const review = {
+    id: 'rev' + Date.now(),
+    itemId,
+    itemType,
+    userId: userId || 'guest',
+    userName: userName || 'Покупатель',
+    rating: Math.min(5, Math.max(1, Math.round(Number(rating)))),
+    text: (text || '').trim(),
+    createdAt: new Date().toISOString(),
+  };
+  reviews.unshift(review);
+  saveReviews(reviews);
+  return review;
+}
+
+function getReviewItemMeta(itemId, itemType) {
+  if (itemType === 'ready-pc') {
+    const pc = getReadyPCById(itemId);
+    if (!pc) return null;
+    return { name: pc.name, href: `ready-pc.html?id=${encodeURIComponent(itemId)}`, label: 'Готовый ПК' };
+  }
+  const product = getEnrichedProductById(itemId);
+  if (!product) return null;
+  return {
+    name: product.name,
+    href: `product.html?id=${encodeURIComponent(itemId)}`,
+    label: CATEGORY_LABELS[product.category] || product.category,
+  };
+}
+
 function initStore() {
   if (!localStorage.getItem(STORE_KEY)) {
     localStorage.setItem(STORE_KEY, JSON.stringify({ products: DEFAULT_PRODUCTS, readyPCs: DEFAULT_READY_PCS }));
@@ -350,6 +460,7 @@ function initStore() {
   if (!localStorage.getItem(ORDERS_KEY)) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify([]));
   }
+  initReviewsStore();
 }
 
 function mergeDefaultAttributes(products) {
@@ -446,6 +557,15 @@ function saveReadyPCs(pcs) {
 
 function formatPrice(price) {
   return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(price);
+}
+
+function escapeHtml(text) {
+  if (text == null) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function getProductById(id) {

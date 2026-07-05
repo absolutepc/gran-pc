@@ -124,6 +124,7 @@ function renderProductDetail(product) {
         </div>
         <div class="product-category">${categoryLabel}</div>
         <h1>${product.name}</h1>
+        ${renderRatingSummary(product.id, 'product', { variant: 'hero' })}
         <p class="pc-detail-desc">${product.description || ''}</p>
         ${attrTags ? `<div class="product-attrs product-detail-attrs">${attrTags}</div>` : ''}
         <div class="product-price pc-detail-price">${formatPrice(product.price)}${oldPriceHtml}</div>
@@ -147,6 +148,8 @@ function renderProductDetail(product) {
       <p class="section-sub">Подробные технические параметры компонента</p>
       ${renderProductSpecsTable(product)}
     </section>
+
+    ${renderReviewsSection(product.id, 'product')}
   `;
 }
 
@@ -182,6 +185,7 @@ function initProductDetailPage() {
   container.innerHTML = `<div class="container pc-detail-page">${renderProductDetail(product)}</div>`;
   bindProductColorPicker(container);
   bindAddToCartButtons(container);
+  bindReviewsSection(container, product.id, 'product');
   updateCartBadge();
 }
 

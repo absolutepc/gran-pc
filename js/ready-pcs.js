@@ -54,6 +54,8 @@ function renderReadyPCCard(pc) {
 
         <h3>${pc.name}</h3>
 
+        ${renderRatingSummary(pc.id, 'ready-pc')}
+
         <p>${pc.description || ''}</p>
 
         <div class="pc-spec-tags">
@@ -204,6 +206,8 @@ function renderReadyPCDetail(pc) {
 
         <h1>${pc.name}</h1>
 
+        ${renderRatingSummary(pc.id, 'ready-pc', { variant: 'hero' })}
+
         <p class="pc-detail-desc">${pc.description || ''}</p>
 
         <div class="product-price pc-detail-price">${formatPrice(pc.price)}</div>
@@ -245,6 +249,8 @@ function renderReadyPCDetail(pc) {
       ${renderPCComponents(pc)}
 
     </section>
+
+    ${renderReviewsSection(pc.id, 'ready-pc')}
 
   `;
 
@@ -319,6 +325,8 @@ function initReadyPCDetailPage() {
   bindPCGallery(container);
 
   bindAddToCartButtons(container);
+
+  bindReviewsSection(container, pc.id, 'ready-pc');
 
   updateCartBadge();
 

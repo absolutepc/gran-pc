@@ -222,6 +222,7 @@ function renderProductCard(product, type = 'product') {
       <div class="product-info">
         <div class="product-category">${categoryLabel}</div>
         <h3>${product.name}</h3>
+        ${renderRatingSummary(product.id, type === 'ready-pc' ? 'ready-pc' : 'product')}
         ${attrTags ? `<div class="product-attrs">${attrTags}</div>` : ''}
         <p>${product.description || ''}</p>
         <div class="product-footer">
