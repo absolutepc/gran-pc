@@ -65,6 +65,7 @@ function setCurrentUser(user) {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   } else {
     localStorage.removeItem(USER_KEY);
+    if (typeof setAuthToken === 'function') setAuthToken(null);
   }
   updateAccountButton();
 }
@@ -78,18 +79,30 @@ function saveUsers(users) {
 }
 
 function registerUser(name, email, password) {
+  if (typeof registerUserViaApi === 'function' && isAuthApiEnabled()) {
+    return registerUserViaApi(name, email, password);
+  }
+
   const users = getUsers();
   if (users.find(u => u.email === email)) {
-    return { success: false, message: 'Email уже зарегистрирован' };
+    return Promise.resolve({ success: false, message: 'Email уже зарегистрирован' });
   }
   const user = { id: 'u' + Date.now(), name, email, password, createdAt: new Date().toISOString() };
   users.push(user);
   saveUsers(users);
-  setCurrentUser({ id: user.id, name: user.name, email: user.email });
-  return { success: true };
+  setCurrentUser({ id: user.id, name: user.name, email: user.email, role: 'user' });
+  return Promise.resolve({ success: true });
 }
 
-function loginUser(email, password) {
+async function loginUser(email, password) {
+  if (typeof loginUserViaApi === 'function' && isAuthApiEnabled()) {
+    try {
+      return await loginUserViaApi(email, password);
+    } catch (error) {
+      return { success: false, message: error.message || 'Не удалось войти' };
+    }
+  }
+
   if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
     setCurrentUser({ id: 'admin', name: 'Администратор', email, role: 'admin' });
     return { success: true, isAdmin: true };
@@ -97,7 +110,7 @@ function loginUser(email, password) {
   const users = getUsers();
   const user = users.find(u => u.email === email && u.password === password);
   if (user) {
-    setCurrentUser({ id: user.id, name: user.name, email: user.email });
+    setCurrentUser({ id: user.id, name: user.name, email: user.email, role: 'user' });
     return { success: true };
   }
   return { success: false, message: 'Неверный email или пароль' };
