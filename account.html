@@ -100,6 +100,7 @@
   <div id="site-footer"></div>
 
   <script src="js/data.js?v=8.1"></script>
+  <script src="js/auth-api.js"></script>
   <script src="js/app.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/transition.js"></script>
@@ -133,10 +134,10 @@
       });
     });
 
-    document.getElementById('loginFormEl').addEventListener('submit', (e) => {
+    document.getElementById('loginFormEl').addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
-      const result = loginUser(fd.get('email'), fd.get('password'));
+      const result = await loginUser(fd.get('email'), fd.get('password'));
       if (result.success) {
         if (result.isAdmin) {
           window.location.href = 'admin.html';
@@ -149,10 +150,10 @@
       }
     });
 
-    document.getElementById('registerFormEl').addEventListener('submit', (e) => {
+    document.getElementById('registerFormEl').addEventListener('submit', async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
-      const result = registerUser(fd.get('name'), fd.get('email'), fd.get('password'));
+      const result = await registerUser(fd.get('name'), fd.get('email'), fd.get('password'));
       if (result.success) {
         showToast('Аккаунт создан!', 'success');
         showDashboard();
@@ -209,10 +210,19 @@
             <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
           </form>
         `;
-        document.getElementById('profileForm').addEventListener('submit', (e) => {
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
           e.preventDefault();
           const name = new FormData(e.target).get('name');
-          setCurrentUser({ ...user, name });
+          if (typeof updateProfileViaApi === 'function' && isAuthApiEnabled() && getAuthToken()) {
+            try {
+              await updateProfileViaApi(name);
+            } catch (error) {
+              showToast(error.message || 'Не удалось обновить профиль', 'error');
+              return;
+            }
+          } else {
+            setCurrentUser({ ...user, name });
+          }
           document.getElementById('userName').textContent = name;
           document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
           showToast('Профиль обновлён', 'success');

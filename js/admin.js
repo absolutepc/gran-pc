@@ -72,11 +72,11 @@ function initAdmin() {
 function bindAdminLogin() {
   const form = document.getElementById('adminLoginForm');
   if (!form) return;
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = form.email.value;
     const password = form.password.value;
-    const result = loginUser(email, password);
+    const result = await loginUser(email, password);
     if (result.success && result.isAdmin) {
       showToast('Добро пожаловать, администратор!', 'success');
       initAdmin();
